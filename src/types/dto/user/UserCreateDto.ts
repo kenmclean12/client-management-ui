@@ -6,6 +6,6 @@ export interface UserCreateDto {
   email: string;
   firstName: string;
   lastName: string;
-  role: UserRole;
+  role?: UserRole;
   avatarUrl: string | null;
 }
