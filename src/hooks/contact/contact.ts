@@ -1,10 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { get, post, put, del } from "../../lib/api";
-import {
-  Contact,
-  ContactCreateDto,
-  ContactUpdateDto,
-} from "../../types";
+import { Contact, ContactCreateDto, ContactUpdateDto } from "../../types";
 
 export function useContactsGetAll() {
   return useQuery<Contact[]>({
@@ -31,8 +27,7 @@ export function useContactsCreate() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (dto: ContactCreateDto) =>
-      post<Contact>("/contact", dto),
+    mutationFn: (dto: ContactCreateDto) => post<Contact>("/contact", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
     },
@@ -63,4 +58,3 @@ export function useContactsDelete(id: number) {
     },
   });
 }
-
