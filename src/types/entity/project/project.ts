@@ -1,4 +1,5 @@
 import { Client } from "../client";
+import { Job } from "../job";
 
 export interface Project {
   id: number;

@@ -3,3 +3,4 @@ export * from "./client";
 export * from "./contact";
 export * from "./note";
 export * from "./project";
+export * from "./job";
