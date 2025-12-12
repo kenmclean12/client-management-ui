@@ -1,37 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api";
 import { UserCreateDto, UserResponseDto, UserUpdateDto } from "../../types";
 import { UserPasswordResetDto } from "../../types/dto/user/PasswordResetDto";
+import { get, post, put, del } from "../../lib/api";
 
 export function useUsersGetAll(options?: { enabled?: boolean }) {
-  return useQuery({
+  return useQuery<UserResponseDto[]>({
     queryKey: ["users"],
-    queryFn: async () => {
-      const res = await api("/user");
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to fetch users");
-      }
-      return res.json() as Promise<UserResponseDto[]>;
-    },
+    queryFn: () => get<UserResponseDto[]>("/user"),
     ...options,
   });
 }
 
-export function useUsersGetById(
-  id: number,
-  options?: { enabled?: boolean }
-) {
-  return useQuery({
+export function useUsersGetById(id: number, options?: { enabled?: boolean }) {
+  return useQuery<UserResponseDto>({
     queryKey: ["user", id],
-    queryFn: async () => {
-      const res = await api(`/user/${id}`);
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to fetch user");
-      }
-      return res.json() as Promise<UserResponseDto>;
-    },
+    queryFn: () => get<UserResponseDto>(`/user/${id}`),
     ...options,
   });
 }
@@ -40,23 +23,8 @@ export function useUsersCreate() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (dto: UserCreateDto) => {
-      const res = await api("/user", {
-        method: "POST",
-        body: JSON.stringify(dto),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to create user");
-      }
-
-      return res.json() as Promise<UserResponseDto>;
-    },
-
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["users"] });
-    },
+    mutationFn: (dto: UserCreateDto) => post<UserResponseDto>("/user", dto),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["users"] }),
   });
 }
 
@@ -64,23 +32,9 @@ export function useUsersUpdate(id: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (vars: { id: number; dto: UserUpdateDto }) => {
-      const res = await api(`/user/${vars.id}`, {
-        method: "PUT",
-        body: JSON.stringify(vars.dto),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to update user");
-      }
-
-      return res.json() as Promise<UserResponseDto>;
-    },
-
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["users", id] });
-    },
+    mutationFn: (vars: { id: number; dto: UserUpdateDto }) =>
+      put<UserResponseDto>(`/user/${vars.id}`, vars.dto),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["users", id] }),
   });
 }
 
@@ -88,22 +42,20 @@ export function useUsersResetPassword(id: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (vars: { id: number; dto: UserPasswordResetDto }) => {
-      const res = await api(`/user/reset-password/${vars.id}`, {
-        method: "PUT",
-        body: JSON.stringify(vars.dto),
-      });
+    mutationFn: (vars: { id: number; dto: UserPasswordResetDto }) =>
+      put<UserResponseDto>(`/user/reset-password/${vars.id}`, vars.dto),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", id] }),
+  });
+}
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to reset password");
-      }
+export function useUsersDelete(id: number) {
+  const qc = useQueryClient();
 
-      return res.json() as Promise<UserResponseDto>;
-    },
+  return useMutation({
+    mutationFn: () => del<void>(`/user/${id}`),
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["user", id] });
     },
   });
 }
-

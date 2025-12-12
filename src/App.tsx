@@ -3,9 +3,10 @@ import HomePage from "./pages/Home";
 import UserPage from "./pages/User";
 import Layout from "./layout";
 import { ProtectedRoute } from "./components";
-import LoginPage from "./pages/Auth/Login";
 import RegisterPage from "./pages/Auth/Register";
 import { AuthProvider } from "./context/AuthProvider";
+import { LoginPage } from "./pages";
+import { QueryClient } from "@tanstack/react-query";
 
 function App() {
   return (
