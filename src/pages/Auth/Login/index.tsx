@@ -15,7 +15,6 @@ import {
   authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
-  authMainContainerStyles,
 } from "../styles";
 
 export interface Errors {
@@ -53,7 +52,14 @@ export function LoginPage() {
   };
 
   return (
-    <Stack sx={authMainContainerStyles}>
+    <Stack
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Stack sx={authInnerContainerStyles}>
         <Stack sx={titleContainerStyles}>
           <Typography fontSize={24}>Login</Typography>

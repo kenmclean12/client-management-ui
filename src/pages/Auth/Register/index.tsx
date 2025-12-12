@@ -25,6 +25,7 @@ import { UserCreateDto } from "../../../types";
 import { useAuthRegister } from "../../../hooks";
 import { previousStep, update, validateStep } from "./utils";
 import { stepFields } from "./config";
+import { authInnerContainerStyles } from "../styles";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -115,6 +116,7 @@ export function RegisterPage() {
         onChange={(e) => update(field.key, e.target.value, setForm)}
         sx={{
           ...authInputStyles,
+          color: "white",
           border: errors[field.key as keyof FormErrors]
             ? "2px solid lightblue"
             : "1px solid #ccc",
@@ -134,7 +136,7 @@ export function RegisterPage() {
         alignItems: "center",
       }}
     >
-      <Stack sx={{ width: "400px" }}>
+      <Stack sx={{ ...authInnerContainerStyles, width: "400px" }}>
         <Stack sx={titleContainerStyles}>
           <Typography fontSize={24}>Register</Typography>
           <NightsStay sx={{ color: "lightblue" }} />
