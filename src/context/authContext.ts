@@ -1,13 +1,10 @@
 import { createContext, useContext } from "react";
-import type { UserResponseDto } from "../types";
+import { UserResponseDto } from "../types";
 
 export interface AuthContextType {
   isAuthenticated: boolean;
   user: UserResponseDto | null;
-  login: (
-    access_token: string,
-    user: UserResponseDto
-  ) => void;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
