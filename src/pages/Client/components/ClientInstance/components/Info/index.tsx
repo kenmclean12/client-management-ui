@@ -15,6 +15,7 @@ import {
 import { Save, Cancel, Edit, Phone, Email, LocationOn } from "@mui/icons-material";
 import { Client, ClientUpdateDto } from "../../../../../../types";
 import { useClientsUpdate } from "../../../../../../hooks";
+import { ClientNotes } from "./Notes";
 
 interface Props {
   client: Client;
@@ -313,6 +314,7 @@ export function ClientInfo({ client }: Props) {
       )}
 
       {editMode ? renderEditView() : renderDisplayView()}
+      <ClientNotes clientId={client.id} />
     </Paper>
   );
 }

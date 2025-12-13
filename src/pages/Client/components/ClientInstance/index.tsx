@@ -45,7 +45,7 @@ export function ClientInstancePage() {
       </Tabs>
       {tab === 0 && <ClientInfo client={client} />}
       {tab === 1 && <ClientContacts clientId={client.id} />}
-      {tab === 2 && <ClientProjects />}
+      {tab === 2 && <ClientProjects clientId={client.id} />}
     </PageShell>
   );
 }

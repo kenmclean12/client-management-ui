@@ -4,3 +4,10 @@ export enum JobStatus {
   InProgress = 3,
   Done = 4,
 }
+
+export const jobStatusKeyMap: Record<JobStatus, "not_started" | "in_progress" | "completed" | "blocked"> = {
+  [JobStatus.Stopped]: "not_started",
+  [JobStatus.Pending]: "blocked",
+  [JobStatus.InProgress]: "in_progress",
+  [JobStatus.Done]: "completed",
+};

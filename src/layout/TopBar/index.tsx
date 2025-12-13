@@ -21,10 +21,10 @@ export default function TopBar() {
       }}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Public sx={{ color: "lightblue" }} />
         <Typography fontSize={20} fontWeight={600}>
           Client Management
         </Typography>
+        <Public sx={{ color: "lightblue" }} />
       </Stack>
       <PopoverMenu
         trigger={
