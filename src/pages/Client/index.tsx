@@ -1,9 +1,17 @@
-import { Stack } from "@mui/material";
+import { Public } from "@mui/icons-material";
+import { PagePlaceholder, PageShell } from "../../components";
+import ClientAddDialog from "./components/Forms/ClientAddForm";
 
 export default function ClientPage() {
-  return(
-    <Stack>
-        Client
-    </Stack>
+  return (
+    <PageShell
+      title="Clients"
+      icon={<Public />}
+      actions={
+        <ClientAddDialog />
+      }
+    >
+      <PagePlaceholder type="client" />
+    </PageShell>
   );
 }
