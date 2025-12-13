@@ -1,11 +1,4 @@
-import {
-  Stack,
-  Avatar,
-  Typography,
-  Box,
-  IconButton,
-  Button,
-} from "@mui/material";
+import { Stack, Avatar, Typography, Box, Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { PageTopBar } from "../../components";
 import { Add, Group } from "@mui/icons-material";
@@ -20,7 +13,7 @@ export default function UserPage() {
         alignItems: "center",
         minHeight: "100vh",
         width: "100%",
-        backgroundColor: "#383848ff",
+        backgroundColor: "#222",
       }}
     >
       <Stack
@@ -35,8 +28,8 @@ export default function UserPage() {
       >
         <Avatar
           sx={{
-            width: 120,
-            height: 120,
+            width: 100,
+            height: 100,
             bgcolor: "grey.400",
             fontSize: "3rem",
           }}
