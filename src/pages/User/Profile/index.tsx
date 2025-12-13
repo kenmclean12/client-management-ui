@@ -205,7 +205,7 @@ console.log(self)
 
   return (
     <>
-      <Box sx={{ p: 3, maxWidth: 800, margin: "0 auto" }}>
+      <Box sx={{ height: "100%", width: "80%", p: 3, margin: "0 auto" }}>
         <Paper elevation={3} sx={{ p: 4, position: "relative" }}>
           {isAdmin && (
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
