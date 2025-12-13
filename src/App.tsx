@@ -3,7 +3,7 @@ import HomePage from "./pages/Home";
 import UserPage from "./pages/User";
 import ClientPage from "./pages/Client";
 import Layout from "./layout";
-import { ProtectedRoute } from "./components";
+// import { ProtectedRoute } from "./components";
 import { AuthProvider } from "./context/AuthProvider";
 import { LoginPage } from "./pages";
 import { RegisterPage } from "./pages/Auth/Register";
@@ -18,9 +18,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <Layout />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           >
             <Route path="/" element={<HomePage />} />
