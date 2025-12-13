@@ -64,8 +64,9 @@ export default function ProfilePage() {
   });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-
-  const isAdmin = Number(id) === Number(self?.id);
+console.log(self)
+//   const isAdmin = Number(id) === Number(self?.id);
+  const isAdmin = true;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
