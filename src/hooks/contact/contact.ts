@@ -9,13 +9,6 @@ export function useContactsGetAll() {
   });
 }
 
-export function useContactsGetById(id: number) {
-  return useQuery<Contact>({
-    queryKey: ["contacts", id],
-    queryFn: () => get<Contact>(`/contact/${id}`),
-  });
-}
-
 export function useContactsGetByClient(id: number) {
   return useQuery<Contact[]>({
     queryKey: ["contacts", "client", id],
@@ -23,13 +16,14 @@ export function useContactsGetByClient(id: number) {
   });
 }
 
-export function useContactsCreate() {
+export function useContactsCreate(id: number) {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (dto: ContactCreateDto) => post<Contact>("/contact", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
     },
   });
 }
@@ -42,7 +36,7 @@ export function useContactsUpdate(id: number) {
       put<Contact>(`/contact/${vars.id}`, vars.dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["contacts", id] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
     },
   });
 }
@@ -54,7 +48,7 @@ export function useContactsDelete(id: number) {
     mutationFn: () => del<void>(`/contact/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["contacts", id] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
     },
   });
 }

@@ -55,7 +55,6 @@ interface EditingContact {
 }
 
 export function ClientContacts({ clientId }: Props) {
-  // State
   const [editingContact, setEditingContact] = useState<EditingContact | null>(
     null
   );
@@ -67,8 +66,8 @@ export function ClientContacts({ clientId }: Props) {
     type: "success" | "error";
   } | null>(null);
 
-  const { data: contacts } = useContactsGetByClient(clientId);
-  const createMutation = useContactsCreate();
+  const { data: contacts, refetch } = useContactsGetByClient(clientId);
+  const createMutation = useContactsCreate(clientId);
   const updateMutation = useContactsUpdate(editingContact?.id || 0);
   const deleteMutation = useContactsDelete(contactToDelete?.id || 0);
 
@@ -122,6 +121,7 @@ export function ClientContacts({ clientId }: Props) {
           message: "Contact created successfully",
           type: "success",
         });
+        refetch();
       } else {
         // Update existing contact
         await updateMutation.mutateAsync({
@@ -132,6 +132,7 @@ export function ClientContacts({ clientId }: Props) {
           message: "Contact updated successfully",
           type: "success",
         });
+        refetch();
       }
       setEditingContact(null);
       setShowAddDialog(false);
@@ -159,6 +160,7 @@ export function ClientContacts({ clientId }: Props) {
       });
       setDeleteDialogOpen(false);
       setContactToDelete(null);
+      refetch();
     } catch (error: any) {
       setNotification({
         message: error.message || "Failed to delete contact",
