@@ -9,13 +9,13 @@ import {
   titleContainerStyles,
 } from "./styles";
 import { validateLogin } from "./utils";
-import { useAuthLogin } from "../../../hooks";
 import { LoginRequestDto } from "../../../types";
 import {
   authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
 } from "../styles";
+import { useAuth } from "../../../context/authContext";
 
 export interface Errors {
   email: boolean;
@@ -24,6 +24,7 @@ export interface Errors {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [form, setForm] = useState<LoginRequestDto>({
     email: "",
@@ -33,23 +34,29 @@ export function LoginPage() {
     email: false,
     password: false,
   });
-  const { mutateAsync: loginUser } = useAuthLogin();
 
-  const handleLogin = async () => {
-    const error = validateLogin(form);
-    if (error) {
-      setErrors({
-        email: error.field === "email",
-        password: error.field === "password",
-      });
-      enqueueSnackbar(error.message, { variant: "warning" });
-      return;
-    }
+const handleLogin = async () => {
+  const error = validateLogin(form);
+  if (error) {
+    setErrors({
+      email: error.field === "email",
+      password: error.field === "password",
+    });
+    enqueueSnackbar(error.message, { variant: "warning" });
+    return;
+  }
 
-    setErrors({ email: false, password: false });
-    await loginUser(form);
+  setErrors({ email: false, password: false });
+
+  try {
+    await login(form.email, form.password);
     navigate("/", { replace: true });
-  };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Login failed";
+    enqueueSnackbar(errorMessage, { variant: "error" });
+  }
+};
+
 
   return (
     <Stack

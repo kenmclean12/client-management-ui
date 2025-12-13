@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, ReactNode } from "react";
-import type { UserResponseDto } from "../types";
+import type { TokenResponseDto, UserResponseDto } from "../types";
 import { post } from "../lib/api";
 import { AuthContext } from "./authContext";
 
@@ -19,7 +19,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function login(email: string, password: string) {
     try {
-      const res = await post<{ token: string }>("/auth/login", {
+      const res = await post<TokenResponseDto>("/auth/login", {
         email,
         password,
       });
@@ -27,15 +27,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (!res?.token) throw new Error("Invalid login response");
 
       localStorage.setItem("access_token", res.token);
+      localStorage.setItem("user", JSON.stringify(res.user));
 
-      const userRes = await fetch("/user/me", {
-        headers: { Authorization: `Bearer ${res.token}` },
-      });
-      if (!userRes.ok) throw new Error("Failed to fetch user info");
-      const userData = (await userRes.json()) as UserResponseDto;
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
+      setUser(res.user);
       setIsAuthenticated(true);
     } catch (err: any) {
       console.error("Login failed:", err.message || err);
