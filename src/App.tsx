@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthProvider";
 import { LoginPage } from "./pages";
 import { RegisterPage } from "./pages/Auth/Register";
 import AdminPage from "./pages/Admin";
+import ProfilePage from "./pages/User/Profile";
 
 function App() {
   return (
@@ -19,12 +20,13 @@ function App() {
           <Route
             element={
               // <ProtectedRoute>
-                <Layout />
+              <Layout />
               // </ProtectedRoute>
             }
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/users" element={<UserPage />} />
+            <Route path="/users/:id" element={<ProfilePage />} />
             <Route path="/clients" element={<ClientPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>

@@ -2,8 +2,10 @@ import { Stack, Typography, Avatar } from "@mui/material";
 import { Public } from "@mui/icons-material";
 import { useAuth } from "../../context/authContext";
 import { PopoverMenu, PopoverMenuItem } from "../../components";
+import { useNavigate } from "react-router-dom";
 export default function TopBar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Stack
@@ -36,6 +38,7 @@ export default function TopBar() {
           label="Profile"
           closeOnSelect
           onClick={() => {
+            navigate(`/users/${user?.id as number}`)
             console.log("Go to profile");
           }}
         />
