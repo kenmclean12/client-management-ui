@@ -39,7 +39,6 @@ export default function TopBar() {
           closeOnSelect
           onClick={() => {
             navigate(`/users/${user?.id as number}`)
-            console.log("Go to profile");
           }}
         />
         <PopoverMenuItem
