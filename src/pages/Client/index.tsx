@@ -1,10 +1,9 @@
 import { Stack } from "@mui/material";
 
-export default function HomePage() {
-
-  return (
+export default function ClientPage() {
+  return(
     <Stack>
-      Home
+        Client
     </Stack>
   );
 }

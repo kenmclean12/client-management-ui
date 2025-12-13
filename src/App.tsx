@@ -1,11 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/Home";
 import UserPage from "./pages/User";
+import ClientPage from "./pages/Client";
 import Layout from "./layout";
 import { ProtectedRoute } from "./components";
 import { AuthProvider } from "./context/AuthProvider";
 import { LoginPage } from "./pages";
 import { RegisterPage } from "./pages/Auth/Register";
+import AdminPage from "./pages/Admin";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/users" element={<UserPage />} />
+            <Route path="/clients" element={<ClientPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
