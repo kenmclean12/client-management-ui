@@ -8,6 +8,7 @@ interface Props {
   onClick?: () => void;
   closeOnSelect?: boolean;
   closeMenu?: () => void;
+  disabled?: boolean;
 }
 
 export function PopoverMenuItem({
@@ -16,6 +17,7 @@ export function PopoverMenuItem({
   onClick,
   closeOnSelect,
   closeMenu,
+  disabled,
 }: Props) {
   return (
     <MenuItem
@@ -25,6 +27,7 @@ export function PopoverMenuItem({
         if (closeOnSelect) closeMenu?.();
       }}
       sx={menuItemStyles}
+      disabled={disabled}
     >
       <Typography fontSize="14px">{label}</Typography>
       {iconRight && <Box>{iconRight}</Box>}

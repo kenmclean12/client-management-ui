@@ -12,10 +12,6 @@ import {
   TextField,
   Button,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
   Select,
   MenuItem,
@@ -41,18 +37,18 @@ import {
   useUsersGetById,
   useUsersUpdate,
   useUsersDelete,
+  useUsersResetPassword,
 } from "../../../hooks";
 import { UserRole, UserRoleLabel, UserUpdateDto } from "../../../types";
 import { PopoverMenu, PopoverMenuItem } from "../../../components/PopoverMenu";
 import { useAuth } from "../../../context/authContext";
-import { PageShell } from "../../../components";
+import { PageShell, UniversalDialog } from "../../../components";
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user: self } = useAuth();
   const userId = id ? parseInt(id, 10) : 0;
-
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<UserUpdateDto>({
     userName: "",
@@ -64,10 +60,16 @@ export default function ProfilePage() {
   });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  console.log(self);
-  //   const isAdmin = Number(id) === Number(self?.id);
-  const isAdmin = true;
+  const isAdmin = self?.role === UserRole.Admin;
+  const isSelf = Number(id) === Number(self?.id);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [resetPassword, setResetPassword] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+  const [resetError, setResetError] = useState<string | null>(null);
+  const resetMutation = useUsersResetPassword(userId);
 
   const {
     data: user,
@@ -93,6 +95,30 @@ export default function ProfilePage() {
       });
     }
   }, [user]);
+
+  const handleResetPasswordChange =
+    (field: "currentPassword" | "newPassword") =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setResetPassword((prev) => ({ ...prev, [field]: e.target.value }));
+      setResetError(null);
+    };
+
+  const handleResetPassword = async () => {
+    try {
+      await resetMutation.mutateAsync({
+        id: userId,
+        dto: {
+          password: resetPassword.currentPassword,
+          newPassword: resetPassword.newPassword,
+        },
+      });
+      setResetDialogOpen(false);
+      setResetPassword({ currentPassword: "", newPassword: "" });
+      setResetError(null);
+    } catch (err: any) {
+      setResetError(err.message || "Failed to reset password");
+    }
+  };
 
   const handleInputChange =
     (field: keyof UserUpdateDto) =>
@@ -204,7 +230,15 @@ export default function ProfilePage() {
   }
 
   return (
-    <PageShell title="User" icon={<Person />} actions={<Button><Send /></Button>}>
+    <PageShell
+      title="User"
+      icon={<Person />}
+      actions={
+        <Button>
+          <Send />
+        </Button>
+      }
+    >
       <Box
         sx={{
           minHeight: "100vh",
@@ -226,7 +260,7 @@ export default function ProfilePage() {
             borderRadius: 2,
           }}
         >
-          {isAdmin && (
+          {(isAdmin || isSelf) && (
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
               <PopoverMenu
                 trigger={
@@ -244,18 +278,25 @@ export default function ProfilePage() {
                 />
                 <PopoverMenuItem
                   label="Delete User"
+                  onClick={() => setDeleteDialogOpen(true)}
+                  disabled={!isAdmin}
                   closeOnSelect
                 />
+                {isSelf && (
+                  <PopoverMenuItem
+                    label="Reset Password"
+                    onClick={() => setResetDialogOpen(true)}
+                    closeOnSelect
+                  />
+                )}
               </PopoverMenu>
             </Box>
           )}
-
           {saveError && (
             <Alert severity="error" sx={{ mb: 3 }}>
               {saveError}
             </Alert>
           )}
-
           <Stack spacing={4}>
             <Stack
               direction={{ xs: "column", sm: "row" }}
@@ -321,7 +362,7 @@ export default function ProfilePage() {
                 </Box>
               </Box>
             </Stack>
-            {editMode && isAdmin && (
+            {editMode && (isAdmin || isSelf) && (
               <Stack direction="column" spacing={2}>
                 <TextField
                   label="First Name"
@@ -354,6 +395,7 @@ export default function ProfilePage() {
                     value={formData.role}
                     onChange={handleSelectChange("role")}
                     label="Role"
+                    disabled={!isAdmin}
                   >
                     <MenuItem value={UserRole.Admin}>Admin</MenuItem>
                     <MenuItem value={UserRole.Standard}>Standard</MenuItem>
@@ -362,8 +404,7 @@ export default function ProfilePage() {
                 </FormControl>
               </Stack>
             )}
-
-            {editMode && isAdmin && (
+            {editMode && (
               <Stack
                 direction="row"
                 spacing={2}
@@ -384,7 +425,7 @@ export default function ProfilePage() {
                   onClick={handleSave}
                   disabled={updateMutation.isPending}
                 >
-                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                  Save
                 </Button>
               </Stack>
             )}
@@ -445,32 +486,69 @@ export default function ProfilePage() {
           </Stack>
         </Paper>
       </Box>
-      <Dialog
+      <UniversalDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
+        title="Delete User"
+        footer={
+          <Stack direction="row" justifyContent="flex-end" spacing={1}>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button
+              onClick={handleDelete}
+              color="error"
+              variant="contained"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete User"}
+            </Button>
+          </Stack>
+        }
       >
-        <DialogTitle>Delete User</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete{" "}
-            <strong>
-              {user.firstName} {user.lastName}
-            </strong>
-            ? This action cannot be undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button
-            onClick={handleDelete}
-            color="error"
-            variant="contained"
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete User"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Typography>
+          Are you sure you want to delete{" "}
+          <strong>
+            {user.firstName} {user.lastName}
+          </strong>
+          ? This action cannot be undone.
+        </Typography>
+      </UniversalDialog>
+      <UniversalDialog
+        open={resetDialogOpen}
+        onClose={() => setResetDialogOpen(false)}
+        title="Reset Password"
+        footer={
+          <Stack direction="row" justifyContent="flex-end" spacing={1}>
+            <Button onClick={() => setResetDialogOpen(false)}>Cancel</Button>
+            <Button
+              onClick={handleResetPassword}
+              variant="contained"
+              disabled={resetMutation.isPending}
+            >
+              {resetMutation.isPending ? "Resetting..." : "Reset Password"}
+            </Button>
+          </Stack>
+        }
+      >
+        <Stack spacing={2}>
+          {resetError && <Alert severity="error">{resetError}</Alert>}
+          <TextField
+            label="Current Password"
+            type="password"
+            value={resetPassword.currentPassword}
+            onChange={handleResetPasswordChange("currentPassword")}
+            size="small"
+            fullWidth
+          />
+          <TextField
+            label="New Password"
+            type="password"
+            value={resetPassword.newPassword}
+            onChange={handleResetPasswordChange("newPassword")}
+            size="small"
+            fullWidth
+          />
+        </Stack>
+      </UniversalDialog>
     </PageShell>
   );
 }
