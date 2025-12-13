@@ -1,15 +1,26 @@
-import { Stack, Avatar, Typography, Box } from "@mui/material";
+import {
+  Stack,
+  Avatar,
+  Typography,
+  Box,
+  IconButton,
+  Button,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import { PageTopBar } from "../../components";
+import { Add, Group } from "@mui/icons-material";
 
 export default function UserPage() {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "80vh",
+        minHeight: "100vh",
         width: "100%",
+        backgroundColor: "#383848ff",
       }}
     >
       <Stack
@@ -32,11 +43,24 @@ export default function UserPage() {
         >
           <PersonIcon sx={{ fontSize: 60 }} />
         </Avatar>
-        
+
         <Typography variant="h6" color="white" fontWeight="medium">
           Select a user from the side panel
         </Typography>
       </Stack>
+      <PageTopBar
+        title={
+          <Stack direction="row" alignItems="center" spacing={0.5}>
+            <Typography>Users</Typography>
+            <Group />
+          </Stack>
+        }
+        actions={
+          <Button variant="contained">
+            <Add sx={{ color: "white" }} />
+          </Button>
+        }
+      />
     </Box>
   );
 }

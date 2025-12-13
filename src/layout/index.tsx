@@ -9,7 +9,7 @@ export default function Layout() {
       <TopBar />
       <Stack direction="row" sx={{ flex: 1 }}>
         <SideBar />
-        <Stack sx={{ flex: 1, p: 3 }}>
+        <Stack sx={{ flex: 1 }}>
           <Outlet />
         </Stack>
       </Stack>
