@@ -33,7 +33,7 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     { label: "Clients", icon: <Public />, path: "/clients" },
     { label: "Users", icon: <People />, path: "/users" },
-    { label: "Admin", icon: <AdminPanelSettings />, path: "/admin" },
+    // { label: "Admin", icon: <AdminPanelSettings />, path: "/admin" },
   ];
 
   const filteredUsers = users.filter(
