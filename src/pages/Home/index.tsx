@@ -1,9 +1,13 @@
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
+import { useAuth } from "../../context/authContext";
 
 export default function HomePage() {
-  return(
+  const { logout } = useAuth();
+
+  return (
     <Stack>
       Home
+      <Button onClick={logout}>Logout</Button>
     </Stack>
   );
 }

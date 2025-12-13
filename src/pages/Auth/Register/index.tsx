@@ -22,13 +22,14 @@ import {
 import { useSnackbar } from "notistack";
 import { FormErrors, Step } from "./types";
 import { UserCreateDto } from "../../../types";
-import { useAuthRegister } from "../../../hooks";
 import { previousStep, update, validateStep } from "./utils";
 import { stepFields } from "./config";
 import { authInnerContainerStyles } from "../styles";
+import { useAuth } from "../../../context/authContext";
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const { register }  = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -42,7 +43,6 @@ export function RegisterPage() {
     avatarUrl: null,
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const { mutateAsync: registerUser } = useAuthRegister();
 
   const handleNext = () => {
     const validationErrors = validateStep(step, form);
@@ -66,7 +66,7 @@ export function RegisterPage() {
       if (payload[k] === "" || payload[k] === null) delete payload[k];
     });
 
-    await registerUser(payload);
+    await register(payload);
     navigate("/", { replace: true });
   };
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, ReactNode } from "react";
-import type { TokenResponseDto, UserResponseDto } from "../types";
+import type { TokenResponseDto, UserCreateDto, UserResponseDto } from "../types";
 import { post } from "../lib/api";
 import { AuthContext } from "./authContext";
 
@@ -37,6 +37,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function register(data: UserCreateDto) {
+    const res = await post<{ token: string; user: UserResponseDto }>("/auth/register", data);
+    localStorage.setItem("access_token", res.token);
+    localStorage.setItem("user", JSON.stringify(res.user));
+    setUser(res.user);
+    setIsAuthenticated(true);
+  }
+
   function logout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
@@ -46,7 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
