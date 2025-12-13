@@ -1,4 +1,4 @@
 
-export { JobPriority } from "./JobPriority";
-export { JobStatus } from "./JobStatus";
-export { Job } from "./job";
+export * from "./JobPriority";
+export * from "./JobStatus";
+export * from "./job";

@@ -1,3 +1,4 @@
-export { UserCreateDto } from "./UserCreateDto";
-export { UserUpdateDto } from "./UserUpdateDto";
-export { UserResponseDto } from "./UserResponseDto";
+export * from "./UserCreateDto";
+export * from "./UserUpdateDto";
+export * from "./UserResponseDto";
+export * from "./PasswordResetDto";

@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserCreateDto, UserResponseDto, UserUpdateDto } from "../../types";
-import { UserPasswordResetDto } from "../../types/dto/user/PasswordResetDto";
+import { UserCreateDto, UserPasswordResetDto, UserResponseDto, UserUpdateDto } from "../../types";
 import { get, post, put, del } from "../../lib/api";
 
 export function useUsersGetAll(options?: { enabled?: boolean }) {

@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Stack, Typography, Box, Divider } from "@mui/material";
 import { People, AdminPanelSettings, Public } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { ReactElement } from "react";
 import { useAuth } from "../../context/authContext";
+import { UserRole } from "../../types";
 
 interface NavItem {
   label: string;
   icon: ReactElement;
   path: string;
-  roles?: string[];
+  roles?: UserRole[];
 }
 
 export default function Sidebar() {
@@ -17,12 +19,8 @@ export default function Sidebar() {
 
   const navItems: NavItem[] = [
     { label: "Clients", icon: <Public />, path: "/clients" },
-    { label: "Users", icon: <People />, path: "/users", 
-        // roles: ["ADMIN"] 
-    },
-    { label: "Admin", icon: <AdminPanelSettings />, path: "/admin", 
-        // roles: ["ADMIN"] 
-    },
+    { label: "Users", icon: <People />, path: "/users", roles: [UserRole.Admin] },
+    { label: "Admin", icon: <AdminPanelSettings />, path: "/admin", roles: [UserRole.Admin] },
   ];
 
   return (
@@ -44,7 +42,7 @@ export default function Sidebar() {
       </Typography>
 
       {navItems.map((item) => {
-        if (item.roles && !item.roles.includes(user?.role ?? "")) return null;
+        if (item.roles && !item.roles.includes(user?.role!)) return null;
 
         return (
           <Box
@@ -58,9 +56,7 @@ export default function Sidebar() {
               py: 1,
               borderRadius: 1,
               cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "#222",
-              },
+              "&:hover": { backgroundColor: "#222" },
             }}
           >
             {item.icon}
@@ -70,8 +66,6 @@ export default function Sidebar() {
       })}
 
       <Divider sx={{ borderColor: "#333", my: 1 }} />
-
-      {/* You could add more sections here if needed */}
     </Stack>
   );
 }

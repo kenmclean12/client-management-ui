@@ -1,2 +1,2 @@
-export { User } from "./User";
-export { UserRole } from "./UserRole";
+export * from "./User";
+export * from "./UserRole";

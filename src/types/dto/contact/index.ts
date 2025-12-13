@@ -1,2 +1,2 @@
-export { ContactCreateDto } from "./ContactCreateDto";
-export { ContactUpdateDto } from "./ContactUpdateDto";
+export * from "./ContactCreateDto";
+export * from "./ContactUpdateDto";

@@ -1,2 +1,2 @@
-export { RequestCreateDto } from "./RequestCreateDto";
-export { RequestUpdateDto } from "./RequestUpdateDto";
+export * from "./RequestCreateDto";
+export * from "./RequestUpdateDto";
