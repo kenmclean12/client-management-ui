@@ -25,8 +25,9 @@ export default function Sidebar() {
   const location = useLocation();
 
   const [search, setSearch] = useState("");
+  const isUsersPage = location.pathname.startsWith("/users");
   const usersQuery = useUsersGetAll({
-    enabled: location.pathname === "/users",
+    enabled: isUsersPage
   });
   const users = usersQuery.data ?? [];
 
@@ -95,7 +96,7 @@ export default function Sidebar() {
           </Box>
         );
       })}
-      {location.pathname === "/users" && (
+      {isUsersPage && (
         <>
           <Divider sx={{ borderColor: "#333", my: 1 }} />
           <Input
