@@ -6,7 +6,7 @@ import { PageShell } from "../../../../components";
 import { useClientsGetById } from "../../../../hooks";
 import { ClientContacts, ClientInfo, ClientProjects } from "./components";
 
-export default function ClientInstancePage() {
+export function ClientInstancePage() {
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
   const [tab, setTab] = useState(0);
@@ -32,7 +32,7 @@ export default function ClientInstancePage() {
   return (
     <PageShell title={client.name} icon={<Business />}>
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
-        <Tab label="Info" />
+        <Tab />
         <Tab label="Projects" />
         <Tab label="Contacts" />
       </Tabs>

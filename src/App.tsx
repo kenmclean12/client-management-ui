@@ -9,6 +9,8 @@ import { LoginPage } from "./pages";
 import { RegisterPage } from "./pages/Auth/Register";
 import AdminPage from "./pages/Admin";
 import ProfilePage from "./pages/User/Profile";
+import { ClientInstancePage } from "./pages/Client/components";
+import { ProtectedRoute } from "./components";
 
 function App() {
   return (
@@ -19,15 +21,16 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route
             element={
-              // <ProtectedRoute>
-              <Layout />
-              // </ProtectedRoute>
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
             }
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/users" element={<UserPage />} />
             <Route path="/users/:id" element={<ProfilePage />} />
             <Route path="/clients" element={<ClientPage />} />
+            <Route path="/clients/:id" element={<ClientInstancePage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
