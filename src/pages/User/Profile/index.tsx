@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, useRef } from "react";
 import {
   Stack,
   Avatar,
@@ -20,7 +21,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Divider,
   Badge,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
@@ -32,20 +32,20 @@ import {
   AdminPanelSettings,
   Settings,
   Save,
-  Cancel,
-  Delete,
   PhotoCamera,
+  Cancel,
+  Send,
 } from "@mui/icons-material";
 import { format } from "date-fns";
-import { useState, useEffect, useRef } from "react";
 import {
   useUsersGetById,
   useUsersUpdate,
   useUsersDelete,
 } from "../../../hooks";
-import { UserRole, UserUpdateDto } from "../../../types";
+import { UserRole, UserRoleLabel, UserUpdateDto } from "../../../types";
 import { PopoverMenu, PopoverMenuItem } from "../../../components/PopoverMenu";
 import { useAuth } from "../../../context/authContext";
+import { PageShell } from "../../../components";
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -64,8 +64,8 @@ export default function ProfilePage() {
   });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-console.log(self)
-//   const isAdmin = Number(id) === Number(self?.id);
+  console.log(self);
+  //   const isAdmin = Number(id) === Number(self?.id);
   const isAdmin = true;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -204,9 +204,28 @@ console.log(self)
   }
 
   return (
-    <>
-      <Box sx={{ height: "100%", width: "80%", p: 3, margin: "0 auto" }}>
-        <Paper elevation={3} sx={{ p: 4, position: "relative" }}>
+    <PageShell title="User" icon={<Person />} actions={<Button><Send /></Button>}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          p: 3,
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            position: "relative",
+            width: "100%",
+            maxWidth: 900,
+            backgroundColor: "white",
+            borderRadius: 2,
+          }}
+        >
           {isAdmin && (
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
               <PopoverMenu
@@ -217,18 +236,15 @@ console.log(self)
                 }
               >
                 <PopoverMenuItem
-                  label={editMode ? "Cancel Editing" : "Edit User"}
+                  label={"Edit User"}
                   closeOnSelect
                   onClick={() =>
                     editMode ? handleCancel() : setEditMode(true)
                   }
                 />
-                <Divider />
                 <PopoverMenuItem
                   label="Delete User"
                   closeOnSelect
-                  onClick={() => setDeleteDialogOpen(true)}
-                  iconRight={<Delete sx={{ color: "error.main" }} />}
                 />
               </PopoverMenu>
             </Box>
@@ -298,7 +314,7 @@ console.log(self)
                 >
                   <Chip
                     icon={<AdminPanelSettings />}
-                    label={user.role}
+                    label={UserRoleLabel[user.role as UserRole]}
                     variant="outlined"
                     size="medium"
                   />
@@ -399,7 +415,7 @@ console.log(self)
                   </Typography>
                   <Typography variant="body1">
                     <AdminPanelSettings fontSize="small" sx={{ mr: 1 }} />
-                    {user.role}
+                    {UserRoleLabel[user.role as UserRole]}
                   </Typography>
                 </Box>
 
@@ -455,6 +471,6 @@ console.log(self)
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </PageShell>
   );
 }

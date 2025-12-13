@@ -1,24 +1,19 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { Add, Group } from "@mui/icons-material";
-import { PageTopBar, PagePlaceholder } from "../../components";
+import { Button } from "@mui/material";
+import { Group, Send } from "@mui/icons-material";
+import { PagePlaceholder, PageShell } from "../../components";
 
 export default function UserPage() {
   return (
-    <Box sx={{ position: "relative", minHeight: "100vh", backgroundColor: "#222" }}>
-      <PageTopBar
-        title={
-          <Stack direction="row" alignItems="center" spacing={0.5}>
-            <Typography>Users</Typography>
-            <Group />
-          </Stack>
-        }
-        actions={
-          <Button variant="contained">
-            <Add sx={{ color: "white" }} />
-          </Button>
-        }
-      />
+    <PageShell
+      title="Users"
+      icon={<Group />}
+      actions={
+        <Button>
+          <Send />
+        </Button>
+      }
+    >
       <PagePlaceholder type="user" />
-    </Box>
+    </PageShell>
   );
 }
