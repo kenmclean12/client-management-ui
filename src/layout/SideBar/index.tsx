@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Stack, Typography, Box, Divider, Input } from "@mui/material";
-import { People, AdminPanelSettings, Public, Search } from "@mui/icons-material";
+import { People, Public, Search } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ReactElement, useState } from "react";
 import { useAuth } from "../../context/authContext";
