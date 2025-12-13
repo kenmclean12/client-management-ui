@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Stack, Typography, Box, Divider, Input } from "@mui/material";
-import { People, Public, Search } from "@mui/icons-material";
+import { PendingActions, People, Public, Search } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ReactElement, useState } from "react";
 import { useAuth } from "../../context/authContext";
@@ -32,6 +32,7 @@ export default function Sidebar() {
 
   const navItems: NavItem[] = [
     { label: "Clients", icon: <Public />, path: "/clients" },
+    { label: "Requests", icon: <PendingActions />, path: "/requests" },
     { label: "Users", icon: <People />, path: "/users" },
     // { label: "Admin", icon: <AdminPanelSettings />, path: "/admin" },
   ];

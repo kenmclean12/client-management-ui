@@ -11,6 +11,7 @@ import AdminPage from "./pages/Admin";
 import ProfilePage from "./pages/User/Profile";
 import { ClientInstancePage } from "./pages/Client/components";
 import { ProtectedRoute } from "./components";
+import RequestsPage from "./pages/Request";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             }
           >
             <Route path="/" element={<HomePage />} />
+            <Route path="/requests" element={<RequestsPage />} />
             <Route path="/users" element={<UserPage />} />
             <Route path="/users/:id" element={<ProfilePage />} />
             <Route path="/clients" element={<ClientPage />} />
