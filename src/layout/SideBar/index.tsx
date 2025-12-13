@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Stack, Typography, Box, Divider, Input } from "@mui/material";
-import {
-  People,
-  AdminPanelSettings,
-  Public,
-  Search,
-} from "@mui/icons-material";
+import { People, AdminPanelSettings, Public, Search } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ReactElement, useState } from "react";
 import { useAuth } from "../../context/authContext";
-import { UserRole, UserResponseDto } from "../../types";
-import { useUsersGetAll } from "../../hooks";
+import { UserRole, UserResponseDto, Client } from "../../types";
+import { useUsersGetAll, useClientsGetAll } from "../../hooks";
 import { UserRow } from "../../components";
+
 interface NavItem {
   label: string;
   icon: ReactElement;
@@ -23,35 +19,34 @@ export default function Sidebar() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [search, setSearch] = useState("");
+
   const isUsersPage = location.pathname.startsWith("/users");
-  const usersQuery = useUsersGetAll({
-    enabled: isUsersPage
-  });
+  const isClientsPage = location.pathname.startsWith("/clients");
+
+  const usersQuery = useUsersGetAll({ enabled: isUsersPage });
+  const clientsQuery = useClientsGetAll();
+
   const users = usersQuery.data ?? [];
+  const clients = clientsQuery.data ?? [];
 
   const navItems: NavItem[] = [
     { label: "Clients", icon: <Public />, path: "/clients" },
-    {
-      label: "Users",
-      icon: <People />,
-      path: "/users",
-      // roles: [UserRole.ADMIN]
-    },
-    {
-      label: "Admin",
-      icon: <AdminPanelSettings />,
-      path: "/admin",
-      //  roles: [UserRole.ADMIN]
-    },
+    { label: "Users", icon: <People />, path: "/users" },
+    { label: "Admin", icon: <AdminPanelSettings />, path: "/admin" },
   ];
 
-  const filteredUsers = users?.filter(
+  const filteredUsers = users.filter(
     (u) =>
       u.firstName?.toLowerCase().includes(search.toLowerCase()) ||
       u.lastName?.toLowerCase().includes(search.toLowerCase()) ||
       u.userName?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredClients = clients.filter(
+    (c) =>
+      c.name?.toLowerCase().includes(search.toLowerCase()) ||
+      c.id.toString() === search
   );
 
   return (
@@ -75,7 +70,6 @@ export default function Sidebar() {
 
       {navItems.map((item) => {
         if (item.roles && !item.roles.includes(user?.role!)) return null;
-
         return (
           <Box
             key={item.label}
@@ -96,6 +90,8 @@ export default function Sidebar() {
           </Box>
         );
       })}
+
+      {/* Users Search */}
       {isUsersPage && (
         <>
           <Divider sx={{ borderColor: "#333", my: 1 }} />
@@ -115,12 +111,56 @@ export default function Sidebar() {
             fullWidth
           />
           <Stack gap={0.5} mt={1}>
-            {filteredUsers?.map((u: UserResponseDto) => (
+            {filteredUsers.map((u: UserResponseDto) => (
               <UserRow
                 key={u.id}
                 user={u}
                 showUserName
                 onClick={() => navigate(`/users/${u.id}`)}
+                hoverColor="#222"
+                color="#111"
+              />
+            ))}
+          </Stack>
+        </>
+      )}
+
+      {/* Clients Search */}
+      {isClientsPage && (
+        <>
+          <Divider sx={{ borderColor: "#333", my: 1 }} />
+          <Input
+            placeholder="Search clients..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            startAdornment={<Search sx={{ color: "#888", mr: 1 }} />}
+            sx={{
+              color: "white",
+              fontSize: 13,
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              backgroundColor: "#362c2cff",
+            }}
+            fullWidth
+          />
+          <Stack gap={0.5} mt={1}>
+            {filteredClients.map((c: Client) => (
+              <UserRow
+                key={c.id}
+                user={{
+                  id: c.id,
+                  firstName: c.name,
+                  lastName: "",
+                  userName: "",
+                  email: "",
+                  createdAt: "",
+                  updatedAt: "",
+                  avatarUrl: "",
+                  role: UserRole.ReadOnly,
+                }}
+                message={c.name}
+                onClick={() => navigate(`/clients/${c.id}`)}
                 hoverColor="#222"
                 color="#111"
               />
