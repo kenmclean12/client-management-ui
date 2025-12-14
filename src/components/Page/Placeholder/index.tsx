@@ -62,7 +62,7 @@ export function PagePlaceholder({
           {config.icon}
         </Avatar>
 
-        <Typography variant="h6" color="white" fontWeight="medium">
+        <Typography variant="h6" color="grey" fontWeight="medium">
           {textOverride ?? config.text}
         </Typography>
       </Stack>

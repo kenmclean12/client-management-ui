@@ -20,7 +20,7 @@ export function PageShell({
       sx={{
         position: "relative",
         minHeight: "100vh",
-        backgroundColor: "#222",
+        backgroundColor: "white",
       }}
     >
       <PageTopBar

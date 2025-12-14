@@ -65,10 +65,6 @@ export default function Sidebar() {
         overflowY: "auto",
       }}
     >
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-        Navigation
-      </Typography>
-
       {navItems.map((item) => {
         if (item.roles && !item.roles.includes(user?.role!)) return null;
         return (
