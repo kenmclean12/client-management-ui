@@ -116,7 +116,6 @@ export function RegisterPage() {
         onChange={(e) => update(field.key, e.target.value, setForm)}
         sx={{
           ...authInputStyles,
-          color: "white",
           border: errors[field.key as keyof FormErrors]
             ? "2px solid lightblue"
             : "1px solid #ccc",

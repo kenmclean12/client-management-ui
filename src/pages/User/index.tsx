@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { Group, Send } from "@mui/icons-material";
 import { PagePlaceholder, PageShell } from "../../components";
 
@@ -8,9 +8,9 @@ export default function UserPage() {
       title="Users"
       icon={<Group />}
       actions={
-        <Button>
-          <Send />
-        </Button>
+        <IconButton>
+          <Send sx={{ color: "white" }} />
+        </IconButton>
       }
     >
       <PagePlaceholder type="user" />

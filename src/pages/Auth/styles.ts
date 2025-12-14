@@ -4,7 +4,7 @@ export const authMainContainerStyles = {
   justifyContent: "center",
   height: "100vh",
   width: "100vw",
-  backgroundColor: "black",
+  backgroundColor: "lightblue",
 };
 
 export const authInnerContainerStyles = {
@@ -17,10 +17,8 @@ export const authInnerContainerStyles = {
   maxHeight: "400px",
   maxWidth: "500px",
   padding: 4,
-  color: "white",
   border: "2px solid lightblue",
   borderRadius: "16px",
-  backgroundColor: "black",
   opacity: 0.9,
 };
 
@@ -30,13 +28,13 @@ export const authInputStyles = {
   fontSize: 14,
   lineHeight: "40px",
   borderRadius: 2,
-  color: "white",
   "&::placeholder": { opacity: 0.7 },
 };
 
 export const authButtonStyles = {
-  backgroundColor: "black",
+  backgroundColor: "white",
   color: "lightblue",
   border: "1.5px solid lightblue",
+  boxShadow: "none",
   borderRadius: 2,
 };

@@ -1,0 +1,17 @@
+export const innerBoxStyles = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  minHeight: "100vh",
+  p: 3,
+};
+
+export const paperStyles = {
+  position: "relative",
+  width: "100%",
+  maxWidth: 900,
+  p: 4,
+  backgroundColor: "white",
+  borderRadius: 2,
+};

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Stack, Input, Button, Typography } from "@mui/material";
-import { Login, NightsStay } from "@mui/icons-material";
+import { Login } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import {
   buttonContainerStyles,
@@ -35,28 +35,27 @@ export function LoginPage() {
     password: false,
   });
 
-const handleLogin = async () => {
-  const error = validateLogin(form);
-  if (error) {
-    setErrors({
-      email: error.field === "email",
-      password: error.field === "password",
-    });
-    enqueueSnackbar(error.message, { variant: "warning" });
-    return;
-  }
+  const handleLogin = async () => {
+    const error = validateLogin(form);
+    if (error) {
+      setErrors({
+        email: error.field === "email",
+        password: error.field === "password",
+      });
+      enqueueSnackbar(error.message, { variant: "warning" });
+      return;
+    }
 
-  setErrors({ email: false, password: false });
+    setErrors({ email: false, password: false });
 
-  try {
-    await login(form.email, form.password);
-    navigate("/", { replace: true });
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Login failed";
-    enqueueSnackbar(errorMessage, { variant: "error" });
-  }
-};
-
+    try {
+      await login(form.email, form.password);
+      navigate("/", { replace: true });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    }
+  };
 
   return (
     <Stack
@@ -70,7 +69,6 @@ const handleLogin = async () => {
       <Stack sx={authInnerContainerStyles}>
         <Stack sx={titleContainerStyles}>
           <Typography fontSize={24}>Login</Typography>
-          <NightsStay sx={{ color: "lightblue" }} />
         </Stack>
         <Stack sx={contentContainerStyles}>
           <Input
@@ -84,7 +82,7 @@ const handleLogin = async () => {
             }
             sx={{
               ...authInputStyles,
-              border: errors.email ? "2px solid lightblue" : "1px solid #ccc",
+              border: errors.email ? "1px solid red" : "1px solid lightblue",
             }}
             fullWidth
             disableUnderline
@@ -103,9 +101,7 @@ const handleLogin = async () => {
             }}
             sx={{
               ...authInputStyles,
-              border: errors.password
-                ? "2px solid lightblue"
-                : "1px solid #ccc",
+              border: errors.password ? "1px solid red" : "1px solid lightblue",
             }}
             fullWidth
             disableUnderline
@@ -120,12 +116,6 @@ const handleLogin = async () => {
             Login
             <Login style={{ height: 16 }} />
           </Button>
-          <Typography align="center" fontSize={12}>
-            Don't have an account?{" "}
-            <Link to="/register" style={{ color: "lightblue" }}>
-              Register
-            </Link>
-          </Typography>
         </Stack>
       </Stack>
     </Stack>
