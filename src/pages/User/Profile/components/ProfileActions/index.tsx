@@ -7,6 +7,7 @@ import { useUsersDelete, useUsersResetPassword } from "../../../../../hooks";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../components";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
+import { EditUserDialog } from "./EditUserDialog";
 
 interface FormFields {
   currentPassword: string;
@@ -16,20 +17,13 @@ interface FormFields {
 interface Props {
   user: UserResponseDto;
   self: UserResponseDto;
-  editMode: boolean;
-  setEditMode: (v: boolean) => void;
-  onCancelEdit: () => void;
+  onSaved: () => void;
 }
 
-export function ProfileActions({
-  user,
-  self,
-  editMode,
-  setEditMode,
-  onCancelEdit,
-}: Props) {
+export function ProfileActions({ user, self, onSaved }: Props) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [resetOpen, setResetOpen] = useState<boolean>(false);
   const [resetPassword, setResetPassword] = useState<FormFields>({
@@ -39,7 +33,6 @@ export function ProfileActions({
 
   const deleteMutation = useUsersDelete(Number(id));
   const resetMutation = useUsersResetPassword(Number(id));
-
   const isAdmin = self?.role === UserRole.Admin;
   const isSelf = Number(id) === Number(self?.id);
 
@@ -56,11 +49,10 @@ export function ProfileActions({
         newPassword: resetPassword.newPassword,
       },
     });
+
     setResetOpen(false);
     setResetPassword({ currentPassword: "", newPassword: "" });
   };
-
-  if (!isAdmin && !isSelf) return null;
 
   return (
     <>
@@ -74,29 +66,40 @@ export function ProfileActions({
         <PopoverMenuItem
           label="Edit User"
           closeOnSelect
-          onClick={() => (editMode ? onCancelEdit() : setEditMode(true))}
+          onClick={() => setEditOpen(true)}
         />
-        <PopoverMenuItem
-          label="Delete User"
-          onClick={() => setDeleteOpen(true)}
-          disabled={!isAdmin}
-          closeOnSelect
-        />
-        {isSelf && (
+        {(isSelf || isAdmin) && (
           <PopoverMenuItem
             label="Reset Password"
-            onClick={() => setResetOpen(true)}
             closeOnSelect
+            onClick={() => setResetOpen(true)}
+          />
+        )}
+        {isAdmin && (
+          <PopoverMenuItem
+            label="Delete User"
+            closeOnSelect
+            disabled={!isAdmin}
+            onClick={() => setDeleteOpen(true)}
           />
         )}
       </PopoverMenu>
+      <EditUserDialog
+        open={editOpen}
+        user={user}
+        onClose={() => setEditOpen(false)}
+        onSaved={() => {
+          onSaved();
+          setEditOpen(false);
+        }}
+      />
       <DeleteUserDialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
         isPending={deleteMutation.isPending}
-        firstName={user.firstName}
-        lastName={user.lastName}
+        firstName={user?.firstName}
+        lastName={user?.lastName}
       />
       <ResetPasswordDialog
         open={resetOpen}
