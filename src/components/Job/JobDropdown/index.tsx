@@ -23,15 +23,15 @@ import {
   JobUpdateDto,
   jobPriorityKeyMap,
   jobStatusKeyMap,
-} from "../../../../../../../types";
+} from "../../../types";
 import {
   useJobsGetByClient,
   useJobsCreate,
   useJobsUpdate,
   useJobsDelete,
-} from "../../../../../../../hooks";
+} from "../../../hooks";
 import { format } from "date-fns";
-import { toUTCDateString } from "../../../../../../../components/utils";
+import { toUTCDateString } from "../../../components/utils";
 
 interface Props {
   clientId: number;

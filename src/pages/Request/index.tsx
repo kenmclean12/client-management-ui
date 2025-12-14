@@ -44,6 +44,7 @@ import {
   CalendarToday,
   Description,
   Title,
+  PendingActions,
 } from "@mui/icons-material";
 import {
   Request,
@@ -59,6 +60,7 @@ import {
   useRequestsDelete,
 } from "../../hooks";
 import { format } from "date-fns";
+import { PageShell } from "../../components";
 
 const statusConfig = {
   [RequestStatus.New]: {
@@ -274,8 +276,8 @@ export default function RequestsPage() {
   };
 
   return (
-    <>
-      <Box sx={{ p: 3 }}>
+    <PageShell title="Pending Requests" icon={<PendingActions />}>
+      <Box sx={{ p: 3, pt: 11 }}>
         {/* Header */}
         <Box
           sx={{
@@ -700,6 +702,6 @@ export default function RequestsPage() {
           {notification?.message}
         </Alert>
       </Snackbar>
-    </>
+    </PageShell>
   );
 }

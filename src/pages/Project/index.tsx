@@ -41,7 +41,7 @@ import {
 } from "../../hooks";
 import { format } from "date-fns";
 import { toUTCDateString } from "../../components/utils";
-import { ProjectJobsDropdown } from "../Client/components/ClientInstance/components/Projects/components";
+import { PageShell, ProjectJobsDropdown } from "../../components";
 
 interface EditingProject {
   id: number | null;
@@ -63,8 +63,6 @@ export function ProjectPage() {
   const {
     data: projects,
     refetch,
-    isLoading,
-    error,
   } = useProjectsGetAll();
 
   const createMutation = useProjectsCreate();
@@ -145,8 +143,8 @@ export function ProjectPage() {
     d ? format(new Date(d), "MMM dd, yyyy") : "—";
 
   return (
-    <>
-      <Paper sx={{ p: 4 }}>
+    <PageShell title="Projects" icon={<Work />}>
+      <Paper sx={{ p: 4, pt: 12 }}>
         <Box
           sx={{
             display: "flex",
@@ -274,6 +272,6 @@ export function ProjectPage() {
       >
         <Alert severity={notification?.type}>{notification?.message}</Alert>
       </Snackbar>
-    </>
+    </PageShell>
   );
 }

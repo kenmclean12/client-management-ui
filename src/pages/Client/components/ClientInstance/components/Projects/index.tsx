@@ -47,7 +47,7 @@ import {
 } from "../../../../../../hooks";
 import { format } from "date-fns";
 import { toUTCDateString } from "../../../../../../components/utils";
-import { ProjectJobsDropdown } from "./components";
+import { ProjectJobsDropdown } from "../../../../../../components";
 
 interface Props {
   clientId: number;
