@@ -30,8 +30,6 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Edit,
-  Delete,
-  Add,
   Work,
   CalendarToday,
 } from "@mui/icons-material";
@@ -40,7 +38,6 @@ import {
   useProjectsGetAll,
   useProjectsCreate,
   useProjectsUpdate,
-  useProjectsDelete,
 } from "../../hooks";
 import { format } from "date-fns";
 import { toUTCDateString } from "../../components/utils";
@@ -55,8 +52,6 @@ export function ProjectPage() {
   const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
   const [editingProject, setEditingProject] = useState<EditingProject | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -65,7 +60,6 @@ export function ProjectPage() {
   const { data: projects, refetch } = useProjectsGetAll();
   const createMutation = useProjectsCreate();
   const updateMutation = useProjectsUpdate(editingProject?.id || 0);
-  const deleteMutation = useProjectsDelete(projectToDelete?.id || 0);
 
   const toggleExpand = (id: number) => {
     setExpandedProjects(p =>
@@ -82,20 +76,6 @@ export function ProjectPage() {
         clientId: project.clientId,
         startDate: project.startDate,
         endDate: project.endDate,
-      },
-    });
-    setShowAddDialog(true);
-  };
-
-  const handleAddClick = () => {
-    setEditingProject({
-      id: null,
-      data: {
-        name: "",
-        description: "",
-        clientId: null,
-        startDate: format(new Date(), "yyyy-MM-dd"),
-        endDate: null,
       },
     });
     setShowAddDialog(true);
@@ -133,22 +113,6 @@ export function ProjectPage() {
     } catch (err: any) {
       setNotification({
         message: err.message || "Save failed",
-        type: "error",
-      });
-    }
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!projectToDelete) return;
-    try {
-      await deleteMutation.mutateAsync();
-      setNotification({ message: "Project deleted", type: "success" });
-      setDeleteDialogOpen(false);
-      setProjectToDelete(null);
-      refetch();
-    } catch (err: any) {
-      setNotification({
-        message: err.message || "Delete failed",
         type: "error",
       });
     }
@@ -193,22 +157,6 @@ export function ProjectPage() {
           <Card sx={{ flex: 1 }}>
             <CardContent>
               <Typography color="text.secondary" variant="body2">
-                Active
-              </Typography>
-              <Typography variant="h5">{projectCounts.active}</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                Completed
-              </Typography>
-              <Typography variant="h5">{projectCounts.completed}</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
                 Total Jobs
               </Typography>
               <Typography variant="h5">{projectCounts.jobs}</Typography>
@@ -217,19 +165,6 @@ export function ProjectPage() {
         </Stack>
 
         <Paper sx={{ p: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-            <Typography variant="h5" fontWeight={600}>
-              All Projects
-            </Typography>
-            <Button
-              startIcon={<Add />}
-              variant="contained"
-              onClick={handleAddClick}
-            >
-              Add Project
-            </Button>
-          </Box>
-
           {sortedProjects.length === 0 ? (
             <Box sx={{ textAlign: "center", py: 6 }}>
               <Work sx={{ fontSize: 56, color: "action.disabled" }} />
@@ -274,15 +209,6 @@ export function ProjectPage() {
                           <Stack direction="row" spacing={1}>
                             <IconButton onClick={() => handleEditClick(p)}>
                               <Edit />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              onClick={() => {
-                                setProjectToDelete(p);
-                                setDeleteDialogOpen(true);
-                              }}
-                            >
-                              <Delete />
                             </IconButton>
                           </Stack>
                         </TableCell>
@@ -354,30 +280,6 @@ export function ProjectPage() {
               <CircularProgress size={20} sx={{ mr: 1 }} />
             )}
             Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>Delete Project</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete{" "}
-            <strong>{projectToDelete?.name}</strong>?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleDeleteConfirm}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending && (
-              <CircularProgress size={20} sx={{ mr: 1 }} />
-            )}
-            Delete
           </Button>
         </DialogActions>
       </Dialog>

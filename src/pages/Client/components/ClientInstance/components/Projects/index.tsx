@@ -10,7 +10,6 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Button,
   Box,
   Stack,
   Alert,
@@ -19,19 +18,13 @@ import {
   Chip,
   Collapse,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Edit,
-  Delete,
   Save,
   Cancel,
-  Add,
   Work,
   CalendarToday,
 } from "@mui/icons-material";
@@ -43,7 +36,6 @@ import {
   useProjectsGetByClient,
   useProjectsCreate,
   useProjectsUpdate,
-  useProjectsDelete,
 } from "../../../../../../hooks";
 import { format } from "date-fns";
 import { toUTCDateString } from "../../../../../../components/utils";
@@ -59,20 +51,13 @@ interface EditingProject {
 }
 
 export function ClientProjects({ clientId }: Props) {
-  // State
   const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
-  const [editingProject, setEditingProject] = useState<EditingProject | null>(
-    null
-  );
-  const [showAddDialog, setShowAddDialog] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+  const [editingProject, setEditingProject] = useState<EditingProject | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
 
-  // Queries and Mutations
   const {
     data: projects,
     refetch,
@@ -81,9 +66,7 @@ export function ClientProjects({ clientId }: Props) {
   } = useProjectsGetByClient(clientId);
   const createMutation = useProjectsCreate();
   const updateMutation = useProjectsUpdate(editingProject?.id || 0);
-  const deleteMutation = useProjectsDelete(projectToDelete?.id || 0);
 
-  // Handlers
   const toggleProjectExpand = (projectId: number) => {
     setExpandedProjects((prev) =>
       prev.includes(projectId)
@@ -104,26 +87,9 @@ export function ClientProjects({ clientId }: Props) {
       },
     });
   };
-
-  const handleAddClick = () => {
-    setShowAddDialog(true);
-    setEditingProject({
-      id: null,
-      data: {
-        name: "",
-        description: "",
-        clientId: clientId,
-        startDate: format(new Date(), "yyyy-MM-dd"),
-        endDate: null,
-      },
-    });
-  };
-
+  
   const handleCancelEdit = () => {
     setEditingProject(null);
-    if (showAddDialog) {
-      setShowAddDialog(false);
-    }
   };
 
   const handleSaveEdit = async () => {
@@ -162,36 +128,10 @@ export function ClientProjects({ clientId }: Props) {
       }
 
       setEditingProject(null);
-      setShowAddDialog(false);
       refetch();
     } catch (error: any) {
       setNotification({
         message: error.message || "Operation failed",
-        type: "error",
-      });
-    }
-  };
-
-  const handleDeleteClick = (project: Project) => {
-    setProjectToDelete(project);
-    setDeleteDialogOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!projectToDelete) return;
-
-    try {
-      await deleteMutation.mutateAsync();
-      setNotification({
-        message: "Project deleted successfully",
-        type: "success",
-      });
-      setDeleteDialogOpen(false);
-      setProjectToDelete(null);
-      refetch();
-    } catch (error: any) {
-      setNotification({
-        message: error.message || "Failed to delete project",
         type: "error",
       });
     }
@@ -262,14 +202,6 @@ export function ClientProjects({ clientId }: Props) {
           <Typography variant="h5" fontWeight={600}>
             Projects
           </Typography>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={handleAddClick}
-            disabled={createMutation.isPending}
-          >
-            Add Project
-          </Button>
         </Box>
 
         {projects?.length === 0 ? (
@@ -459,14 +391,6 @@ export function ClientProjects({ clientId }: Props) {
                             >
                               <Edit />
                             </IconButton>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => handleDeleteClick(project)}
-                              disabled={deleteMutation.isPending}
-                            >
-                              <Delete />
-                            </IconButton>
                           </Stack>
                         )}
                       </TableCell>
@@ -496,126 +420,6 @@ export function ClientProjects({ clientId }: Props) {
           </TableContainer>
         )}
       </Paper>
-
-      {/* Add Project Dialog */}
-      <Dialog
-        open={showAddDialog}
-        onClose={handleCancelEdit}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Add New Project</DialogTitle>
-        <DialogContent>
-          <Stack spacing={3} sx={{ mt: 1 }}>
-            <TextField
-              label="Project Name"
-              value={editingProject?.data.name || ""}
-              onChange={handleChange("name")}
-              fullWidth
-              required
-              error={!editingProject?.data.name}
-              helperText={!editingProject?.data.name ? "Required" : ""}
-            />
-            <TextField
-              label="Description"
-              value={editingProject?.data.description || ""}
-              onChange={handleChange("description")}
-              fullWidth
-              multiline
-              rows={3}
-              placeholder="Describe the project..."
-            />
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                label="Start Date"
-                type="date"
-                value={editingProject?.data.startDate || ""}
-                onChange={handleChange("startDate")}
-                fullWidth
-                required
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                label="End Date (Optional)"
-                type="date"
-                value={editingProject?.data.endDate || ""}
-                onChange={handleChange("endDate")}
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-              />
-            </Box>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCancelEdit}
-            disabled={createMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSaveEdit}
-            disabled={
-              createMutation.isPending ||
-              !editingProject?.data.name ||
-              !editingProject?.data.startDate
-            }
-          >
-            {createMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creating...
-              </>
-            ) : (
-              "Create Project"
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Delete Project</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete{" "}
-            <strong>{projectToDelete?.name}</strong>?
-          </Typography>
-          {projectToDelete?.jobs && projectToDelete.jobs.length > 0 && (
-            <Alert severity="warning" sx={{ mt: 2 }}>
-              This project contains {projectToDelete.jobs.length} job(s) that
-              will also be deleted.
-            </Alert>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteDialogOpen(false)}
-            disabled={deleteMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Deleting...
-              </>
-            ) : (
-              "Delete Project"
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
     
       <Snackbar
         open={!!notification}

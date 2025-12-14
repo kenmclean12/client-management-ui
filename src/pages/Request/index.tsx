@@ -31,10 +31,8 @@ import {
 } from "@mui/material";
 import {
   Edit,
-  Delete,
   Save,
   Cancel,
-  Add,
   Assignment,
   PriorityHigh,
   CheckCircle,
@@ -57,7 +55,6 @@ import {
   useRequestsGetAll,
   useRequestsCreate,
   useRequestsUpdate,
-  useRequestsDelete,
 } from "../../hooks";
 import { format } from "date-fns";
 import { PageShell } from "../../components";
@@ -101,26 +98,23 @@ const priorityConfig = {
 };
 
 interface EditingRequest {
-  id: number | null; // null for new request
+  id: number | null;
   data: RequestUpdateDto;
 }
 
 export default function RequestsPage() {
-  // State
-  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(null);
+  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
+    null
+  );
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [requestToDelete, setRequestToDelete] = useState<Request | null>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
 
-  // Queries and Mutations
   const { data: requests, refetch } = useRequestsGetAll();
   const createMutation = useRequestsCreate();
   const updateMutation = useRequestsUpdate(editingRequest?.id || 0);
-  const deleteMutation = useRequestsDelete(requestToDelete?.id || 0);
 
   // Handlers
   const handleEditClick = (request: Request) => {
@@ -133,21 +127,6 @@ export default function RequestsPage() {
         status: request.status,
         projectId: request.projectId,
         jobId: request.jobId,
-      },
-    });
-  };
-
-  const handleAddClick = () => {
-    setShowAddDialog(true);
-    setEditingRequest({
-      id: null,
-      data: {
-        title: "",
-        description: "",
-        priority: RequestPriority.Low,
-        status: RequestStatus.New,
-        projectId: null,
-        jobId: null,
       },
     });
   };
@@ -198,48 +177,21 @@ export default function RequestsPage() {
     }
   };
 
-  const handleDeleteClick = (request: Request) => {
-    setRequestToDelete(request);
-    setDeleteDialogOpen(true);
-  };
+  const handleChange =
+    (field: keyof RequestUpdateDto) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      if (editingRequest) {
+        setEditingRequest({
+          ...editingRequest,
+          data: {
+            ...editingRequest.data,
+            [field]: e.target.value,
+          },
+        });
+      }
+    };
 
-  const handleConfirmDelete = async () => {
-    if (!requestToDelete) return;
-
-    try {
-      await deleteMutation.mutateAsync();
-      setNotification({
-        message: "Request deleted successfully",
-        type: "success",
-      });
-      setDeleteDialogOpen(false);
-      setRequestToDelete(null);
-      refetch();
-    } catch (error: any) {
-      setNotification({
-        message: error.message || "Failed to delete request",
-        type: "error",
-      });
-    }
-  };
-
-  const handleChange = (field: keyof RequestUpdateDto) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (editingRequest) {
-      setEditingRequest({
-        ...editingRequest,
-        data: {
-          ...editingRequest.data,
-          [field]: e.target.value,
-        },
-      });
-    }
-  };
-
-  const handleSelectChange = (field: keyof RequestUpdateDto) => (
-    e: any
-  ) => {
+  const handleSelectChange = (field: keyof RequestUpdateDto) => (e: any) => {
     if (editingRequest) {
       setEditingRequest({
         ...editingRequest,
@@ -269,40 +221,18 @@ export default function RequestsPage() {
 
   // Count requests by status
   const statusCounts = {
-    new: sortedRequests.filter(r => r.status === RequestStatus.New).length,
-    reviewed: sortedRequests.filter(r => r.status === RequestStatus.Reviewed).length,
-    approved: sortedRequests.filter(r => r.status === RequestStatus.Approved).length,
-    rejected: sortedRequests.filter(r => r.status === RequestStatus.Rejected).length,
+    new: sortedRequests.filter((r) => r.status === RequestStatus.New).length,
+    reviewed: sortedRequests.filter((r) => r.status === RequestStatus.Reviewed)
+      .length,
+    approved: sortedRequests.filter((r) => r.status === RequestStatus.Approved)
+      .length,
+    rejected: sortedRequests.filter((r) => r.status === RequestStatus.Rejected)
+      .length,
   };
 
   return (
-    <PageShell title="Pending Requests" icon={<PendingActions />}>
+    <PageShell title="Requests" icon={<PendingActions />}>
       <Box sx={{ p: 3, pt: 11 }}>
-        {/* Header */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Box>
-            <Typography variant="h4" fontWeight={600} gutterBottom>
-              Requests
-            </Typography>
-          </Box>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={handleAddClick}
-            disabled={createMutation.isPending}
-          >
-            Add Request
-          </Button>
-        </Box>
-
-        {/* Status Summary */}
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           <Card sx={{ flex: 1 }}>
             <CardContent>
@@ -315,25 +245,9 @@ export default function RequestsPage() {
           <Card sx={{ flex: 1 }}>
             <CardContent>
               <Typography color="text.secondary" variant="body2">
-                Reviewed
+                Pending
               </Typography>
               <Typography variant="h5">{statusCounts.reviewed}</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                Approved
-              </Typography>
-              <Typography variant="h5">{statusCounts.approved}</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                Rejected
-              </Typography>
-              <Typography variant="h5">{statusCounts.rejected}</Typography>
             </CardContent>
           </Card>
         </Stack>
@@ -353,7 +267,9 @@ export default function RequestsPage() {
                 color: "text.secondary",
               }}
             >
-              <Assignment sx={{ fontSize: 60, mb: 2, color: "action.disabled" }} />
+              <Assignment
+                sx={{ fontSize: 60, mb: 2, color: "action.disabled" }}
+              />
               <Typography variant="h6">No requests yet</Typography>
             </Box>
           ) : (
@@ -383,7 +299,13 @@ export default function RequestsPage() {
                             required
                           />
                         ) : (
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                            }}
+                          >
                             <Title color="action" fontSize="small" />
                             <Typography>{request.title}</Typography>
                           </Box>
@@ -395,14 +317,18 @@ export default function RequestsPage() {
                         {isEditing(request.id) ? (
                           <FormControl fullWidth size="small">
                             <Select
-                              value={editingRequest?.data.status || RequestStatus.New}
+                              value={
+                                editingRequest?.data.status || RequestStatus.New
+                              }
                               onChange={handleSelectChange("status")}
                             >
-                              {Object.entries(statusConfig).map(([key, config]) => (
-                                <MenuItem key={key} value={Number(key)}>
-                                  {config.label}
-                                </MenuItem>
-                              ))}
+                              {Object.entries(statusConfig).map(
+                                ([key, config]) => (
+                                  <MenuItem key={key} value={Number(key)}>
+                                    {config.label}
+                                  </MenuItem>
+                                )
+                              )}
                             </Select>
                           </FormControl>
                         ) : (
@@ -420,20 +346,27 @@ export default function RequestsPage() {
                         {isEditing(request.id) ? (
                           <FormControl fullWidth size="small">
                             <Select
-                              value={editingRequest?.data.priority || RequestPriority.Normal}
+                              value={
+                                editingRequest?.data.priority ||
+                                RequestPriority.Normal
+                              }
                               onChange={handleSelectChange("priority")}
                             >
-                              {Object.entries(priorityConfig).map(([key, config]) => (
-                                <MenuItem key={key} value={Number(key)}>
-                                  {config.label}
-                                </MenuItem>
-                              ))}
+                              {Object.entries(priorityConfig).map(
+                                ([key, config]) => (
+                                  <MenuItem key={key} value={Number(key)}>
+                                    {config.label}
+                                  </MenuItem>
+                                )
+                              )}
                             </Select>
                           </FormControl>
                         ) : (
                           <Chip
                             label={priorityConfig[request.priority].label}
-                            color={priorityConfig[request.priority].color as any}
+                            color={
+                              priorityConfig[request.priority].color as any
+                            }
                             icon={<PriorityHigh fontSize="small" />}
                             size="small"
                             variant="outlined"
@@ -443,7 +376,13 @@ export default function RequestsPage() {
 
                       {/* Created Date */}
                       <TableCell>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
                           <CalendarToday fontSize="small" color="action" />
                           <Typography variant="body2">
                             {formatDate(request.createdAt)}
@@ -469,17 +408,27 @@ export default function RequestsPage() {
                             noWrap
                             sx={{ maxWidth: 200 }}
                           >
-                            <Description fontSize="small" color="action" sx={{ mr: 0.5, verticalAlign: 'middle' }} />
-                            {request.description?.substring(0, 50) || "No description"}
-                            {request.description && request.description.length > 50 ? "..." : ""}
+                            <Description
+                              fontSize="small"
+                              color="action"
+                              sx={{ mr: 0.5, verticalAlign: "middle" }}
+                            />
+                            {request.description?.substring(0, 50) ||
+                              "No description"}
+                            {request.description &&
+                            request.description.length > 50
+                              ? "..."
+                              : ""}
                           </Typography>
                         )}
                       </TableCell>
-
-                      {/* Actions */}
                       <TableCell align="right">
                         {isEditing(request.id) ? (
-                          <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="flex-end"
+                          >
                             <IconButton
                               size="small"
                               onClick={handleCancelEdit}
@@ -501,21 +450,17 @@ export default function RequestsPage() {
                             </IconButton>
                           </Stack>
                         ) : (
-                          <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <Stack
+                            direction="row"
+                            spacing={1}
+                            justifyContent="flex-end"
+                          >
                             <IconButton
                               size="small"
                               onClick={() => handleEditClick(request)}
                               disabled={!!editingRequest}
                             >
                               <Edit />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => handleDeleteClick(request)}
-                              disabled={deleteMutation.isPending}
-                            >
-                              <Delete />
                             </IconButton>
                           </Stack>
                         )}
@@ -547,7 +492,7 @@ export default function RequestsPage() {
               error={!editingRequest?.data.title}
               helperText={!editingRequest?.data.title ? "Required" : ""}
             />
-            
+
             <TextField
               label="Description"
               value={editingRequest?.data.description || ""}
@@ -565,7 +510,9 @@ export default function RequestsPage() {
               <FormControl fullWidth>
                 <InputLabel>Priority</InputLabel>
                 <Select
-                  value={editingRequest?.data.priority || RequestPriority.Normal}
+                  value={
+                    editingRequest?.data.priority || RequestPriority.Normal
+                  }
                   onChange={handleSelectChange("priority")}
                   label="Priority"
                 >
@@ -614,7 +561,10 @@ export default function RequestsPage() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelEdit} disabled={createMutation.isPending}>
+          <Button
+            onClick={handleCancelEdit}
+            disabled={createMutation.isPending}
+          >
             Cancel
           </Button>
           <Button
@@ -637,51 +587,6 @@ export default function RequestsPage() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Delete Request</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete{" "}
-            <strong>{requestToDelete?.title}</strong>?
-          </Typography>
-          <Card variant="outlined" sx={{ mt: 2, p: 2, maxHeight: 150, overflow: "auto" }}>
-            <Typography variant="body2" color="text.secondary">
-              {requestToDelete?.description?.substring(0, 200) || "No description"}
-              {requestToDelete?.description && requestToDelete.description.length > 200 ? "..." : ""}
-            </Typography>
-          </Card>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteDialogOpen(false)}
-            disabled={deleteMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Notification Snackbar */}
       <Snackbar
         open={!!notification}
         autoHideDuration={6000}
