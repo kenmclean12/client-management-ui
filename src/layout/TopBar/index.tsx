@@ -22,7 +22,7 @@ export default function TopBar() {
     >
       <Stack direction="row" alignItems="center" spacing={1}>
         <Typography fontSize={20} fontWeight={600}>
-          Client Management
+          Project Management
         </Typography>
         <Public sx={{ color: "lightblue" }} />
       </Stack>

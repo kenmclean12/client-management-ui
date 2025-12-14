@@ -291,9 +291,6 @@ export default function RequestsPage() {
             <Typography variant="h4" fontWeight={600} gutterBottom>
               Requests
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage client requests and service tickets
-            </Typography>
           </Box>
           <Button
             variant="contained"
@@ -358,9 +355,6 @@ export default function RequestsPage() {
             >
               <Assignment sx={{ fontSize: 60, mb: 2, color: "action.disabled" }} />
               <Typography variant="h6">No requests yet</Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                Create the first request to get started
-              </Typography>
             </Box>
           ) : (
             <TableContainer>
