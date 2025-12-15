@@ -1,40 +1,22 @@
 import { useState } from "react";
-import {
-  Box,
-  Tabs,
-  Tab,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Tabs, Tab } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useClientsGetById } from "../../../../hooks";
 import { ClientContacts, ClientInfo, ClientProjects } from "./components";
 import { PageShell } from "../../../../components";
 import { Public } from "@mui/icons-material";
-import ClientAddDialog from "../Forms/ClientAddForm";
+import ClientAddDialog from "../../../../components/Client/ClientAddForm";
+
+enum ClientTab {
+  Info = 0,
+  Contacts = 1,
+  Projects = 2,
+}
 
 export function ClientInstancePage() {
   const { id } = useParams<{ id: string }>();
-  const clientId = Number(id);
-  const [tab, setTab] = useState(0);
-
-  const { data: client, isLoading, error } = useClientsGetById(clientId);
-
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={6}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error || !client) {
-    return (
-      <Box display="flex" justifyContent="center" mt={6}>
-        <Typography color="error">Client not found</Typography>
-      </Box>
-    );
-  }
+  const [tab, setTab] = useState<number>(ClientTab.Info);
+  const { data: client } = useClientsGetById(Number(id));
 
   return (
     <PageShell title="Clients" icon={<Public />} actions={<ClientAddDialog />}>
@@ -43,9 +25,13 @@ export function ClientInstancePage() {
         <Tab label="Contacts" />
         <Tab label="Projects" />
       </Tabs>
-      {tab === 0 && <ClientInfo client={client} />}
-      {tab === 1 && <ClientContacts clientId={client.id} />}
-      {tab === 2 && <ClientProjects clientId={client.id} />}
+      {client && (
+        <>
+          {tab === ClientTab.Info && <ClientInfo client={client} />}
+          {tab === ClientTab.Contacts && <ClientContacts clientId={client.id} />}
+          {tab === ClientTab.Projects && <ClientProjects clientId={client.id} />}
+        </>
+      )}
     </PageShell>
   );
 }
