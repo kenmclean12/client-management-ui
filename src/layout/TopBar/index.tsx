@@ -18,10 +18,9 @@ export default function TopBar() {
         onClick={() => navigate("/")}
         sx={{ cursor: "pointer" }}
       >
-        <Typography fontSize={20} fontWeight={600}>
+        <Typography fontSize={18} fontWeight={600}>
           Client Management
         </Typography>
-        <Public sx={{ color: "white" }} />
       </Stack>
       <PopoverMenu
         trigger={

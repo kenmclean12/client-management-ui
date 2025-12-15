@@ -9,6 +9,8 @@ export const topRowBoxStyles = {
 export const titleStyles = {
   flex: 1,
   minWidth: 0,
+  fontSize: "18px",
+  color: "white",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",

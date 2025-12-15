@@ -13,7 +13,7 @@ interface Props {
 
 export function ClientInfo({ client }: Props) {
   return (
-    <Paper sx={{ p: 4, m: 2, border: "1px solid lightgrey", borderRadius: 2 }}>
+    <Paper sx={{ p: 4, m: 2, backgroundColor: "black", border: "1px solid lightgrey", borderRadius: 2 }}>
       <Box sx={topRowBoxStyles}>
         <Typography variant="h5" fontWeight={600} sx={titleStyles}>
           {client.name}
@@ -21,7 +21,6 @@ export function ClientInfo({ client }: Props) {
         <ClientEditDialog client={client} />
       </Box>
       <Divider sx={{ my: 2 }} />
-
       <Box
         sx={{
           display: "flex",

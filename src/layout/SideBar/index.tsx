@@ -15,9 +15,23 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Clients", icon: <Public />, path: "/clients" },
-  { label: "Projects", icon: <Work />, path: "/projects" },
-  { label: "Requests", icon: <PendingActions />, path: "/requests" },
+  {
+    label: "Clients",
+    icon: <Public />,
+    path: "/clients",
+  },
+  {
+    label: "Projects",
+    icon: <Work />,
+    path: "/projects",
+    roles: [UserRole.Admin, UserRole.Standard],
+  },
+  {
+    label: "Requests",
+    icon: <PendingActions />,
+    path: "/requests",
+    roles: [UserRole.Admin],
+  },
   { label: "Users", icon: <People />, path: "/users" },
 ];
 
@@ -27,12 +41,12 @@ export default function Sidebar() {
   const location = useLocation();
   const isUsersPage = location.pathname.startsWith("/users");
   const isClientsPage = location.pathname.startsWith("/clients");
+  const userRole = user?.role as UserRole;
 
   return (
     <Stack sx={mainContainerStyles}>
       {navItems.map((item) => {
-        if (item.roles && !item.roles.includes(user?.role as UserRole))
-          return null;
+        if (item.roles && !item.roles.includes(userRole)) return null;
         return (
           <Box
             key={item.label}

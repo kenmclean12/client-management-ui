@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Tabs, Tab, Stack, Fab, Fade } from "@mui/material";
+import { Tabs, Tab, Stack, Fab, Fade, Divider } from "@mui/material";
 import { KeyboardArrowUp } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useClientsGetById } from "../../../../hooks";
@@ -15,11 +15,10 @@ enum ClientTab {
 
 export function ClientInstancePage() {
   const { id } = useParams<{ id: string }>();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [tab, setTab] = useState<number>(ClientTab.Info);
   const { data: client } = useClientsGetById(Number(id));
-
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
@@ -38,13 +37,13 @@ export function ClientInstancePage() {
       <Tabs
         value={tab}
         onChange={(_, v) => setTab(v)}
-        sx={{ mt: 1, mb: 2, px: 1 }}
+        sx={{ px: 2.5 }}
       >
         <Tab label="Info" />
         <Tab label="Contacts" />
         <Tab label="Projects" />
       </Tabs>
-
+      <Divider />
       <Stack
         ref={scrollRef}
         onScroll={handleScroll}

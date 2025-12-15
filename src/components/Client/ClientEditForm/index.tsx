@@ -67,13 +67,7 @@ export function ClientEditDialog({ client }: Props) {
 
   return (
     <>
-      <IconButton
-        onClick={() => setOpen(true)}
-        color="primary"
-        sx={{ border: 1, borderColor: "divider" }}
-      >
-        <Edit />
-      </IconButton>
+      <Edit onClick={() => setOpen(true)} sx={{ color: "white", cursor: "pointer" }} />
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
