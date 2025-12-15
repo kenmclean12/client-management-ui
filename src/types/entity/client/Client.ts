@@ -10,4 +10,5 @@ export interface Client {
   country: string | null;
   createdAt: string;
   updatedAt: string | null;
+  softDeleted: boolean;
 }

@@ -7,4 +7,5 @@ export interface ClientUpdateDto {
   state: string | null;
   zipCode: string | null;
   country: string | null;
+  softDeleted: boolean | null;
 }

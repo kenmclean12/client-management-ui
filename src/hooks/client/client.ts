@@ -58,15 +58,16 @@ export function useClientsUpdate(id: number) {
   });
 }
 
-export function useClientsDelete(id: number) {
+export function useClientsSoftDelete(id: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: () => del<void>(`/client/${id}`),
+    mutationFn: () => put<Client>(`/client/soft-delete/${id}`, {}),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
       qc.invalidateQueries({ queryKey: ["client", id] });
-      enqueueSnackbar("Client deleted", {
+
+      enqueueSnackbar("Client archived", {
         variant: "success",
       });
     },
