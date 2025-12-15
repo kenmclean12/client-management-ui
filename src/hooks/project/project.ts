@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { get, post, put, del } from "../../lib/api";
-import { Project, ProjectCreateDto, ProjectUpdateDto } from "../../types";
+import type { Project, ProjectCreateDto, ProjectUpdateDto } from "../../types";
 
 export function useProjectsGetAll() {
   return useQuery<Project[]>({
@@ -30,6 +31,14 @@ export function useProjectsCreate() {
     mutationFn: (dto: ProjectCreateDto) => post<Project>("/project", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["projects"] });
+      enqueueSnackbar("Project created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -43,6 +52,14 @@ export function useProjectsUpdate(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["projects"] });
       qc.invalidateQueries({ queryKey: ["projects", id] });
+      enqueueSnackbar("Project updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -55,6 +72,14 @@ export function useProjectsDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["projects"] });
       qc.invalidateQueries({ queryKey: ["projects", id] });
+      enqueueSnackbar("Project deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

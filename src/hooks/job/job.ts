@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Job, JobCreateDto, JobUpdateDto } from "../../types";
+import { enqueueSnackbar } from "notistack";
+import type { Job, JobCreateDto, JobUpdateDto } from "../../types";
 import { del, get, post, put } from "../../lib/api";
 
 export function useJobsGetAll() {
@@ -32,6 +33,14 @@ export function useJobsCreate() {
     mutationFn: (dto: JobCreateDto) => post<Job>("/job", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
+      enqueueSnackbar("Job created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -45,6 +54,14 @@ export function useJobsUpdate(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
+      enqueueSnackbar("Job updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -57,6 +74,14 @@ export function useJobsDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
+      enqueueSnackbar("Job deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

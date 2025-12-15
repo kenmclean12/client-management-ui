@@ -1,5 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserInviteCreateDto, UserInviteResponseDto, UserPasswordResetDto, UserResponseDto, UserUpdateDto } from "../../types";
+import { enqueueSnackbar } from "notistack";
+import {
+  UserInviteCreateDto,
+  UserInviteResponseDto,
+  UserPasswordResetDto,
+  UserResponseDto,
+  UserUpdateDto,
+} from "../../types";
 import { get, post, put, del } from "../../lib/api";
 
 export function useUsersGetAll(options?: { enabled?: boolean }) {
@@ -22,6 +29,16 @@ export function useUsersInvite() {
   return useMutation({
     mutationFn: (dto: UserInviteCreateDto) =>
       post<UserInviteResponseDto>("/user/invite-user", dto),
+    onSuccess: () => {
+      enqueueSnackbar("User invite sent successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    },
   });
 }
 
@@ -31,7 +48,18 @@ export function useUsersUpdate(id: number) {
   return useMutation({
     mutationFn: (vars: { id: number; dto: UserUpdateDto }) =>
       put<UserResponseDto>(`/user/${vars.id}`, vars.dto),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["users", id] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user", id] });
+      enqueueSnackbar("User updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    },
   });
 }
 
@@ -41,7 +69,17 @@ export function useUsersResetPassword(id: number) {
   return useMutation({
     mutationFn: (vars: { id: number; dto: UserPasswordResetDto }) =>
       put<UserResponseDto>(`/user/reset-password/${vars.id}`, vars.dto),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", id] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", id] });
+      enqueueSnackbar("Password reset successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    },
   });
 }
 
@@ -53,6 +91,14 @@ export function useUsersDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["user", id] });
+      enqueueSnackbar("User deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

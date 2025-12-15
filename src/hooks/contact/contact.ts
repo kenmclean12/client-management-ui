@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { get, post, put, del } from "../../lib/api";
-import { Contact, ContactCreateDto, ContactUpdateDto } from "../../types";
+import type { Contact, ContactCreateDto, ContactUpdateDto } from "../../types";
 
 export function useContactsGetAll() {
   return useQuery<Contact[]>({
@@ -16,19 +17,28 @@ export function useContactsGetByClient(id: number) {
   });
 }
 
-export function useContactsCreate(id: number) {
+export function useContactsCreate(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (dto: ContactCreateDto) => post<Contact>("/contact", dto),
+    mutationFn: (dto: ContactCreateDto) =>
+      post<Contact>("/contact", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", clientId] });
+      enqueueSnackbar("Contact created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
 
-export function useContactsUpdate(id: number) {
+export function useContactsUpdate(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
@@ -36,19 +46,36 @@ export function useContactsUpdate(id: number) {
       put<Contact>(`/contact/${vars.id}`, vars.dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", clientId] });
+      enqueueSnackbar("Contact updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
 
-export function useContactsDelete(id: number) {
+export function useContactsDelete(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: () => del<void>(`/contact/${id}`),
+    mutationFn: (id: number) =>
+      del<void>(`/contact/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["contacts", "client", id] });
+      qc.invalidateQueries({ queryKey: ["contacts", "client", clientId] });
+      enqueueSnackbar("Contact deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

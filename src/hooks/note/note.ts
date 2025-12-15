@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { get, post, put, del } from "../../lib/api";
-import { Note, NoteCreateDto, NoteUpdateDto } from "../../types";
+import type { Note, NoteCreateDto, NoteUpdateDto } from "../../types";
 
 export function useNotesGetAll() {
   return useQuery<Note[]>({
@@ -21,7 +22,17 @@ export function useNotesCreate() {
 
   return useMutation({
     mutationFn: (dto: NoteCreateDto) => post<Note>("/notes", dto),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["notes"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notes"] });
+      enqueueSnackbar("Note created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    },
   });
 }
 
@@ -31,7 +42,18 @@ export function useNotesUpdate(id: number) {
   return useMutation({
     mutationFn: (vars: { id: number; dto: NoteUpdateDto }) =>
       put<Note>(`/notes/${vars.id}`, vars.dto),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["notes", id] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notes"] });
+      qc.invalidateQueries({ queryKey: ["notes", id] });
+      enqueueSnackbar("Note updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
+    },
   });
 }
 
@@ -43,6 +65,14 @@ export function useNotesDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notes"] });
       qc.invalidateQueries({ queryKey: ["notes", id] });
+      enqueueSnackbar("Note deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

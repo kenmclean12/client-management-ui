@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { get, post, put, del } from "../../lib/api";
 import type { Client, ClientCreateDto, ClientUpdateDto } from "../../types";
+import { enqueueSnackbar } from "notistack";
 
 export function useClientsGetAll(options?: { enabled?: boolean }) {
   return useQuery<Client[]>({
@@ -19,33 +20,60 @@ export function useClientsGetById(id: number) {
 
 export function useClientsCreate() {
   const qc = useQueryClient();
+
   return useMutation({
     mutationFn: (dto: ClientCreateDto) => post<Client>("/client", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
+      enqueueSnackbar("Client created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
 
 export function useClientsUpdate(id: number) {
   const qc = useQueryClient();
+
   return useMutation({
     mutationFn: (vars: { id: number; dto: ClientUpdateDto }) =>
       put<Client>(`/client/${vars.id}`, vars.dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
       qc.invalidateQueries({ queryKey: ["client", id] });
+      enqueueSnackbar("Client updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
 
 export function useClientsDelete(id: number) {
   const qc = useQueryClient();
+
   return useMutation({
     mutationFn: () => del<void>(`/client/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["clients"] });
       qc.invalidateQueries({ queryKey: ["client", id] });
+      enqueueSnackbar("Client deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }

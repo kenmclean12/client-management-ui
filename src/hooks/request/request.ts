@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
 import { get, post, put, del } from "../../lib/api";
-import { Request, RequestCreateDto, RequestUpdateDto } from "../../types";
+import type { Request, RequestCreateDto, RequestUpdateDto } from "../../types";
 
 export function useRequestsGetAll() {
   return useQuery<Request[]>({
@@ -30,6 +31,14 @@ export function useRequestsCreate() {
     mutationFn: (dto: RequestCreateDto) => post<Request>("/request", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["requests"] });
+      enqueueSnackbar("Request created successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -43,6 +52,14 @@ export function useRequestsUpdate(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["requests"] });
       qc.invalidateQueries({ queryKey: ["requests", id] });
+      enqueueSnackbar("Request updated successfully", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
@@ -55,6 +72,14 @@ export function useRequestsDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["requests"] });
       qc.invalidateQueries({ queryKey: ["requests", id] });
+      enqueueSnackbar("Request deleted", {
+        variant: "success",
+      });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, {
+        variant: "error",
+      });
     },
   });
 }
