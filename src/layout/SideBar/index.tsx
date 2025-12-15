@@ -1,15 +1,12 @@
 import { ReactElement } from "react";
-import { Stack, Typography, Box } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  PendingActions,
-  People,
-  Public,
-  Work,
-} from "@mui/icons-material";
+import { Stack, Typography, Box } from "@mui/material";
+import { PendingActions, People, Public, Work } from "@mui/icons-material";
 import { UserRole } from "../../types";
 import { ClientSearchSection, UserSearchSection } from "../../components";
 import { useAuth } from "../../context";
+import { boxStyles, mainContainerStyles } from "./styles";
+
 interface NavItem {
   label: string;
   icon: ReactElement;
@@ -32,35 +29,15 @@ export default function Sidebar() {
   const isClientsPage = location.pathname.startsWith("/clients");
 
   return (
-    <Stack
-      sx={{
-        width: "220px",
-        height: "100vh",
-        backgroundColor: "#111",
-        color: "white",
-        py: 3,
-        px: 2,
-        borderRight: "1px solid #222",
-        gap: 1.5,
-        overflowY: "auto",
-      }}
-    >
+    <Stack sx={mainContainerStyles}>
       {navItems.map((item) => {
-        if (item.roles && !item.roles.includes(user?.role as UserRole)) return null;
+        if (item.roles && !item.roles.includes(user?.role as UserRole))
+          return null;
         return (
           <Box
             key={item.label}
             onClick={() => navigate(item.path)}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              px: 2,
-              py: 1,
-              borderRadius: 1,
-              cursor: "pointer",
-              "&:hover": { backgroundColor: "#222" },
-            }}
+            sx={boxStyles}
           >
             {item.icon}
             <Typography fontSize={14}>{item.label}</Typography>
