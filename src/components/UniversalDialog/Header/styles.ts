@@ -3,7 +3,7 @@ export const dialogTitleStyles = {
   alignItems: "center",
   py: 1.5,
   fontSize: "19px",
-  color: "black",
+  color: "white",
 };
 
 export const closeIconStyles = {

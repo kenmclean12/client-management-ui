@@ -24,20 +24,20 @@ export function DeleteUserDialog({
       onClose={onClose}
       title="Delete User"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={1}>
-          <Button onClick={onClose}>Cancel</Button>
+        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+          <Button onClick={onClose} sx={{ color: "white" }}>Cancel</Button>
           <Button
             onClick={onConfirm}
             color="error"
-            variant="contained"
+            variant="outlined"
             disabled={isPending}
           >
-            {isPending ? "Deleting..." : "Delete User"}
+            Delete
           </Button>
         </Stack>
       }
     >
-      <Typography color="black">
+      <Typography color="white">
         Are you sure you want to delete{" "}
         <strong>
           {firstName} {lastName}

@@ -26,7 +26,7 @@ export function useJobsGetByClient(clientId: number) {
   });
 }
 
-export function useJobsGetByUser(userId: number) {
+export function useJobsGetByUserId(userId: number) {
   return useQuery<Job[]>({
     queryKey: ["jobs", "user", userId],
     queryFn: () => get<Job[]>(`/job/user/${userId}`),

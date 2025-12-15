@@ -85,7 +85,7 @@ export function ProfileActions({
     <>
       <PopoverMenu
         trigger={
-          <IconButton sx={{ color: "text.secondary" }} disabled={isReadOnly}>
+          <IconButton sx={{ color: "white" }} disabled={isReadOnly}>
             <Settings />
           </IconButton>
         }

@@ -1,0 +1,22 @@
+export const textFieldStyles = {
+  "& .MuiInputBase-input": {
+    color: "white",
+  },
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "white",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#444",
+    },
+    "&:hover fieldset": {
+      borderColor: "#444",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#444",
+    },
+  },
+};

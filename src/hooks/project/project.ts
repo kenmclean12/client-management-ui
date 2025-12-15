@@ -25,7 +25,6 @@ export function useProjectsGetByUserId(userId: number) {
   });
 }
 
-
 export function useProjectsGetByClient(clientId: number) {
   return useQuery<Project[]>({
     queryKey: ["projects", "client", clientId],
