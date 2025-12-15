@@ -13,13 +13,14 @@ export function InfoBlock({ icon, label, value, multiline }: Props) {
     <Box>
       <Box sx={boxStyles}>
         {icon}
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography variant="subtitle2">
           {label}
         </Typography>
       </Box>
       <Typography
         variant="body1"
         ml={3}
+        color="white"
         whiteSpace={multiline ? "pre-line" : "normal"}
       >
         {value}

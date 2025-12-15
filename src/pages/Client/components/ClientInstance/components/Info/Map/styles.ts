@@ -1,5 +1,6 @@
 export const boxStyles = {
-  height: 350,
+  mt: 1,
+  height: 260,
   border: "1px solid lightgrey",
   borderRadius: 2,
   overflow: "hidden",

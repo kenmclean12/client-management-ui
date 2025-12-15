@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Avatar } from "@mui/material";
-import { Public } from "@mui/icons-material";
 import { PopoverMenu, PopoverMenuItem } from "../../components";
 import { avatarStyles, mainContainerStyles } from "./styles";
 import { useAuth } from "../../context";

@@ -11,7 +11,7 @@ export const mainContainerStyles = {
 };
 
 export const avatarStyles = {
-  width: 36,
-  height: 36,
+  width: 32.5,
+  height: 32.5,
   cursor: "pointer",
 };

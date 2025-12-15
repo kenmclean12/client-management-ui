@@ -38,6 +38,8 @@ import {
   useNotesDelete,
 } from "../../../../../../../hooks";
 import { formatDate } from "../../../../../../../utils";
+import { UniversalDialog } from "../../../../../../../components";
+import { textFieldStyles } from "../../../../../../styles";
 
 interface Props {
   clientId: number;
@@ -139,7 +141,7 @@ export function ClientNotes({ clientId }: Props) {
   );
 
   return (
-    <>
+    <Stack>
       <Box
         sx={{
           display: "flex",
@@ -149,28 +151,28 @@ export function ClientNotes({ clientId }: Props) {
           mb: 3,
         }}
       >
-        <Typography variant="h5" fontWeight={600}>
+        <Typography variant="h6" color="white" fontWeight={600}>
           Notes
         </Typography>
-        <Button
-          variant="contained"
+        <IconButton
           onClick={handleAddClick}
           disabled={createMutation.isPending}
         >
-          <Add />
-        </Button>
+          <Add sx={{ color: "white" }} />
+        </IconButton>
       </Box>
       {sortedNotes.length === 0 ? (
         <Box
           sx={{
             textAlign: "center",
-            py: 8,
+            py: 4,
+            pt: 2,
             color: "text.secondary",
           }}
         >
-          <Note sx={{ fontSize: 60, mb: 2, color: "action.disabled" }} />
-          <Typography variant="h6">No notes yet</Typography>
-          <Typography variant="body1" sx={{ mt: 1 }}>
+          <Note sx={{ fontSize: 60, mb: 2, color: "white" }} />
+          <Typography variant="h6" color="white">No notes yet</Typography>
+          <Typography variant="body1" sx={{ color: "white", mt: 1 }}>
             Add the first note for this client
           </Typography>
         </Box>
@@ -181,10 +183,11 @@ export function ClientNotes({ clientId }: Props) {
               key={note.id}
               variant="outlined"
               sx={{
-                borderLeft: "4px solid",
+                backgroundColor: "#191717ff",
+                borderLeft: "2px solid",
                 borderLeftColor: isEditing(note.id)
                   ? "primary.main"
-                  : "primary.light",
+                  : "white",
                 transition: "all 0.2s",
               }}
             >
@@ -232,18 +235,19 @@ export function ClientNotes({ clientId }: Props) {
               ) : (
                 <>
                   <CardContent>
-                    <Box sx={{ whiteSpace: "pre-wrap", mb: 2 }}>
+                    <Box sx={{ color: "white", whiteSpace: "pre-wrap" }}>
                       {note.content}
                     </Box>
                     <Divider sx={{ my: 1 }} />
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
                     <Box
                       sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1 }}
                     >
                       <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "white" }}
                       >
-                        <AccessTime fontSize="small" color="action" />
-                        <Typography variant="caption" color="text.secondary">
+                        <AccessTime fontSize="small"/>
+                        <Typography variant="caption">
                           Created: {formatDate(note.createdAt)}
                         </Typography>
                       </Box>
@@ -253,20 +257,20 @@ export function ClientNotes({ clientId }: Props) {
                             display: "flex",
                             alignItems: "center",
                             gap: 0.5,
+                            color: "white"
                           }}
                         >
-                          <EditCalendar fontSize="small" color="action" />
-                          <Typography variant="caption" color="text.secondary">
+                          <EditCalendar fontSize="small" />
+                          <Typography variant="caption">
                             Updated: {formatDate(note.updatedAt)}
                           </Typography>
                         </Box>
                       )}
                     </Box>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
                     <IconButton
                       size="small"
                       onClick={() => handleEditClick(note)}
+                      sx={{ ml: "auto", color: "white" }}
                       disabled={!!editingNote}
                     >
                       <Edit />
@@ -275,112 +279,67 @@ export function ClientNotes({ clientId }: Props) {
                       size="small"
                       color="error"
                       onClick={() => handleDeleteClick(note)}
+                      sx={{ ml: 1 }}
                       disabled={deleteMutation.isPending}
                     >
                       <Delete />
                     </IconButton>
-                  </CardActions>
+                    </Stack>
+                  </CardContent>
                 </>
               )}
             </Card>
           ))}
         </Stack>
       )}
-
-      <Dialog
+      <UniversalDialog
         open={showAddDialog}
         onClose={handleCancelEdit}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Add New Note</DialogTitle>
-        <DialogContent>
-          <TextField
-            value={editingNote?.data.content || ""}
-            onChange={handleChange("content")}
-            multiline
-            rows={6}
-            fullWidth
-            required
-            placeholder="Enter note content..."
+        title="Add New Note"
+        footer={
+          <Button
             variant="outlined"
-            sx={{ mt: 2 }}
-            error={!editingNote?.data.content}
-            helperText={!editingNote?.data.content ? "Required" : ""}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCancelEdit}
-            disabled={createMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
             onClick={handleSaveEdit}
+            sx={{ mx: 2, color: "#ccc", border: "1px solid #444" }}
             disabled={createMutation.isPending || !editingNote?.data.content}
           >
-            {createMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creating...
-              </>
-            ) : (
-              "Add Note"
-            )}
+            Add
           </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <Dialog
+        }
+      >
+        <TextField
+          value={editingNote?.data.content || ""}
+          onChange={handleChange("content")}
+          multiline
+          rows={4}
+          fullWidth
+          required
+          placeholder="Enter note content..."
+          variant="outlined"
+          sx={textFieldStyles}
+          helperText={!editingNote?.data.content ? "Required" : ""}
+        />
+      </UniversalDialog>
+      <UniversalDialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-      >
-        <DialogTitle>Delete Note</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete this note? This action cannot be
-            undone.
-          </Typography>
-          {noteToDelete && (
-            <Card
-              variant="outlined"
-              sx={{ mt: 2, p: 2, maxHeight: 150, overflow: "auto" }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                {noteToDelete.content.length > 200
-                  ? `${noteToDelete.content.substring(0, 200)}...`
-                  : noteToDelete.content}
-              </Typography>
-            </Card>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteDialogOpen(false)}
-            disabled={deleteMutation.isPending}
-          >
-            Cancel
-          </Button>
+        title="Delete Note"
+        footer={
           <Button
             color="error"
-            variant="contained"
+            variant="outlined"
             onClick={handleConfirmDelete}
-            disabled={deleteMutation.isPending}
+            sx={{ mx: 2 }}
           >
-            {deleteMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
+            Delete
           </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+        }
+      >
+        <Typography>
+          Are you sure you want to delete this note? This action cannot be
+          undone.
+        </Typography>
+      </UniversalDialog>
+    </Stack>
   );
 }

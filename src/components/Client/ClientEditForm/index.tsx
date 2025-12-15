@@ -6,6 +6,7 @@ import { UniversalDialog } from "../../../components";
 import { Client, ClientUpdateDto } from "../../../types";
 import { useClientsUpdate } from "../../../hooks";
 import { CLIENT_FIELD_ROWS, CLIENT_FIELDS } from "../config";
+import { textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   client: Client;
@@ -67,27 +68,26 @@ export function ClientEditDialog({ client }: Props) {
 
   return (
     <>
-      <Edit onClick={() => setOpen(true)} sx={{ color: "white", cursor: "pointer" }} />
+      <Edit
+        onClick={() => setOpen(true)}
+        sx={{ color: "white", cursor: "pointer" }}
+      />
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
         title="Edit Client"
         footer={
-          <Stack direction="row" justifyContent="flex-end" spacing={1}>
-            <Button variant="outlined" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSave}
-              disabled={isPending}
-            >
-              Save
-            </Button>
-          </Stack>
+          <Button
+            variant="outlined"
+            onClick={handleSave}
+            sx={{ mx: 2, color: "white", border: "1px solid #444" }}
+            disabled={isPending}
+          >
+            Save
+          </Button>
         }
       >
-        <Stack spacing={2}>
+        <Stack spacing={2.5}>
           {CLIENT_FIELDS.map(({ key, label, required, type, autoFocus }) => (
             <TextField
               key={key}
@@ -95,6 +95,8 @@ export function ClientEditDialog({ client }: Props) {
               value={(form[key] ?? "") as string}
               onChange={handleChange(key)}
               required={required}
+              size="small"
+              sx={textFieldStyles}
               type={type}
               autoFocus={autoFocus}
               fullWidth
@@ -105,6 +107,8 @@ export function ClientEditDialog({ client }: Props) {
               {row.map(({ key, label }) => (
                 <TextField
                   key={key}
+                  size="small"
+                  sx={textFieldStyles}
                   label={label}
                   value={(form[key] ?? "") as string}
                   onChange={handleChange(key)}
