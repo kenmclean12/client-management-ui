@@ -126,7 +126,7 @@ export function ClientContacts({ client }: Props) {
 
   const handleConfirmDelete = async () => {
     if (!contactToDelete) return;
-    await deleteMutation.mutateAsync();
+    await deleteMutation.mutateAsync(contactToDelete.id);
     setDeleteDialogOpen(false);
     setContactToDelete(null);
     refetch();
