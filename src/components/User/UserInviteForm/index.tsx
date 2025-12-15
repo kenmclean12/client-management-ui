@@ -42,14 +42,14 @@ export function UserInviteForm() {
           </Stack>
         }
       >
-          <TextField
-            label="Email address"
-            type="email"
-            value={email}
-            autoFocus
-            onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-          />
+        <TextField
+          label="Email address"
+          type="email"
+          value={email}
+          autoFocus
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        />
       </UniversalDialog>
     </>
   );
