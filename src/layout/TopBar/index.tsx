@@ -21,7 +21,7 @@ export default function TopBar() {
         <Typography fontSize={20} fontWeight={600}>
           Client Management
         </Typography>
-        <Public sx={{ color: "lightblue" }} />
+        <Public sx={{ color: "white" }} />
       </Stack>
       <PopoverMenu
         trigger={

@@ -143,7 +143,7 @@ export function ProjectPage() {
   };
 
   return (
-    <PageShell title="Projects" icon={<Work />}>
+    <PageShell title="Projects">
       <Box sx={{ p: 4, pt: 12 }}>
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           <Card sx={{ flex: 1 }}>

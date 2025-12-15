@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { useClientsGetById } from "../../../../hooks";
 import { ClientContacts, ClientInfo, ClientProjects } from "./components";
 import { PageShell } from "../../../../components";
-import { Public } from "@mui/icons-material";
 import ClientAddDialog from "../../../../components/Client/ClientAddForm";
 
 enum ClientTab {
@@ -19,7 +18,7 @@ export function ClientInstancePage() {
   const { data: client } = useClientsGetById(Number(id));
 
   return (
-    <PageShell title="Clients" icon={<Public />} actions={<ClientAddDialog />}>
+    <PageShell title="Clients" actions={<ClientAddDialog />}>
       <Tabs
         value={tab}
         onChange={(_, v) => setTab(v)}

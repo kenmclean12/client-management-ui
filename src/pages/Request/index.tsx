@@ -42,7 +42,6 @@ import {
   CalendarToday,
   Description,
   Title,
-  PendingActions,
 } from "@mui/icons-material";
 import {
   Request,
@@ -231,8 +230,8 @@ export default function RequestsPage() {
   };
 
   return (
-    <PageShell title="Requests" icon={<PendingActions />}>
-      <Box sx={{ p: 3, pt: 11 }}>
+    <PageShell title="Requests">
+      <Box sx={{ p: 3 }}>
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           <Card sx={{ flex: 1 }}>
             <CardContent>
