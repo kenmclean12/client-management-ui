@@ -17,6 +17,20 @@ export function useNotesGetByClient(id: number) {
   });
 }
 
+export function useNotesGetByProject(projectId: number) {
+  return useQuery<Note[]>({
+    queryKey: ["notes", "project", projectId],
+    queryFn: () => get<Note[]>(`/notes/project/${projectId}`),
+  });
+}
+
+export function useNotesGetByJob(jobId: number) {
+  return useQuery<Note[]>({
+    queryKey: ["notes", "job", jobId],
+    queryFn: () => get<Note[]>(`/notes/job/${jobId}`),
+  });
+}
+
 export function useNotesCreate() {
   const qc = useQueryClient();
 
