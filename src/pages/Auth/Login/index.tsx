@@ -82,7 +82,7 @@ export function LoginPage() {
             }
             sx={{
               ...authInputStyles,
-              border: errors.email ? "1px solid red" : "1px solid lightblue",
+              border: errors.email ? "1px solid red" : "1px solid black",
             }}
             fullWidth
             disableUnderline
@@ -101,7 +101,7 @@ export function LoginPage() {
             }}
             sx={{
               ...authInputStyles,
-              border: errors.password ? "1px solid red" : "1px solid lightblue",
+              border: errors.password ? "1px solid red" : "1px solid black",
             }}
             fullWidth
             disableUnderline

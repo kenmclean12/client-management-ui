@@ -7,5 +7,4 @@ export interface UserCreateDto {
   firstName: string;
   lastName: string;
   role?: UserRole;
-  avatarUrl: string | null;
 }

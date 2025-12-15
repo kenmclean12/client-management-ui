@@ -9,7 +9,6 @@ export const stepFields: Record<Step, StepField[]> = {
   [Step.Two]: [
     { key: "userName", placeholder: "Username" },
     { key: "password", placeholder: "Password", type: "password" },
-    { key: "avatarUrl", placeholder: "Avatar URL (optional)" },
   ],
 };
 

@@ -1,37 +1,29 @@
-import { useState, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Stack, Input, Button, Typography, Avatar, Box } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Stack, Input, Button, Typography } from "@mui/material";
+import { ArrowBackIos, ArrowForwardIos, Check } from "@mui/icons-material";
 import {
-  NightsStay,
-  ArrowBackIos,
-  ArrowForwardIos,
-  Check,
-  CameraAlt,
-} from "@mui/icons-material";
-import {
-  titleContainerStyles,
   contentContainerStyles,
-  contentInnerContainerStyles,
   buttonContainerStyles,
   buttonInnerContainerStyles,
-  authInputStyles,
-  avatarStyles,
-  avatarContainerStyles,
-  cameraIconContainerStyles,
+  mainContainerStyles,
 } from "./styles";
 import { useSnackbar } from "notistack";
 import { FormErrors, Step } from "./types";
 import { UserCreateDto } from "../../../types";
 import { previousStep, update, validateStep } from "./utils";
 import { stepFields } from "./config";
-import { authInnerContainerStyles } from "../styles";
+import {
+  authButtonStyles,
+  authInnerContainerStyles,
+  authInputStyles,
+} from "../styles";
 import { useAuth } from "../../../context/authContext";
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const { register }  = useAuth();
+  const { register } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [step, setStep] = useState<Step>(Step.One);
   const [form, setForm] = useState<UserCreateDto>({
@@ -40,7 +32,6 @@ export function RegisterPage() {
     email: "",
     userName: "",
     password: "",
-    avatarUrl: null,
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -70,42 +61,11 @@ export function RegisterPage() {
     navigate("/", { replace: true });
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, avatarUrl: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const triggerAvatarSelect = () => inputRef.current?.click();
-
   const renderField = (field: {
     key: keyof UserCreateDto;
     placeholder: string;
     type?: string;
   }) => {
-    if (field.key === "avatarUrl") {
-      return (
-        <Box key="avatar-upload" sx={avatarContainerStyles}>
-          <Avatar src={form.avatarUrl ?? undefined} sx={avatarStyles} />
-          <Box sx={cameraIconContainerStyles} onClick={triggerAvatarSelect}>
-            <CameraAlt sx={{ fontSize: 18, color: "#fff" }} />
-          </Box>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            style={{ display: "none" }}
-          />
-        </Box>
-      );
-    }
-
     const value = form[field.key] ?? "";
     return (
       <Input
@@ -117,8 +77,8 @@ export function RegisterPage() {
         sx={{
           ...authInputStyles,
           border: errors[field.key as keyof FormErrors]
-            ? "2px solid lightblue"
-            : "1px solid #ccc",
+            ? "1px solid red"
+            : "1px solid black",
         }}
         fullWidth
         disableUnderline
@@ -127,49 +87,38 @@ export function RegisterPage() {
   };
 
   return (
-    <Stack
-      sx={{
-        height: "100vh",
-        width: "100vw",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Stack sx={{ ...authInnerContainerStyles, width: "400px" }}>
-        <Stack sx={titleContainerStyles}>
-          <Typography fontSize={24}>Register</Typography>
-          <NightsStay sx={{ color: "lightblue" }} />
-        </Stack>
-        <Stack sx={contentContainerStyles}>
-          <Stack sx={contentInnerContainerStyles}>
-            {stepFields[step].map(renderField)}
-          </Stack>
+    <Stack sx={mainContainerStyles}>
+      <Stack sx={authInnerContainerStyles}>
+        <Typography fontSize={24}>Register</Typography>
+        <Stack
+          sx={{
+            ...contentContainerStyles,
+            gap: step == Step.One ? "16px" : "24px",
+          }}
+        >
+          {stepFields[step].map(renderField)}
         </Stack>
         <Stack sx={buttonContainerStyles}>
           <Stack sx={buttonInnerContainerStyles}>
             {step !== Step.One && (
-              <Button onClick={() => setStep(previousStep(step))} fullWidth>
+              <Button
+                onClick={() => setStep(previousStep(step))}
+                sx={authButtonStyles}
+                fullWidth
+              >
                 <ArrowBackIos /> Back
               </Button>
             )}
             {step === Step.Two ? (
-              <Button onClick={handleRegister} fullWidth>
+              <Button onClick={handleRegister} sx={authButtonStyles} fullWidth>
                 Register <Check />
               </Button>
             ) : (
-              <Button onClick={handleNext} fullWidth>
+              <Button onClick={handleNext} sx={authButtonStyles} fullWidth>
                 Next <ArrowForwardIos />
               </Button>
             )}
           </Stack>
-          {step === Step.One && (
-            <Typography align="center" fontSize={12}>
-              Already have an account?{" "}
-              <Link to="/login" style={{ color: "lightblue" }}>
-                Login
-              </Link>
-            </Typography>
-          )}
         </Stack>
       </Stack>
     </Stack>

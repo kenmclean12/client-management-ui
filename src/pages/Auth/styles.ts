@@ -17,7 +17,7 @@ export const authInnerContainerStyles = {
   maxHeight: "400px",
   maxWidth: "500px",
   padding: 4,
-  border: "2px solid lightblue",
+  border: "2px solid black",
   borderRadius: "16px",
   opacity: 0.9,
 };
@@ -33,8 +33,8 @@ export const authInputStyles = {
 
 export const authButtonStyles = {
   backgroundColor: "white",
-  color: "lightblue",
-  border: "1.5px solid lightblue",
+  color: "black",
+  border: "1.5px solid black",
   boxShadow: "none",
   borderRadius: 2,
 };
