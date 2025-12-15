@@ -5,12 +5,13 @@ import { useAuth } from "../../../context";
 import { UserRole } from "../../../types";
 import { useUsersInvite } from "../../../hooks";
 import { UniversalDialog } from "../../UniversalDialog";
+import { textFieldStyles } from "../../../pages/styles";
 
 export function UserInviteForm() {
   const [open, setOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const { user: self } = useAuth();
-  const { mutateAsync: inviteUser, isPending } = useUsersInvite();
+  const { mutateAsync: inviteUser } = useUsersInvite();
   const isAdmin = self?.role === UserRole.Admin;
 
   const handleSend = async () => {
@@ -30,13 +31,11 @@ export function UserInviteForm() {
         onClose={() => setOpen(false)}
         title="Invite User"
         footer={
-          <Stack direction="row" justifyContent="flex-end" spacing={1}>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button
-              variant="contained"
-              onClick={handleSend}
-              disabled={isPending || !email}
-            >
+          <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+            <Button onClick={() => setOpen(false)} sx={{ color: "white" }}>
+              Cancel
+            </Button>
+            <Button variant="outlined" onClick={handleSend} disabled={!email}>
               Send
             </Button>
           </Stack>
@@ -48,6 +47,7 @@ export function UserInviteForm() {
           value={email}
           autoFocus
           onChange={(e) => setEmail(e.target.value)}
+          sx={textFieldStyles}
           fullWidth
         />
       </UniversalDialog>

@@ -1,5 +1,5 @@
 export const mainContainerStyles = {
-  minWidth: "220px",
+  width: "20vw",
   height: "100vh",
   backgroundColor: "#111",
   color: "white",

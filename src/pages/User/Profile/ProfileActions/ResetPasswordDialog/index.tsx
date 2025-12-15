@@ -29,7 +29,7 @@ export function ResetPasswordDialog({
       onClose={onClose}
       title="Reset Password"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
           <Button onClick={onClose} sx={{ color: "white" }}>
             Cancel
           </Button>

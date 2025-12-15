@@ -24,7 +24,7 @@ export function DeleteUserDialog({
       onClose={onClose}
       title="Delete User"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
           <Button onClick={onClose} sx={{ color: "white" }}>Cancel</Button>
           <Button
             onClick={onConfirm}

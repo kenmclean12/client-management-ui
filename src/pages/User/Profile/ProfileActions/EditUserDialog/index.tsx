@@ -12,11 +12,12 @@ import {
   MenuItem,
   Box,
 } from "@mui/material";
-import { PhotoCamera, Save, Cancel } from "@mui/icons-material";
+import { PhotoCamera } from "@mui/icons-material";
 import { UserResponseDto, UserRole, UserUpdateDto } from "../../../../../types";
 import { useUsersUpdate } from "../../../../../hooks";
 import { UniversalDialog } from "../../../../../components";
-import { iconButtonStyles } from "./styles";
+import { iconButtonStyles, selectMenuProps } from "./styles";
+import { selectStyles, textFieldStyles } from "../../../../styles";
 
 interface Props {
   open: boolean;
@@ -28,6 +29,7 @@ interface Props {
 export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const updateMutation = useUsersUpdate(user?.id);
+
   const [formData, setFormData] = useState<UserUpdateDto>({
     userName: "",
     email: "",
@@ -78,13 +80,12 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
       onClose={onClose}
       title="Edit User"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Button startIcon={<Cancel />} onClick={onClose}>
+        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+          <Button onClick={onClose} sx={{ color: "white" }}>
             Cancel
           </Button>
           <Button
-            variant="contained"
-            startIcon={<Save />}
+            variant="outlined"
             onClick={handleSave}
             disabled={updateMutation.isPending}
           >
@@ -93,7 +94,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
         </Stack>
       }
     >
-      <Stack spacing={2}>
+      <Stack spacing={2.5}>
         <Stack alignItems="center" spacing={1}>
           <Box sx={{ position: "relative", pb: 2 }}>
             <Avatar
@@ -123,36 +124,55 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
         <TextField
           label="First Name"
           value={formData.firstName}
+          sx={textFieldStyles}
           onChange={(e) =>
             setFormData((p) => ({ ...p, firstName: e.target.value }))
           }
         />
+
         <TextField
           label="Last Name"
           value={formData.lastName}
+          sx={textFieldStyles}
           onChange={(e) =>
             setFormData((p) => ({ ...p, lastName: e.target.value }))
           }
         />
+
         <TextField
           label="Username"
           value={formData.userName}
+          sx={textFieldStyles}
           onChange={(e) =>
             setFormData((p) => ({ ...p, userName: e.target.value }))
           }
         />
+
         <TextField
           label="Email"
           value={formData.email}
+          sx={textFieldStyles}
           onChange={(e) =>
             setFormData((p) => ({ ...p, email: e.target.value }))
           }
         />
+
         <FormControl fullWidth>
-          <InputLabel>Role</InputLabel>
+          <InputLabel
+            sx={{
+              color: "white",
+              "&.Mui-focused": {
+                color: "white",
+              },
+            }}
+          >
+            Role
+          </InputLabel>
           <Select
             value={formData.role}
             label="Role"
+            sx={selectStyles}
+            MenuProps={selectMenuProps}
             onChange={(e) =>
               setFormData((p) => ({
                 ...p,
@@ -162,7 +182,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
           >
             <MenuItem value={UserRole.Admin}>Admin</MenuItem>
             <MenuItem value={UserRole.Standard}>Standard</MenuItem>
-            <MenuItem value={UserRole.ReadOnly}>ReadOnly</MenuItem>
+            <MenuItem value={UserRole.ReadOnly}>Read Only</MenuItem>
           </Select>
         </FormControl>
       </Stack>
