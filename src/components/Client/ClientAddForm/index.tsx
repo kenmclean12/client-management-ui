@@ -5,7 +5,7 @@ import { UniversalDialog } from "../../../components";
 import { useClientsCreate } from "../../../hooks";
 import { UserRole, type ClientCreateDto } from "../../../types";
 import { useAuth } from "../../../context";
-import { CLIENT_FIELD_ROWS, CLIENT_FIELDS, emptyForm } from "./config";
+import { CLIENT_FIELD_ROWS, CLIENT_FIELDS, emptyForm } from "../config";
 
 export default function ClientAddDialog() {
   const { user } = useAuth();

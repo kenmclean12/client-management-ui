@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   Paper,
@@ -12,9 +11,6 @@ import {
   IconButton,
   Box,
   Stack,
-  Alert,
-  Snackbar,
-  CircularProgress,
   Chip,
   Collapse,
   TextField,
@@ -28,10 +24,7 @@ import {
   Work,
   CalendarToday,
 } from "@mui/icons-material";
-import {
-  Project,
-  ProjectUpdateDto,
-} from "../../../../../../types";
+import { Client, Project, ProjectUpdateDto } from "../../../../../../types";
 import {
   useProjectsGetByClient,
   useProjectsCreate,
@@ -42,28 +35,21 @@ import { toUTCDateString } from "../../../../../../utils";
 import { ProjectJobsDropdown } from "../../../../../../components";
 
 interface Props {
-  clientId: number;
+  client: Client;
 }
 
 interface EditingProject {
-  id: number | null; // null for new project
+  id: number | null;
   data: ProjectUpdateDto;
 }
 
-export function ClientProjects({ clientId }: Props) {
+export function ClientProjects({ client }: Props) {
   const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
-  const [editingProject, setEditingProject] = useState<EditingProject | null>(null);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
+  const [editingProject, setEditingProject] = useState<EditingProject | null>(
+    null
+  );
 
-  const {
-    data: projects,
-    refetch,
-    isLoading,
-    error,
-  } = useProjectsGetByClient(clientId);
+  const { data: projects, refetch } = useProjectsGetByClient(client.id);
   const createMutation = useProjectsCreate();
   const updateMutation = useProjectsUpdate(editingProject?.id || 0);
 
@@ -87,54 +73,36 @@ export function ClientProjects({ clientId }: Props) {
       },
     });
   };
-  
+
   const handleCancelEdit = () => {
     setEditingProject(null);
   };
 
   const handleSaveEdit = async () => {
     if (!editingProject) return;
+    const payload = {
+      ...editingProject.data,
+      startDate: toUTCDateString(editingProject.data.startDate),
+      endDate: toUTCDateString(editingProject.data.endDate),
+    };
 
-    try {
-      const payload = {
-        ...editingProject.data,
-        startDate: toUTCDateString(editingProject.data.startDate),
-        endDate: toUTCDateString(editingProject.data.endDate),
-      };
-
-      if (editingProject.id === null) {
-        // Create new project
-        await createMutation.mutateAsync({
-          name: payload.name || "",
-          description: payload.description,
-          clientId: clientId,
-          startDate: payload.startDate!,
-          endDate: payload.endDate,
-        });
-        setNotification({
-          message: "Project created successfully",
-          type: "success",
-        });
-      } else {
-        // Update existing project
-        await updateMutation.mutateAsync({
-          id: editingProject.id,
-          dto: payload,
-        });
-        setNotification({
-          message: "Project updated successfully",
-          type: "success",
-        });
-      }
-
-      setEditingProject(null);
-      refetch();
-    } catch (error: any) {
-      setNotification({
-        message: error.message || "Operation failed",
-        type: "error",
+    if (editingProject.id === null) {
+      await createMutation.mutateAsync({
+        name: payload.name || "",
+        description: payload.description,
+        clientId: client.id,
+        startDate: payload.startDate!,
+        endDate: payload.endDate,
+      });
+    } else {
+      await updateMutation.mutateAsync({
+        id: editingProject.id,
+        dto: payload,
       });
     }
+
+    setEditingProject(null);
+    refetch();
   };
 
   const handleChange =
@@ -161,26 +129,6 @@ export function ClientProjects({ clientId }: Props) {
   };
 
   const isEditing = (projectId: number) => editingProject?.id === projectId;
-
-  // Render loading state
-  if (isLoading) {
-    return (
-      <Paper sx={{ p: 4, display: "flex", justifyContent: "center" }}>
-        <CircularProgress />
-      </Paper>
-    );
-  }
-
-  // Render error state
-  if (error) {
-    return (
-      <Paper sx={{ p: 4 }}>
-        <Alert severity="error">
-          Failed to load projects: {error.message}
-        </Alert>
-      </Paper>
-    );
-  }
 
   return (
     <>
@@ -340,8 +288,6 @@ export function ClientProjects({ clientId }: Props) {
                           </Box>
                         )}
                       </TableCell>
-
-                      {/* Job Count */}
                       <TableCell>
                         <Chip
                           label={`${project.jobs?.length || 0} jobs`}
@@ -350,8 +296,6 @@ export function ClientProjects({ clientId }: Props) {
                           color="primary"
                         />
                       </TableCell>
-
-                      {/* Actions */}
                       <TableCell align="right">
                         {isEditing(project.id) ? (
                           <Stack
@@ -404,7 +348,7 @@ export function ClientProjects({ clientId }: Props) {
                         >
                           <Box sx={{ m: 2, ml: 6 }}>
                             <ProjectJobsDropdown
-                              clientId={clientId}
+                              clientId={client.id}
                               projectId={project.id}
                               jobs={project.jobs || []}
                               refreshParent={refetch}
@@ -420,21 +364,6 @@ export function ClientProjects({ clientId }: Props) {
           </TableContainer>
         )}
       </Paper>
-    
-      <Snackbar
-        open={!!notification}
-        autoHideDuration={6000}
-        onClose={() => setNotification(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setNotification(null)}
-          severity={notification?.type}
-          sx={{ width: "100%" }}
-        >
-          {notification?.message}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

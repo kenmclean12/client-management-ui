@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   Paper,
@@ -14,8 +13,6 @@ import {
   Stack,
   Box,
   TextField,
-  Alert,
-  Snackbar,
   CircularProgress,
   Chip,
   Dialog,
@@ -34,6 +31,7 @@ import {
   Person,
 } from "@mui/icons-material";
 import {
+  Client,
   Contact,
   ContactCreateDto,
   ContactUpdateDto,
@@ -45,33 +43,28 @@ import {
   useContactsDelete,
 } from "../../../../../../hooks";
 
-interface Props {
-  clientId: number;
-}
-
 interface EditingContact {
-  id: number | null; // null for new contact
+  id: number | null;
   data: ContactUpdateDto;
 }
 
-export function ClientContacts({ clientId }: Props) {
+interface Props {
+  client: Client;
+}
+
+export function ClientContacts({ client }: Props) {
   const [editingContact, setEditingContact] = useState<EditingContact | null>(
     null
   );
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
 
-  const { data: contacts, refetch } = useContactsGetByClient(clientId);
-  const createMutation = useContactsCreate(clientId);
+  const { data: contacts, refetch } = useContactsGetByClient(client.id);
+  const createMutation = useContactsCreate(client.id);
   const updateMutation = useContactsUpdate(editingContact?.id || 0);
   const deleteMutation = useContactsDelete(contactToDelete?.id || 0);
 
-  // Handlers
   const handleEditClick = (contact: Contact) => {
     setEditingContact({
       id: contact.id,
@@ -92,7 +85,7 @@ export function ClientContacts({ clientId }: Props) {
         name: "",
         email: "",
         phone: "",
-        clientId: clientId,
+        clientId: client.id,
       },
     });
   };
@@ -106,42 +99,24 @@ export function ClientContacts({ clientId }: Props) {
 
   const handleSaveEdit = async () => {
     if (!editingContact) return;
-
-    try {
-      if (editingContact.id === null) {
-        // Create new contact
-        const createDto: ContactCreateDto = {
-          name: editingContact.data.name || "",
-          email: editingContact.data.email || "",
-          phone: editingContact.data.phone,
-          clientId: clientId,
-        };
-        await createMutation.mutateAsync(createDto);
-        setNotification({
-          message: "Contact created successfully",
-          type: "success",
-        });
-        refetch();
-      } else {
-        // Update existing contact
-        await updateMutation.mutateAsync({
-          id: editingContact.id,
-          dto: editingContact.data,
-        });
-        setNotification({
-          message: "Contact updated successfully",
-          type: "success",
-        });
-        refetch();
-      }
-      setEditingContact(null);
-      setShowAddDialog(false);
-    } catch (error: any) {
-      setNotification({
-        message: error.message || "Operation failed",
-        type: "error",
+    if (editingContact.id === null) {
+      const createDto: ContactCreateDto = {
+        name: editingContact.data.name || "",
+        email: editingContact.data.email || "",
+        phone: editingContact.data.phone,
+        clientId: client.id,
+      };
+      await createMutation.mutateAsync(createDto);
+      refetch();
+    } else {
+      await updateMutation.mutateAsync({
+        id: editingContact.id,
+        dto: editingContact.data,
       });
+      refetch();
     }
+    setEditingContact(null);
+    setShowAddDialog(false);
   };
 
   const handleDeleteClick = (contact: Contact) => {
@@ -151,22 +126,10 @@ export function ClientContacts({ clientId }: Props) {
 
   const handleConfirmDelete = async () => {
     if (!contactToDelete) return;
-
-    try {
-      await deleteMutation.mutateAsync();
-      setNotification({
-        message: "Contact deleted successfully",
-        type: "success",
-      });
-      setDeleteDialogOpen(false);
-      setContactToDelete(null);
-      refetch();
-    } catch (error: any) {
-      setNotification({
-        message: error.message || "Failed to delete contact",
-        type: "error",
-      });
-    }
+    await deleteMutation.mutateAsync();
+    setDeleteDialogOpen(false);
+    setContactToDelete(null);
+    refetch();
   };
 
   const handleChange =
@@ -479,20 +442,6 @@ export function ClientContacts({ clientId }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={!!notification}
-        autoHideDuration={6000}
-        onClose={() => setNotification(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setNotification(null)}
-          severity={notification?.type}
-          sx={{ width: "100%" }}
-        >
-          {notification?.message}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

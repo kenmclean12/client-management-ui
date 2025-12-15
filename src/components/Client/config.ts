@@ -1,4 +1,4 @@
-import { ClientCreateDto } from "../../../types";
+import { ClientCreateDto } from "../../types";
 
 type ClientFieldConfig = {
   key: keyof ClientCreateDto;
