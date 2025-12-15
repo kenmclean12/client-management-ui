@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextField, Stack } from "@mui/material";
+import { Button, TextField, Stack, IconButton } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useClientsCreate } from "../../../hooks";
@@ -32,9 +32,9 @@ export default function ClientAddDialog() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} disabled={!isAdmin}>
-        <Add />
-      </Button>
+      <IconButton onClick={() => setOpen(true)} disabled={!isAdmin}>
+        <Add sx={{ color: "white" }} />
+      </IconButton>
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
