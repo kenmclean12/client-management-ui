@@ -1,7 +1,12 @@
 import { Person, Public } from "@mui/icons-material";
-import { PlaceholderConfig, PlaceholderType } from "./types"
+import { PlaceholderConfig, PlaceholderType } from "./types";
 
 export const PLACEHOLDER_CONFIG: Record<PlaceholderType, PlaceholderConfig> = {
+  home: {
+    icon: <Public sx={{ fontSize: 72 }} />,
+    text: "Client Management",
+    subText: "Please select a category from the sidebar to view information",
+  },
   user: {
     icon: <Person sx={{ fontSize: 60 }} />,
     text: "Select a user from the side panel",

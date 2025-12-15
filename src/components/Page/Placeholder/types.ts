@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 
-export type PlaceholderType = "user" | "client";
+export type PlaceholderType = "home" | "user" | "client";
 
 export interface PlaceholderConfig {
   icon: ReactNode;
   text: string;
+  subText?: string;
 }
 
 export interface Props {

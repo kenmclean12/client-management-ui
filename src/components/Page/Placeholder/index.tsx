@@ -14,9 +14,14 @@ export function PagePlaceholder({ type, textOverride }: Props) {
     <Box sx={mainContainerStyles}>
       <Stack sx={contentContainerStyles}>
         <Avatar sx={avatarStyles}>{config.icon}</Avatar>
-        <Typography variant="h6" color="grey" fontWeight="medium">
+        <Typography variant="h6" color="#555" fontWeight={600}>
           {textOverride ?? config.text}
         </Typography>
+        {config.subText && (
+          <Typography variant="body2" color="#555" textAlign="center">
+            {config.subText}
+          </Typography>
+        )}
       </Stack>
     </Box>
   );

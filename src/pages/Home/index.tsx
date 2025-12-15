@@ -1,10 +1,9 @@
-import { Stack } from "@mui/material";
+import { PagePlaceholder, PageShell } from "../../components";
 
 export default function HomePage() {
-
   return (
-    <Stack>
-      Home
-    </Stack>
+    <PageShell title="Home">
+      <PagePlaceholder type="home" />
+    </PageShell>
   );
 }

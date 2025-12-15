@@ -11,7 +11,13 @@ export default function TopBar() {
 
   return (
     <Stack sx={mainContainerStyles}>
-      <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        onClick={() => navigate("/")}
+        sx={{ cursor: "pointer" }}
+      >
         <Typography fontSize={20} fontWeight={600}>
           Client Management
         </Typography>

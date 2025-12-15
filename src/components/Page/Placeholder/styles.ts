@@ -3,15 +3,14 @@ export const mainContainerStyles = {
   alignItems: "center",
   justifyContent: "center",
   width: "100%",
-  minHeight: "100vh",
+  minHeight: "75vh",
 };
 
 export const contentContainerStyles = {
   alignItems: "center",
   width: "100%",
-  maxWidth: 400,
   p: 4,
-  gap: "24px",
+  gap: "20px",
   textAlign: "center",
 };
 
