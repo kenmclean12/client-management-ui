@@ -20,7 +20,11 @@ export function ClientInstancePage() {
 
   return (
     <PageShell title="Clients" icon={<Public />} actions={<ClientAddDialog />}>
-      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mt: 10, mb: 3 }}>
+      <Tabs
+        value={tab}
+        onChange={(_, v) => setTab(v)}
+        sx={{ mt: 1, mb: 2, paddingInline: 1 }}
+      >
         <Tab label="Info" />
         <Tab label="Contacts" />
         <Tab label="Projects" />
@@ -28,8 +32,8 @@ export function ClientInstancePage() {
       {client && (
         <>
           {tab === ClientTab.Info && <ClientInfo client={client} />}
-          {tab === ClientTab.Contacts && <ClientContacts clientId={client.id} />}
-          {tab === ClientTab.Projects && <ClientProjects clientId={client.id} />}
+          {tab === ClientTab.Contacts && <ClientContacts client={client} />}
+          {tab === ClientTab.Projects && <ClientProjects client={client} />}
         </>
       )}
     </PageShell>
