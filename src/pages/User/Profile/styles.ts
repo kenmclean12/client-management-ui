@@ -14,8 +14,3 @@ export const paperStyles = {
   backgroundColor: "white",
   borderRadius: 2,
 };
-
-export const boxStyles = {
-  px: 3,
-  pt: 11,
-};

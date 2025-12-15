@@ -51,7 +51,7 @@ export function UniversalDialog({
         </Stack>
       </Content>
       {footer && (
-        <Stack mt={2.5} p={1.5} paddingInline={0}>
+        <Stack mt={1.5} p={1.5} paddingInline={0}>
           <Stack paddingInline={1}>{footer}</Stack>
         </Stack>
       )}

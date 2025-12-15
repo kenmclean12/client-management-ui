@@ -1,6 +1,5 @@
 export const mainContainerStyles = {
-  position: "absolute",
-  top: 0,
+  display: "flex",
   width: "100%",
   height: "70px",
   px: 3,

@@ -16,7 +16,7 @@ interface Props {
 export function Content({ display, children, loading, emptyMessage }: Props) {
   return (
     <DialogContent sx={{ padding: 0 }}>
-      <Stack pt={1}>
+      <Stack>
         {loading && (
           <CircularProgress size={30} sx={{ p: 3, color: "lightblue" }} />
         )}

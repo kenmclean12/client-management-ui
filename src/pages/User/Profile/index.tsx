@@ -13,12 +13,11 @@ import {
   Email,
   CalendarToday,
   AdminPanelSettings,
-  Group,
   Send,
 } from "@mui/icons-material";
 import { useUsersGetById } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
-import { PageShell } from "../../../components";
+import { PageShell, UserInviteForm } from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
 import { format } from "date-fns";
@@ -41,16 +40,8 @@ export function ProfilePage() {
   const isSelf = Number(id) === Number(self?.id);
 
   return (
-    <PageShell
-      title="User Profile"
-      icon={<Group />}
-      actions={
-        <IconButton>
-          <Send sx={{ color: "white" }} />
-        </IconButton>
-      }
-    >
-      <Box sx={boxStyles}>
+    <PageShell title="Users" actions={<UserInviteForm />}>
+      <Box px={4} pt={4}>
         <Paper elevation={2} sx={paperStyles}>
           {(isAdmin || isSelf) && (
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
@@ -79,7 +70,7 @@ export function ProfilePage() {
                 size="small"
                 icon={<AdminPanelSettings />}
                 label={UserRoleLabel[user?.role as UserRole]}
-                sx={{ mt: 1 }}
+                sx={{ mt: 1.5 }}
               />
             </Stack>
           </Stack>

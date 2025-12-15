@@ -10,11 +10,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Box,
 } from "@mui/material";
 import { PhotoCamera, Save, Cancel } from "@mui/icons-material";
 import { UserResponseDto, UserRole, UserUpdateDto } from "../../../../../types";
 import { useUsersUpdate } from "../../../../../hooks";
 import { UniversalDialog } from "../../../../../components";
+import { iconButtonStyles } from "./styles";
 
 interface Props {
   open: boolean;
@@ -58,6 +60,18 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
     onClose();
   };
 
+  function handleImageInput(
+    e: React.ChangeEvent<HTMLInputElement>,
+    onLoad: (dataUrl: string) => void
+  ) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => onLoad(reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
   return (
     <UniversalDialog
       open={open}
@@ -79,32 +93,32 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
         </Stack>
       }
     >
-      <Stack spacing={2} mt={1}>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar
-            src={formData.avatarUrl ?? ""}
-            sx={{ width: 80, height: 80 }}
-          />
-          <IconButton onClick={() => fileInputRef.current?.click()}>
-            <PhotoCamera />
-          </IconButton>
-          <input
-            ref={fileInputRef}
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = () =>
-                setFormData((p) => ({
-                  ...p,
-                  avatarUrl: reader.result as string,
-                }));
-              reader.readAsDataURL(file);
-            }}
-          />
+      <Stack spacing={2}>
+        <Stack alignItems="center" spacing={1}>
+          <Box sx={{ position: "relative", pb: 2 }}>
+            <Avatar
+              src={formData.avatarUrl ?? ""}
+              sx={{ width: 96, height: 96 }}
+            />
+            <IconButton
+              size="small"
+              onClick={() => fileInputRef.current?.click()}
+              sx={iconButtonStyles}
+            >
+              <PhotoCamera fontSize="small" />
+            </IconButton>
+            <input
+              ref={fileInputRef}
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={(e) =>
+                handleImageInput(e, (avatarUrl) =>
+                  setFormData((p) => ({ ...p, avatarUrl }))
+                )
+              }
+            />
+          </Box>
         </Stack>
         <TextField
           label="First Name"

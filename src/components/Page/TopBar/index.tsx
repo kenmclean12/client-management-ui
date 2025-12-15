@@ -10,7 +10,7 @@ interface Props {
 export function PageTopBar({ title, actions }: Props) {
   return (
     <Box sx={mainContainerStyles}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
         {title}
         {actions && (
           <Stack direction="row" alignItems="center" gap={1}>
