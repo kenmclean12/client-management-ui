@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import { useUsersDelete, useUsersResetPassword } from "../../../../hooks";
-import { UserResponseDto, UserRole } from "../../../../types";
+import { UserResponseDto } from "../../../../types";
 import { PopoverMenu, PopoverMenuItem } from "../../../../components";
 import { EditUserDialog } from "./EditUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
@@ -16,11 +16,19 @@ interface FormFields {
 
 interface Props {
   user: UserResponseDto;
-  self: UserResponseDto;
   onSaved: () => void;
+  isReadOnly: boolean;
+  isAdmin: boolean;
+  isSelf: boolean;
 }
 
-export function ProfileActions({ user, self, onSaved }: Props) {
+export function ProfileActions({
+  user,
+  onSaved,
+  isReadOnly,
+  isAdmin,
+  isSelf,
+}: Props) {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState<boolean>(false);
@@ -33,8 +41,6 @@ export function ProfileActions({ user, self, onSaved }: Props) {
 
   const deleteMutation = useUsersDelete(Number(id));
   const resetMutation = useUsersResetPassword(Number(id));
-  const isAdmin = self?.role === UserRole.Admin;
-  const isSelf = Number(id) === Number(self?.id);
 
   const handleDelete = async () => {
     await deleteMutation.mutateAsync();
@@ -79,7 +85,7 @@ export function ProfileActions({ user, self, onSaved }: Props) {
     <>
       <PopoverMenu
         trigger={
-          <IconButton sx={{ color: "text.secondary" }}>
+          <IconButton sx={{ color: "text.secondary" }} disabled={isReadOnly}>
             <Settings />
           </IconButton>
         }

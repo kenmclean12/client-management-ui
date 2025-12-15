@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserCreateDto, UserPasswordResetDto, UserResponseDto, UserUpdateDto } from "../../types";
+import { UserInviteCreateDto, UserInviteResponseDto, UserPasswordResetDto, UserResponseDto, UserUpdateDto } from "../../types";
 import { get, post, put, del } from "../../lib/api";
 
 export function useUsersGetAll(options?: { enabled?: boolean }) {
@@ -18,12 +18,10 @@ export function useUsersGetById(id: number, options?: { enabled?: boolean }) {
   });
 }
 
-export function useUsersCreate() {
-  const qc = useQueryClient();
-
+export function useUsersInvite() {
   return useMutation({
-    mutationFn: (dto: UserCreateDto) => post<UserResponseDto>("/user", dto),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["users"] }),
+    mutationFn: (dto: UserInviteCreateDto) =>
+      post<UserInviteResponseDto>("/user/invite-user", dto),
   });
 }
 

@@ -6,22 +6,16 @@ import {
   Box,
   Paper,
   Chip,
-  IconButton,
   Divider,
 } from "@mui/material";
-import {
-  Email,
-  CalendarToday,
-  AdminPanelSettings,
-  Send,
-} from "@mui/icons-material";
+import { Email, CalendarToday, AdminPanelSettings } from "@mui/icons-material";
 import { useUsersGetById } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
 import { PageShell, UserInviteForm } from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
 import { format } from "date-fns";
-import { boxStyles, paperStyles } from "./styles";
+import { paperStyles } from "./styles";
 
 const ellipsis = {
   whiteSpace: "nowrap",
@@ -35,7 +29,7 @@ export function ProfilePage() {
   const { data: user, refetch } = useUsersGetById(Number(id), {
     enabled: Number(id) > 0,
   });
-
+  const isReadOnly = self?.role === UserRole.ReadOnly;
   const isAdmin = self?.role === UserRole.Admin;
   const isSelf = Number(id) === Number(self?.id);
 
@@ -47,8 +41,10 @@ export function ProfilePage() {
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
               <ProfileActions
                 user={user as UserResponseDto}
-                self={self as UserResponseDto}
                 onSaved={refetch}
+                isReadOnly={isReadOnly}
+                isAdmin={isAdmin}
+                isSelf={isSelf}
               />
             </Box>
           )}
