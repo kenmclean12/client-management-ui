@@ -17,6 +17,15 @@ export function useProjectsGetById(id: number) {
   });
 }
 
+export function useProjectsGetByUserId(userId: number) {
+  return useQuery<Project[]>({
+    queryKey: ["projects", "user", userId],
+    queryFn: () => get<Project[]>(`/project/user/${userId}`),
+    enabled: !!userId,
+  });
+}
+
+
 export function useProjectsGetByClient(clientId: number) {
   return useQuery<Project[]>({
     queryKey: ["projects", "client", clientId],
