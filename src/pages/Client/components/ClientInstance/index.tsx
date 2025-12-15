@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tabs, Tab } from "@mui/material";
+import { Tabs, Tab, Stack } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useClientsGetById } from "../../../../hooks";
 import { ClientContacts, ClientInfo, ClientProjects } from "./components";
@@ -28,6 +28,7 @@ export function ClientInstancePage() {
         <Tab label="Contacts" />
         <Tab label="Projects" />
       </Tabs>
+      <Stack sx={{ maxHeight: "80vh", overflowY: "auto" }}>
       {client && (
         <>
           {tab === ClientTab.Info && <ClientInfo client={client} />}
@@ -35,6 +36,7 @@ export function ClientInstancePage() {
           {tab === ClientTab.Projects && <ClientProjects client={client} />}
         </>
       )}
+      </Stack>
     </PageShell>
   );
 }

@@ -159,6 +159,7 @@ export function ClientNotes({ clientId }: Props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          mt: 1,
           mb: 3,
         }}
       >
