@@ -5,6 +5,6 @@ export const mainContainerStyles = {
   px: 3,
   py: 2,
   borderBottom: "1px solid #222",
-  backgroundColor: "#111",
+  backgroundColor: "black",
   color: "white",
 };

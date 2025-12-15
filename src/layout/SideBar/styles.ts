@@ -1,7 +1,7 @@
 export const mainContainerStyles = {
   width: "20vw",
   height: "100vh",
-  backgroundColor: "#111",
+  backgroundColor: "black",
   color: "white",
   py: 3,
   px: 2,

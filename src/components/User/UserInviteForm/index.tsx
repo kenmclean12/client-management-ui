@@ -35,7 +35,7 @@ export function UserInviteForm() {
             <Button onClick={() => setOpen(false)} sx={{ color: "white" }}>
               Cancel
             </Button>
-            <Button variant="outlined" onClick={handleSend} disabled={!email}>
+            <Button variant="outlined" sx={{ color: "white", border: "1px solid white" }} onClick={handleSend} disabled={!email}>
               Send
             </Button>
           </Stack>

@@ -12,7 +12,7 @@ export const iconButtonStyles = {
 export const selectMenuProps = {
   PaperProps: {
     sx: {
-      backgroundColor: "#1e1e1e",
+      backgroundColor: "black",
       color: "white",
     },
   },

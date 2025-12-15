@@ -5,7 +5,7 @@ export const mainContainerStyles = {
   justifyContent: "space-between",
   px: 3,
   py: 2,
-  backgroundColor: "#111",
+  backgroundColor: "black",
   color: "white",
   borderBottom: "1px solid #222",
 };

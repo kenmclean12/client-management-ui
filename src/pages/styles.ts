@@ -1,6 +1,7 @@
 export const textFieldStyles = {
   "& .MuiInputBase-input": {
     color: "white",
+    backgroundColor: "black",
   },
   "& .MuiInputLabel-root": {
     color: "white",
@@ -24,6 +25,7 @@ export const textFieldStyles = {
 export const selectStyles = {
   height: "40px",
   color: "white",
+  backgroundColor: "black",
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: "#444",
   },
