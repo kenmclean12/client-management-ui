@@ -27,6 +27,7 @@ export function ClientSearchSection() {
         onChange={(e) => setSearch(e.target.value)}
         startAdornment={<Search sx={{ color: "#888", mr: 1 }} />}
         sx={inputStyles}
+        disableUnderline
         fullWidth
       />
       <Stack sx={rowContainerStyles}>

@@ -1,10 +1,20 @@
 import { useParams } from "react-router-dom";
-import { Stack, Avatar, Typography, Box, Paper, Chip } from "@mui/material";
+import {
+  Stack,
+  Avatar,
+  Typography,
+  Box,
+  Paper,
+  Chip,
+  IconButton,
+} from "@mui/material";
 import {
   Person,
   Email,
   CalendarToday,
   AdminPanelSettings,
+  Group,
+  Send,
 } from "@mui/icons-material";
 import { useUsersGetById } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
@@ -24,7 +34,15 @@ export function ProfilePage() {
   const isSelf = Number(id) === Number(self?.id);
 
   return (
-    <PageShell title="User" icon={<Person />}>
+    <PageShell
+      title="Users"
+      icon={<Group />}
+      actions={
+        <IconButton>
+          <Send sx={{ color: "white" }} />
+        </IconButton>
+      }
+    >
       <Box sx={innerBoxStyles}>
         <Paper elevation={3} sx={paperStyles}>
           {(isAdmin || isSelf) && (
