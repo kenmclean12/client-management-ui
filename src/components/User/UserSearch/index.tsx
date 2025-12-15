@@ -38,8 +38,6 @@ export function UserSearchSection() {
             user={u}
             showUserName
             onClick={() => navigate(`/users/${u.id}`)}
-            hoverColor="#222"
-            color="#111"
           />
         ))}
       </Stack>

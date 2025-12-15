@@ -36,8 +36,6 @@ export function ClientSearchSection() {
             key={c.id}
             message={c.name}
             onClick={() => navigate(`/clients/${c.id}`)}
-            hoverColor="#222"
-            color="#111"
           />
         ))}
       </Stack>
