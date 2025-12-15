@@ -22,6 +22,7 @@ export const textFieldStyles = {
 };
 
 export const selectStyles = {
+  height: "40px",
   color: "white",
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: "#444",

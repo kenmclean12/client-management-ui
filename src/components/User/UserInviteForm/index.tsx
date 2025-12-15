@@ -48,6 +48,7 @@ export function UserInviteForm() {
           autoFocus
           onChange={(e) => setEmail(e.target.value)}
           sx={textFieldStyles}
+          size="small"
           fullWidth
         />
       </UniversalDialog>

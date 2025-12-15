@@ -125,6 +125,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
           label="First Name"
           value={formData.firstName}
           sx={textFieldStyles}
+          size="small"
           onChange={(e) =>
             setFormData((p) => ({ ...p, firstName: e.target.value }))
           }
@@ -134,6 +135,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
           label="Last Name"
           value={formData.lastName}
           sx={textFieldStyles}
+          size="small"
           onChange={(e) =>
             setFormData((p) => ({ ...p, lastName: e.target.value }))
           }
@@ -143,6 +145,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
           label="Username"
           value={formData.userName}
           sx={textFieldStyles}
+          size="small"
           onChange={(e) =>
             setFormData((p) => ({ ...p, userName: e.target.value }))
           }
@@ -152,6 +155,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
           label="Email"
           value={formData.email}
           sx={textFieldStyles}
+          size="small"
           onChange={(e) =>
             setFormData((p) => ({ ...p, email: e.target.value }))
           }
