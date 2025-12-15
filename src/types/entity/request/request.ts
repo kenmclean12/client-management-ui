@@ -8,7 +8,6 @@ export interface Request {
   status: RequestStatus;
   priority: RequestPriority;
   projectId: number | null;
-  jobId: number | null;
   createdAt: string;
   reviewedAt: string | null;
 }

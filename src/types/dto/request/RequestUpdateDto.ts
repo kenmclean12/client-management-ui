@@ -5,6 +5,8 @@ export interface RequestUpdateDto {
   description: string | null;
   priority: RequestPriority | null;
   status: RequestStatus | null;
+  assignedUserId: number | null;
+  dueDate: string | null;
   projectId: number | null;
   jobId: number | null;
 }
