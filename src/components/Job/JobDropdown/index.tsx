@@ -350,7 +350,6 @@ export function ProjectJobsDropdown({
           </Button>
         </DialogActions>
       </Dialog>
-
       <Button
         startIcon={<Add />}
         onClick={() => setShowAddDialog(true)}

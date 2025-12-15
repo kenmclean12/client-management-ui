@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Box, Stack } from "@mui/material";
+import { mainContainerStyles } from "./styles";
 
 interface Props {
   title: ReactNode;
@@ -8,24 +9,8 @@ interface Props {
 
 export function PageTopBar({ title, actions }: Props) {
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        top: 0,
-        width: "100%",
-        height: "70px",
-        px: 3,
-        py: 2,
-        borderBottom: "1px solid #222",
-        backgroundColor: "#111",
-        color: "white",
-      }}
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+    <Box sx={mainContainerStyles}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
         {title}
         {actions && (
           <Stack direction="row" alignItems="center" gap={1}>
