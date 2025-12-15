@@ -9,7 +9,6 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  Person,
   Email,
   CalendarToday,
   AdminPanelSettings,
