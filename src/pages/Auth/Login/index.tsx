@@ -15,7 +15,7 @@ import {
   authInnerContainerStyles,
   authInputStyles,
 } from "../styles";
-import { useAuth } from "../../../context/authContext";
+import { useAuth } from "../../../context";
 
 export interface Errors {
   email: boolean;

@@ -40,7 +40,7 @@ import {
   useProjectsUpdate,
 } from "../../hooks";
 import { format } from "date-fns";
-import { toUTCDateString } from "../../components/utils";
+import { toUTCDateString } from "../../utils";
 import { PageShell, ProjectJobsDropdown } from "../../components";
 
 interface EditingProject {

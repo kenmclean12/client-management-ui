@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { get, post, put, del } from "../../lib/api";
 import type { Client, ClientCreateDto, ClientUpdateDto } from "../../types";
 
-export function useClientsGetAll() {
+export function useClientsGetAll(options?: { enabled?: boolean }) {
   return useQuery<Client[]>({
     queryKey: ["clients"],
     queryFn: () => get<Client[]>("/client"),
+    ...options,
   });
 }
 

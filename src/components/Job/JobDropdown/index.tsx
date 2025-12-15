@@ -31,7 +31,7 @@ import {
   useJobsDelete,
 } from "../../../hooks";
 import { format } from "date-fns";
-import { toUTCDateString } from "../../../components/utils";
+import { toUTCDateString } from "../../../utils";
 
 interface Props {
   clientId: number;

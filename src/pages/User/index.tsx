@@ -2,7 +2,7 @@ import { IconButton } from "@mui/material";
 import { Group, Send } from "@mui/icons-material";
 import { PagePlaceholder, PageShell } from "../../components";
 
-export default function UserPage() {
+export function UserPage() {
   return (
     <PageShell
       title="Users"

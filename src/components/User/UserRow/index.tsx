@@ -4,7 +4,7 @@ import { contentContainerStyles, paperStyles } from "./styles";
 import { UserResponseDto } from "../../../types";
 
 interface Props {
-  user: UserResponseDto;
+  user?: UserResponseDto;
   showUserName?: boolean;
   button?: ReactNode;
   message?: string;
@@ -22,7 +22,7 @@ export function UserRow({
   hoverColor,
   onClick,
 }: Props) {
-  const fullName = message || `${user.firstName} ${user.lastName}`;
+  const fullName = message || `${user?.firstName} ${user?.lastName}`;
 
   return (
     <Paper
@@ -33,10 +33,10 @@ export function UserRow({
           backgroundColor: hoverColor ?? "#101",
         },
       }}
-      onClick={() => onClick?.(user.id)}
+      onClick={() => onClick?.(user?.id as number)}
     >
       <Stack sx={contentContainerStyles}>
-        <Avatar src={user.avatarUrl} sx={{ width: 30, height: 30 }} />
+        <Avatar src={user?.avatarUrl} sx={{ width: 30, height: 30 }} />
         <Tooltip title={fullName}>
           <Typography
             color="white"
@@ -44,7 +44,7 @@ export function UserRow({
             sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
             noWrap
           >
-            {fullName} {showUserName && `(@${user.userName})`}
+            {fullName} {showUserName && `(@${user?.userName})`}
           </Typography>
         </Tooltip>
       </Stack>

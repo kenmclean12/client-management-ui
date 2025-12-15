@@ -4,3 +4,4 @@ export * from "./User";
 export * from "./Page";
 export * from "./UniversalDialog";
 export * from "./Job";
+export * from "./Client";

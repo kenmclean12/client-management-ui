@@ -1,17 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/Home";
-import UserPage from "./pages/User";
-import ClientPage from "./pages/Client";
+import { AuthProvider } from "./context";
 import Layout from "./layout";
-import { AuthProvider } from "./context/AuthProvider";
-import { LoginPage } from "./pages";
-import { RegisterPage } from "./pages/Auth/Register";
-import AdminPage from "./pages/Admin";
-import ProfilePage from "./pages/User/Profile";
-import { ClientInstancePage } from "./pages/Client/components";
+import { LoginPage, RegisterPage, UserPage } from "./pages";
 import { ProtectedRoute } from "./components";
 import RequestsPage from "./pages/Request";
 import { ProjectPage } from "./pages/Project";
+import { ProfilePage } from "./pages/User/Profile";
+import { ClientInstancePage } from "./pages/Client/components";
+import HomePage from "./pages/Home";
+import ClientPage from "./pages/Client";
 
 function App() {
   return (
@@ -34,7 +31,6 @@ function App() {
             <Route path="/clients" element={<ClientPage />} />
             <Route path="/clients/:id" element={<ClientInstancePage />} />
             <Route path="/projects" element={<ProjectPage />} />
-            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

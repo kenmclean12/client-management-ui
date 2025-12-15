@@ -6,15 +6,15 @@ import {
   CalendarToday,
   AdminPanelSettings,
 } from "@mui/icons-material";
-import { useAuth } from "../../../context/authContext";
 import { useUsersGetById } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
 import { PageShell } from "../../../components";
 import { format } from "date-fns";
 import { ProfileActions } from "./components";
 import { innerBoxStyles, paperStyles } from "./styles";
+import { useAuth } from "../../../context";
 
-export default function ProfilePage() {
+export function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const { user: self } = useAuth();
   const { data: user, refetch } = useUsersGetById(Number(id), {
