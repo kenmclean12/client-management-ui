@@ -144,7 +144,7 @@ export function ProjectPage() {
 
   return (
     <PageShell title="Projects">
-      <Box sx={{ p: 4, pt: 12 }}>
+      <Box sx={{ p: 3 }}>
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           <Card sx={{ flex: 1 }}>
             <CardContent>
