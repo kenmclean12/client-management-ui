@@ -1,5 +1,5 @@
 import { Stack, Button, Typography } from "@mui/material";
-import { UniversalDialog } from "../../../../../../components";
+import { UniversalDialog } from "../../../../../components";
 
 interface Props {
   open: boolean;
@@ -37,7 +37,7 @@ export function DeleteUserDialog({
         </Stack>
       }
     >
-      <Typography>
+      <Typography color="black">
         Are you sure you want to delete{" "}
         <strong>
           {firstName} {lastName}

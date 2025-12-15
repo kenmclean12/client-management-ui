@@ -1,5 +1,5 @@
 import { Stack, Button, TextField } from "@mui/material";
-import { UniversalDialog } from "../../../../../../components";
+import { UniversalDialog } from "../../../../../components";
 
 interface Props {
   open: boolean;

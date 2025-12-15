@@ -12,9 +12,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import { PhotoCamera, Save, Cancel } from "@mui/icons-material";
-import { UserResponseDto, UserRole, UserUpdateDto } from "../../../../../../types";
-import { useUsersUpdate } from "../../../../../../hooks";
-import { UniversalDialog } from "../../../../../../components";
+import { UserResponseDto, UserRole, UserUpdateDto } from "../../../../../types";
+import { useUsersUpdate } from "../../../../../hooks";
+import { UniversalDialog } from "../../../../../components";
 
 interface Props {
   open: boolean;

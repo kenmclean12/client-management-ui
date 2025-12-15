@@ -7,6 +7,7 @@ import {
   Paper,
   Chip,
   IconButton,
+  Divider,
 } from "@mui/material";
 import {
   Email,
@@ -18,10 +19,16 @@ import {
 import { useUsersGetById } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
 import { PageShell } from "../../../components";
-import { format } from "date-fns";
-import { ProfileActions } from "./components";
-import { innerBoxStyles, paperStyles } from "./styles";
+import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
+import { format } from "date-fns";
+import { boxStyles, paperStyles } from "./styles";
+
+const ellipsis = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
 
 export function ProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -29,12 +36,13 @@ export function ProfilePage() {
   const { data: user, refetch } = useUsersGetById(Number(id), {
     enabled: Number(id) > 0,
   });
+
   const isAdmin = self?.role === UserRole.Admin;
   const isSelf = Number(id) === Number(self?.id);
 
   return (
     <PageShell
-      title="Users"
+      title="User Profile"
       icon={<Group />}
       actions={
         <IconButton>
@@ -42,8 +50,8 @@ export function ProfilePage() {
         </IconButton>
       }
     >
-      <Box sx={innerBoxStyles}>
-        <Paper elevation={3} sx={paperStyles}>
+      <Box sx={boxStyles}>
+        <Paper elevation={2} sx={paperStyles}>
           {(isAdmin || isSelf) && (
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
               <ProfileActions
@@ -54,35 +62,51 @@ export function ProfilePage() {
             </Box>
           )}
           <Stack direction="row" spacing={3} alignItems="center">
-            <Avatar src={user?.avatarUrl} sx={{ width: 120, height: 120 }} />
-            <Box>
-              <Typography variant="h4">
+            <Avatar src={user?.avatarUrl} sx={{ width: 96, height: 96 }} />
+            <Stack sx={{ minWidth: 0 }}>
+              <Typography variant="h5" sx={ellipsis}>
                 {user?.firstName} {user?.lastName}
               </Typography>
-              <Typography variant="h6" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={ellipsis}
+                mt={0.5}
+              >
                 @{user?.userName}
               </Typography>
               <Chip
+                size="small"
                 icon={<AdminPanelSettings />}
                 label={UserRoleLabel[user?.role as UserRole]}
-                variant="outlined"
                 sx={{ mt: 1 }}
               />
-              <Stack direction="row" spacing={4} mt={2}>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Email fontSize="small" />
-                  <Typography>{user?.email}</Typography>
-                </Stack>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <CalendarToday fontSize="small" />
-                  <Typography>
-                    {user?.createdAt
-                      ? format(new Date(user.createdAt), "PPP")
-                      : "n/a"}
-                  </Typography>
-                </Stack>
-              </Stack>
-            </Box>
+            </Stack>
+          </Stack>
+          <Divider sx={{ my: 4 }} />
+          <Stack direction="row" spacing={4} sx={{ rowGap: 3 }}>
+            <Stack direction="row" spacing={2} alignItems="center" width="50%">
+              <Email fontSize="small" />
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="caption" color="text.secondary">
+                  Email
+                </Typography>
+                <Typography sx={ellipsis}>{user?.email ?? "n/a"}</Typography>
+              </Box>
+            </Stack>
+            <Stack direction="row" spacing={2} alignItems="center" width="50%">
+              <CalendarToday fontSize="small" />
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="caption" color="text.secondary">
+                  Joined
+                </Typography>
+                <Typography sx={ellipsis}>
+                  {user?.createdAt
+                    ? format(new Date(user.createdAt), "PPP")
+                    : "n/a"}
+                </Typography>
+              </Box>
+            </Stack>
           </Stack>
         </Paper>
       </Box>

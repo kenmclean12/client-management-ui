@@ -10,8 +10,12 @@ export const innerBoxStyles = {
 export const paperStyles = {
   position: "relative",
   width: "100%",
-  maxWidth: 900,
   p: 4,
   backgroundColor: "white",
   borderRadius: 2,
+};
+
+export const boxStyles = {
+  px: 3,
+  pt: 11,
 };

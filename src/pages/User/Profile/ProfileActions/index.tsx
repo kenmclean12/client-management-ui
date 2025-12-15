@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
-import { UserResponseDto, UserRole } from "../../../../../types";
-import { useUsersDelete, useUsersResetPassword } from "../../../../../hooks";
-import { PopoverMenu, PopoverMenuItem } from "../../../../../components";
+import { useUsersDelete, useUsersResetPassword } from "../../../../hooks";
+import { UserResponseDto, UserRole } from "../../../../types";
+import { PopoverMenu, PopoverMenuItem } from "../../../../components";
+import { EditUserDialog } from "./EditUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { ResetPasswordDialog } from "./ResetPasswordDialog";
-import { EditUserDialog } from "./EditUserDialog";
 
 interface FormFields {
   currentPassword: string;
@@ -54,6 +54,27 @@ export function ProfileActions({ user, self, onSaved }: Props) {
     setResetPassword({ currentPassword: "", newPassword: "" });
   };
 
+  const menuItems = [
+    {
+      key: "edit",
+      show: true,
+      label: "Edit User",
+      onClick: () => setEditOpen(true),
+    },
+    {
+      key: "reset",
+      show: isSelf || isAdmin,
+      label: "Reset Password",
+      onClick: () => setResetOpen(true),
+    },
+    {
+      key: "delete",
+      show: isAdmin,
+      label: "Delete User",
+      onClick: () => setDeleteOpen(true),
+    },
+  ];
+
   return (
     <>
       <PopoverMenu
@@ -63,26 +84,16 @@ export function ProfileActions({ user, self, onSaved }: Props) {
           </IconButton>
         }
       >
-        <PopoverMenuItem
-          label="Edit User"
-          closeOnSelect
-          onClick={() => setEditOpen(true)}
-        />
-        {(isSelf || isAdmin) && (
-          <PopoverMenuItem
-            label="Reset Password"
-            closeOnSelect
-            onClick={() => setResetOpen(true)}
-          />
-        )}
-        {isAdmin && (
-          <PopoverMenuItem
-            label="Delete User"
-            closeOnSelect
-            disabled={!isAdmin}
-            onClick={() => setDeleteOpen(true)}
-          />
-        )}
+        {menuItems
+          .filter((item) => item.show)
+          .map((item) => (
+            <PopoverMenuItem
+              key={item.key}
+              label={item.label}
+              closeOnSelect
+              onClick={item.onClick}
+            />
+          ))}
       </PopoverMenu>
       <EditUserDialog
         open={editOpen}
