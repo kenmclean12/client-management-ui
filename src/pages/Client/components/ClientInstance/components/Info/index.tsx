@@ -12,7 +12,7 @@ interface Props {
 
 export function ClientInfo({ client }: Props) {
   return (
-    <Paper sx={{ p: 4, margin: 2, mt: 4, border: "1px solid lightgrey", borderRadius: 2 }}>
+    <Paper sx={{ p: 4, margin: 2, mt: 1, border: "1px solid lightgrey", borderRadius: 2 }}>
       <Box sx={topRowBoxStyles}>
         <Typography variant="h5" fontWeight={600} sx={titleStyles}>
           {client.name}

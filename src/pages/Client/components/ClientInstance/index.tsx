@@ -28,7 +28,7 @@ export function ClientInstancePage() {
         <Tab label="Contacts" />
         <Tab label="Projects" />
       </Tabs>
-      <Stack sx={{ maxHeight: "80vh", overflowY: "auto" }}>
+      <Stack sx={{ maxHeight: "80vh", width: "80vw", overflowY: "auto" }}>
       {client && (
         <>
           {tab === ClientTab.Info && <ClientInfo client={client} />}
