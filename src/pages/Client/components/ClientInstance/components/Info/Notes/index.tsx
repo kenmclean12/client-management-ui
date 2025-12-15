@@ -37,6 +37,7 @@ import {
   useNotesUpdate,
   useNotesDelete,
 } from "../../../../../../../hooks";
+import { formatDate } from "../../../../../../../utils";
 
 interface Props {
   clientId: number;
@@ -47,21 +48,7 @@ interface EditingNote {
   data: NoteUpdateDto;
 }
 
-// Helper function to format dates
-const formatDate = (dateString: string | null) => {
-  if (!dateString) return "N/A";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
 export function ClientNotes({ clientId }: Props) {
-  // State
   const [editingNote, setEditingNote] = useState<EditingNote | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -147,7 +134,6 @@ export function ClientNotes({ clientId }: Props) {
 
   const isEditing = (noteId: number) => editingNote?.id === noteId;
 
-  // Sort notes by date (newest first)
   const sortedNotes = [...(notes || [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
@@ -168,14 +154,12 @@ export function ClientNotes({ clientId }: Props) {
         </Typography>
         <Button
           variant="contained"
-          startIcon={<Add />}
           onClick={handleAddClick}
           disabled={createMutation.isPending}
         >
-          Add Note
+          <Add />
         </Button>
       </Box>
-
       {sortedNotes.length === 0 ? (
         <Box
           sx={{
