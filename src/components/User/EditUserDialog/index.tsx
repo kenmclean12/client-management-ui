@@ -35,12 +35,12 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const updateMutation = useUsersUpdate(user?.id);
   const [formData, setFormData] = useState<UserUpdateDto>({
-    userName: user.userName ?? "",
-    email: user.email ?? "",
-    firstName: user.firstName ?? "",
-    lastName: user.lastName ?? "",
-    role: user.role,
-    avatarUrl: user.avatarUrl ?? "",
+    userName: user?.userName ?? "",
+    email: user?.email ?? "",
+    firstName: user?.firstName ?? "",
+    lastName: user?.lastName ?? "",
+    role: user?.role,
+    avatarUrl: user?.avatarUrl ?? "",
   });
 
   const handleSave = async () => {
