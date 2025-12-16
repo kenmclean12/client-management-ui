@@ -1,6 +1,6 @@
 import { Stack, Button, TextField } from "@mui/material";
-import { UniversalDialog } from "../../../../../components";
-import { textFieldStyles } from "../../../../styles";
+import { UniversalDialog } from "../../UniversalDialog";
+import { textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   open: boolean;
@@ -49,7 +49,6 @@ export function ResetPasswordDialog({
           fullWidth
           sx={textFieldStyles}
         />
-
         <TextField
           label="New Password"
           type="password"

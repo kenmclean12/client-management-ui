@@ -4,10 +4,13 @@ import { IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import { useUsersDelete, useUsersResetPassword } from "../../../../hooks";
 import { UserResponseDto } from "../../../../types";
-import { PopoverMenu, PopoverMenuItem } from "../../../../components";
-import { EditUserDialog } from "./EditUserDialog";
-import { DeleteUserDialog } from "./DeleteUserDialog";
-import { ResetPasswordDialog } from "./ResetPasswordDialog";
+import {
+  DeleteUserDialog,
+  EditUserDialog,
+  PopoverMenu,
+  PopoverMenuItem,
+  ResetPasswordDialog,
+} from "../../../../components";
 
 interface FormFields {
   currentPassword: string;

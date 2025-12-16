@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, IconButton, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { UniversalDialog } from "../../../../UniversalDialog";
-import { useNotesDelete } from "../../../../../hooks";
+import { UniversalDialog } from "../../UniversalDialog";
+import { useNotesDelete } from "../../../hooks";
 
 interface Props {
   noteId: number;

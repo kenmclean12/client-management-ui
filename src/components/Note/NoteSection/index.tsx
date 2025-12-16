@@ -13,7 +13,9 @@ import {
 } from "@mui/icons-material";
 import { Note } from "../../../types";
 import { formatDate } from "../../../utils";
-import { AddNoteDialog, DeleteNoteDialog, EditNoteDialog } from "./components";
+import { EditNoteDialog } from "../EditNoteDialog";
+import { DeleteNoteDialog } from "../DeleteNoteDialog";
+import { AddNoteDialog } from "../AddNoteDialog";
 
 interface Props {
   clientId: number;

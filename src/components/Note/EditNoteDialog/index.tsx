@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-import { UniversalDialog } from "../../../../UniversalDialog";
-import { textFieldStyles } from "../../../../../pages/styles";
-import { useNotesUpdate } from "../../../../../hooks";
-import { Note } from "../../../../../types";
+import { UniversalDialog } from "../../UniversalDialog";
+import { textFieldStyles } from "../../../pages/styles";
+import { useNotesUpdate } from "../../../hooks";
+import { Note } from "../../../types";
 
 interface Props {
   note: Note;

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { UniversalDialog } from "../../../../UniversalDialog";
-import { textFieldStyles } from "../../../../../pages/styles";
-import { useNotesCreate } from "../../../../../hooks";
-import { useAuth } from "../../../../../context";
-import { UserRole } from "../../../../../types";
+import { UniversalDialog } from "../../UniversalDialog";
+import { textFieldStyles } from "../../../pages/styles";
+import { useNotesCreate } from "../../../hooks";
+import { useAuth } from "../../../context";
+import { UserRole } from "../../../types";
 
 interface Props {
   clientId: number;

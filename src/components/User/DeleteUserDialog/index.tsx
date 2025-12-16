@@ -1,5 +1,5 @@
 import { Stack, Button, Typography } from "@mui/material";
-import { UniversalDialog } from "../../../../../components";
+import { UniversalDialog } from "../../../components";
 
 interface Props {
   open: boolean;
@@ -25,7 +25,9 @@ export function DeleteUserDialog({
       title="Delete User"
       footer={
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button onClick={onClose} sx={{ color: "white" }}>Cancel</Button>
+          <Button onClick={onClose} sx={{ color: "white" }}>
+            Cancel
+          </Button>
           <Button
             onClick={onConfirm}
             color="error"

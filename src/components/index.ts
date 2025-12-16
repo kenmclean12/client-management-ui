@@ -6,3 +6,4 @@ export * from "./UniversalDialog";
 export * from "./Job";
 export * from "./Client";
 export * from "./Note";
+export * from "./Contact";

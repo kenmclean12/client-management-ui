@@ -13,11 +13,11 @@ import {
   Box,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
-import { UserResponseDto, UserRole, UserUpdateDto } from "../../../../../types";
-import { useUsersUpdate } from "../../../../../hooks";
-import { UniversalDialog } from "../../../../../components";
+import { UserResponseDto, UserRole, UserUpdateDto } from "../../../types";
+import { useUsersUpdate } from "../../../hooks";
+import { UniversalDialog } from "../../../components";
 import { iconButtonStyles, selectMenuProps } from "./styles";
-import { selectStyles, textFieldStyles } from "../../../../styles";
+import { selectStyles, textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   open: boolean;
