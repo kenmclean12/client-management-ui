@@ -1,11 +1,12 @@
 export const mainContainerStyles = {
   maxHeight: "calc(100vh - 60px)",
+  minWidth: "200px",
   width: "200px",
   backgroundColor: "black",
   color: "white",
-  py: 3,
+  py: 2,
   borderRight: "1px solid #222",
-  gap: 1.5,
+  gap: .5,
   overflowY: "auto",
 };
 
@@ -17,5 +18,5 @@ export const boxStyles = {
   py: 1,
   borderRadius: 1,
   cursor: "pointer",
-  "&:hover": { backgroundColor: "#222" },
+  "&:hover": { backgroundColor: "#101" },
 };
