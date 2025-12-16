@@ -16,12 +16,10 @@ export const paperStyles = {
 };
 
 export const tableCellStyles = {
+  maxWidth: 200,
   color: "#aaa",
-  fontSize: 13,
-};
-
-export const titleBoxStyles = {
-  display: "flex",
-  alignItems: "center",
-  gap: 1,
+  textOverflow: "ellipsis",
+  textAlign: "center",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
 };

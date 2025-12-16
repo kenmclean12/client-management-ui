@@ -19,16 +19,19 @@ import {
 } from "@mui/material";
 import {
   Edit,
-  Save,
   Assignment,
   PriorityHigh,
   CalendarToday,
-  Description,
   Title,
+  Visibility,
 } from "@mui/icons-material";
 import { Request, RequestUpdateDto } from "../../types";
 import { useRequestsGetAll, useRequestsUpdate } from "../../hooks";
-import { PageShell, UniversalDialog } from "../../components";
+import {
+  PageShell,
+  RequestDescriptionDialog,
+  UniversalDialog,
+} from "../../components";
 import {
   priorityConfig,
   statusConfig,
@@ -39,9 +42,8 @@ import {
   cardStyles,
   paperStyles,
   tableCellStyles,
-  titleBoxStyles,
 } from "./styles";
-import { textFieldStyles } from "../styles";
+import { dialogButtonStyles, tableStyles, textFieldStyles } from "../styles";
 import { formatDate } from "../../utils";
 
 interface EditingRequest {
@@ -51,6 +53,7 @@ interface EditingRequest {
 
 export default function RequestsPage() {
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
+  const [openDescription, setOpenDescription] = useState<string>("");
   const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
     null
   );
@@ -107,8 +110,8 @@ export default function RequestsPage() {
 
   return (
     <PageShell title="Requests">
-      <Box sx={{ p: 3 }}>
-        <Stack direction="row" spacing={2} mb={4}>
+      <Box sx={{ p: 2 }}>
+        <Stack direction="row" spacing={2} mb={2}>
           {statusLabels(sortedRequests).map((s) => (
             <Card key={s.label} sx={cardStyles}>
               <Typography fontSize={13} color="#aaa">
@@ -130,7 +133,7 @@ export default function RequestsPage() {
             </Box>
           ) : (
             <TableContainer>
-              <Table>
+              <Table stickyHeader sx={tableStyles}>
                 <TableHead>
                   <TableRow>
                     {tableHeaders.map((h) => (
@@ -147,21 +150,34 @@ export default function RequestsPage() {
                       hover
                       sx={{ "&:hover": { bgcolor: "#111" } }}
                     >
-                      <TableCell sx={{ color: "white" }}>
-                        <Box sx={titleBoxStyles}>
-                          <Title fontSize="small" sx={{ color: "#777" }} />
-                          {r.title}
-                        </Box>
+                      <TableCell sx={tableCellStyles}>
+                        <Title fontSize="small" sx={{ color: "#777" }} />
+                        {r.title}
                       </TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          label={statusConfig[r.status].label}
-                          icon={statusConfig[r.status].icon}
-                          color={statusConfig[r.status].color as any}
+                      <TableCell sx={tableCellStyles}>
+                        <CalendarToday
+                          fontSize="small"
+                          sx={{ mr: 0.5, color: "#888" }}
                         />
+                        {formatDate(r.createdAt)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell sx={tableCellStyles}>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          height="100%"
+                          width="100%"
+                        >
+                          <IconButton
+                            onClick={() => setOpenDescription(r.description)}
+                          >
+                            <Visibility
+                              sx={{ color: "white", cursor: "pointer" }}
+                            />
+                          </IconButton>
+                        </Stack>
+                      </TableCell>
+                      <TableCell sx={tableCellStyles}>
                         <Chip
                           size="small"
                           variant="outlined"
@@ -174,21 +190,15 @@ export default function RequestsPage() {
                           }}
                         />
                       </TableCell>
-                      <TableCell sx={{ color: "#ccc" }}>
-                        <CalendarToday
-                          fontSize="small"
-                          sx={{ mr: 0.5, color: "#888" }}
+                      <TableCell sx={tableCellStyles}>
+                        <Chip
+                          size="small"
+                          label={statusConfig[r.status].label}
+                          icon={statusConfig[r.status].icon}
+                          color={statusConfig[r.status].color as any}
                         />
-                        {formatDate(r.createdAt)}
                       </TableCell>
-                      <TableCell sx={{ color: "#aaa", maxWidth: 240 }}>
-                        <Description
-                          fontSize="small"
-                          sx={{ mr: 0.5, color: "#888" }}
-                        />
-                        {r.description || "—"}
-                      </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={tableCellStyles}>
                         <IconButton
                           sx={{ color: "white" }}
                           onClick={() => handleEditClick(r)}
@@ -207,13 +217,12 @@ export default function RequestsPage() {
       <UniversalDialog
         open={showAddDialog}
         onClose={handleCancelEdit}
-        title={editingRequest?.id === null ? "Create Request" : "Edit Request"}
+        title="Edit Request"
         footer={
           <Button
             variant="outlined"
             onClick={handleSaveEdit}
-            startIcon={<Save />}
-            sx={{ mx: 2 }}
+            sx={dialogButtonStyles}
           >
             Save
           </Button>
@@ -240,6 +249,14 @@ export default function RequestsPage() {
           />
         </Stack>
       </UniversalDialog>
+      {openDescription && (
+        <RequestDescriptionDialog
+          open={!!openDescription}
+          title="Task Request Description"
+          description={openDescription}
+          onClose={() => setOpenDescription("")}
+        />
+      )}
     </PageShell>
   );
 }

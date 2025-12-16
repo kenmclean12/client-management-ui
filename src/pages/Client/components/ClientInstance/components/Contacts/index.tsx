@@ -26,10 +26,10 @@ import {
   personIconStyles,
   tableContainerStyles,
   tableRowStyles,
-  tableStyles,
   titleStyles,
   topRowBoxStyles,
 } from "./styles";
+import { tableStyles } from "../../../../../styles";
 
 interface Props {
   client: Client;

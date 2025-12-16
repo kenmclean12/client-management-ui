@@ -30,6 +30,21 @@ export const textFieldStyles = {
   },
 };
 
+export const tableStyles = {
+  border: "1px solid #444",
+  "& .MuiTableCell-head": {
+    color: "#ccc",
+    backgroundColor: "black",
+    borderColor: "#333",
+  },
+  "& .MuiTableCell-body": {
+    color: "white",
+    borderColor: "#333",
+  },
+  "& th": { color: "#ccc", borderColor: "#333" },
+  "& td": { color: "white", borderColor: "#333" },
+};
+
 export const dialogButtonStyles = {
   color: "white",
   border: "1px solid #444",
