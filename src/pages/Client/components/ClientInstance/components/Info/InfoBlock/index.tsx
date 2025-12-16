@@ -10,16 +10,13 @@ interface Props {
 
 export function InfoBlock({ icon, label, value, multiline }: Props) {
   return (
-    <Box>
+    <Box gap={3}>
       <Box sx={boxStyles}>
         {icon}
-        <Typography variant="subtitle2">
-          {label}
-        </Typography>
+        <Typography variant="subtitle2">{label}</Typography>
       </Box>
       <Typography
         variant="body1"
-        ml={3}
         color="white"
         whiteSpace={multiline ? "pre-line" : "normal"}
       >

@@ -21,6 +21,18 @@ export const titleStyles = {
   color: "white",
 };
 
+export const emptyBoxStyles = {
+  textAlign: "center",
+  py: 4,
+  color: "#aaa",
+};
+
+export const personIconStyles = {
+  fontSize: 50,
+  mb: 0.5,
+  color: "#555",
+};
+
 export const tableStyles = {
   "& th": { color: "#ccc", borderColor: "#333" },
   "& td": { color: "white", borderColor: "#333" },

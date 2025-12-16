@@ -60,14 +60,18 @@ const darkTextFieldSx = {
 
 export function ClientProjects({ client }: Props) {
   const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
-  const [editingProject, setEditingProject] = useState<EditingProject | null>(null);
+  const [editingProject, setEditingProject] = useState<EditingProject | null>(
+    null
+  );
 
   const { data: projects, refetch } = useProjectsGetByClient(client.id);
   const createMutation = useProjectsCreate();
   const updateMutation = useProjectsUpdate(editingProject?.id || 0);
 
   const toggleProjectExpand = (id: number) => {
-    setExpandedProjects((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setExpandedProjects((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
   };
 
   const handleEditClick = (project: Project) => {
@@ -143,7 +147,13 @@ export function ClientProjects({ client }: Props) {
         color: "white",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography fontSize={18} fontWeight={600} sx={{ color: "white" }}>
           Projects
         </Typography>
@@ -153,7 +163,9 @@ export function ClientProjects({ client }: Props) {
         <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
           <Work sx={{ fontSize: 60, mb: 2, color: "#555" }} />
           <Typography variant="h6">No projects yet</Typography>
-          <Typography sx={{ mt: 1 }}>Add the first project to this client</Typography>
+          <Typography sx={{ mt: 1 }}>
+            Add the first project to this client
+          </Typography>
         </Box>
       ) : (
         <TableContainer>
@@ -176,27 +188,55 @@ export function ClientProjects({ client }: Props) {
             <TableBody>
               {projects?.map((project) => (
                 <>
-                  <TableRow key={project.id} hover sx={{ "&:hover": { backgroundColor: "#111" } }}>
+                  <TableRow
+                    key={project.id}
+                    hover
+                    sx={{ "&:hover": { backgroundColor: "#111" } }}
+                  >
                     <TableCell>
-                      <IconButton size="small" onClick={() => toggleProjectExpand(project.id)} sx={{ color: "#aaa" }}>
-                        {expandedProjects.includes(project.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                      <IconButton
+                        size="small"
+                        onClick={() => toggleProjectExpand(project.id)}
+                        sx={{ color: "#aaa" }}
+                      >
+                        {expandedProjects.includes(project.id) ? (
+                          <KeyboardArrowUp />
+                        ) : (
+                          <KeyboardArrowDown />
+                        )}
                       </IconButton>
                     </TableCell>
 
                     <TableCell>
                       {isEditing(project.id) ? (
-                        <TextField fullWidth size="small" value={editingProject?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editingProject?.data.name || ""}
+                          onChange={handleChange("name")}
+                          sx={darkTextFieldSx}
+                        />
                       ) : (
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Work fontSize="small" sx={{ color: "#777" }} />
-                          <Typography fontWeight={500}>{project.name}</Typography>
+                          <Typography fontWeight={500}>
+                            {project.name}
+                          </Typography>
                         </Stack>
                       )}
                     </TableCell>
 
                     <TableCell>
                       {isEditing(project.id) ? (
-                        <TextField fullWidth size="small" multiline rows={1} value={editingProject?.data.description || ""} onChange={handleChange("description")} sx={darkTextFieldSx} />
+                        <TextField
+                          fullWidth
+                          size="small"
+                          multiline
+                          rows={1}
+                          value={editingProject?.data.description || ""}
+                          onChange={handleChange("description")}
+                          sx={darkTextFieldSx}
+                        />
                       ) : (
                         <Typography variant="body2" sx={{ color: "#aaa" }}>
                           {project.description || "No description"}
@@ -207,17 +247,45 @@ export function ClientProjects({ client }: Props) {
                     <TableCell>
                       {isEditing(project.id) ? (
                         <Stack spacing={1}>
-                          <TextField type="date" label="Start" value={editingProject?.data.startDate || ""} onChange={handleChange("startDate")} size="small" InputLabelProps={{ shrink: true }} sx={darkTextFieldSx} />
-                          <TextField type="date" label="End" value={editingProject?.data.endDate || ""} onChange={handleChange("endDate")} size="small" InputLabelProps={{ shrink: true }} sx={darkTextFieldSx} />
+                          <TextField
+                            type="date"
+                            label="Start"
+                            value={editingProject?.data.startDate || ""}
+                            onChange={handleChange("startDate")}
+                            size="small"
+                            InputLabelProps={{ shrink: true }}
+                            sx={darkTextFieldSx}
+                          />
+                          <TextField
+                            type="date"
+                            label="End"
+                            value={editingProject?.data.endDate || ""}
+                            onChange={handleChange("endDate")}
+                            size="small"
+                            InputLabelProps={{ shrink: true }}
+                            sx={darkTextFieldSx}
+                          />
                         </Stack>
                       ) : (
                         <Box>
-                          <Stack direction="row" spacing={0.5} alignItems="center">
-                            <CalendarToday fontSize="small" sx={{ color: "#777" }} />
-                            <Typography variant="body2">{formatDate(project.startDate)}</Typography>
+                          <Stack
+                            direction="row"
+                            spacing={0.5}
+                            alignItems="center"
+                          >
+                            <CalendarToday
+                              fontSize="small"
+                              sx={{ color: "#777" }}
+                            />
+                            <Typography variant="body2">
+                              {formatDate(project.startDate)}
+                            </Typography>
                           </Stack>
                           {project.endDate && (
-                            <Typography variant="caption" sx={{ color: "#888" }}>
+                            <Typography
+                              variant="caption"
+                              sx={{ color: "#888" }}
+                            >
                               → {formatDate(project.endDate)}
                             </Typography>
                           )}
@@ -226,21 +294,41 @@ export function ClientProjects({ client }: Props) {
                     </TableCell>
 
                     <TableCell>
-                      <Chip label={`${project.jobs?.length || 0} jobs`} size="small" variant="outlined" sx={{ color: "#aaa", borderColor: "#555" }} />
+                      <Chip
+                        label={`${project.jobs?.length || 0} jobs`}
+                        size="small"
+                        variant="outlined"
+                        sx={{ color: "#aaa", borderColor: "#555" }}
+                      />
                     </TableCell>
 
                     <TableCell align="right">
                       {isEditing(project.id) ? (
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
-                          <IconButton onClick={handleCancelEdit} sx={{ color: "#aaa" }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
+                          <IconButton
+                            onClick={handleCancelEdit}
+                            sx={{ color: "#aaa" }}
+                          >
                             <Cancel />
                           </IconButton>
-                          <IconButton onClick={handleSaveEdit} sx={{ color: "white" }} disabled={!editingProject?.data.name}>
+                          <IconButton
+                            onClick={handleSaveEdit}
+                            sx={{ color: "white" }}
+                            disabled={!editingProject?.data.name}
+                          >
                             <Save />
                           </IconButton>
                         </Stack>
                       ) : (
-                        <IconButton onClick={() => handleEditClick(project)} disabled={!!editingProject} sx={{ color: "#aaa" }}>
+                        <IconButton
+                          onClick={() => handleEditClick(project)}
+                          disabled={!!editingProject}
+                          sx={{ color: "#aaa" }}
+                        >
                           <Edit />
                         </IconButton>
                       )}
@@ -249,9 +337,18 @@ export function ClientProjects({ client }: Props) {
 
                   <TableRow>
                     <TableCell colSpan={6} sx={{ p: 0, borderTop: 0 }}>
-                      <Collapse in={expandedProjects.includes(project.id)} timeout="auto" unmountOnExit>
+                      <Collapse
+                        in={expandedProjects.includes(project.id)}
+                        timeout="auto"
+                        unmountOnExit
+                      >
                         <Box sx={{ m: 2, ml: 6 }}>
-                          <ProjectJobsDropdown clientId={client.id} projectId={project.id} jobs={project.jobs || []} refreshParent={refetch} />
+                          <ProjectJobsDropdown
+                            clientId={client.id}
+                            projectId={project.id}
+                            jobs={project.jobs || []}
+                            refreshParent={refetch}
+                          />
                         </Box>
                       </Collapse>
                     </TableCell>

@@ -14,7 +14,6 @@ export function ClientAddressMap({ client }: Props) {
     client.zipCode,
     client.country,
   ].filter(Boolean);
-  const addressQuery = encodeURIComponent(addressParts.join(", "));
 
   if (addressParts.length === 0) {
     return (
@@ -23,6 +22,8 @@ export function ClientAddressMap({ client }: Props) {
       </Box>
     );
   }
+
+  const addressQuery = encodeURIComponent(addressParts.join(", "));
 
   return (
     <Box sx={boxStyles}>

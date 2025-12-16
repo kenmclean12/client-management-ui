@@ -6,6 +6,7 @@ import { useClientsGetById } from "../../../../hooks";
 import { ClientContacts, ClientInfo, ClientProjects } from "./components";
 import { PageShell } from "../../../../components";
 import ClientAddDialog from "../../../../components/Client/ClientAddForm";
+import { fabStyles, tabStyles } from "./styles";
 
 enum ClientTab {
   Info = 0,
@@ -35,32 +36,13 @@ export function ClientInstancePage() {
   return (
     <PageShell title="Clients" actions={<ClientAddDialog />}>
       <Stack>
-        <Tabs
-          value={tab}
-          onChange={(_, v) => setTab(v)}
-          sx={{
-            px: 1.25,
-            "& .MuiTab-root": {
-              color: "rgba(255,255,255,0.7)",
-              textTransform: "none",
-            },
-            "& .MuiTab-root.Mui-selected": {
-              color: "#fff",
-            },
-            "& .MuiTabs-indicator": {
-              backgroundColor: "#fff",
-            },
-          }}
-        >
+        <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={tabStyles}>
           <Tab label="Info" />
           <Tab label="Contacts" />
           <Tab label="Projects" />
         </Tabs>
         <Divider />
-        <Stack
-          ref={scrollRef}
-          onScroll={handleScroll}
-        >
+        <Stack ref={scrollRef} onScroll={handleScroll}>
           {client && (
             <>
               {tab === ClientTab.Info && <ClientInfo client={client} />}
@@ -68,18 +50,12 @@ export function ClientInstancePage() {
               {tab === ClientTab.Projects && <ClientProjects client={client} />}
             </>
           )}
-
           <Fade in={showScrollTop}>
             <Fab
               size="small"
               color="primary"
               onClick={scrollToTop}
-              sx={{
-                position: "sticky",
-                bottom: 16,
-                alignSelf: "flex-end",
-                mt: 2,
-              }}
+              sx={fabStyles}
             >
               <KeyboardArrowUp />
             </Fab>

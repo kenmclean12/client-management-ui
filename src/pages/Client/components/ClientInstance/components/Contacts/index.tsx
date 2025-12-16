@@ -21,7 +21,9 @@ import {
   ContactEditDialog,
 } from "../../../../../../components";
 import {
+  emptyBoxStyles,
   paperStyles,
+  personIconStyles,
   tableRowStyles,
   tableStyles,
   titleStyles,
@@ -43,8 +45,8 @@ export function ClientContacts({ client }: Props) {
       </Box>
       <Divider sx={{ my: 1, backgroundColor: "#444" }} />
       {contacts.length === 0 ? (
-        <Box sx={{ textAlign: "center", py: 4, color: "#aaa" }}>
-          <Person sx={{ fontSize: 50, mb: 0.5, color: "#555" }} />
+        <Box sx={emptyBoxStyles}>
+          <Person sx={personIconStyles} />
           <Typography variant="h6">No contacts yet</Typography>
           <Typography sx={{ mt: 1 }}>
             Add the first contact to this client

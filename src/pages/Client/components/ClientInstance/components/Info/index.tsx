@@ -3,7 +3,12 @@ import { Phone, Email, LocationOn } from "@mui/icons-material";
 import { Client } from "../../../../../../types";
 import { ClientEditDialog } from "../../../../../../components/Client/ClientEditForm";
 import { InfoBlock } from "./InfoBlock";
-import { titleStyles, topRowBoxStyles } from "./styles";
+import {
+  mainBoxStyles,
+  paperStyles,
+  titleStyles,
+  topRowBoxStyles,
+} from "./styles";
 import { ClientAddressMap } from "./Map";
 import { useNotesGetByClient } from "../../../../../../hooks";
 import { NoteSection } from "../../../../../../components";
@@ -14,17 +19,9 @@ interface Props {
 
 export function ClientInfo({ client }: Props) {
   const { data: notes } = useNotesGetByClient(client.id);
+
   return (
-    <Paper
-      sx={{
-        p: 3,
-        m: 1,
-        mt: 2,
-        backgroundColor: "black",
-        border: "1px solid #444",
-        borderRadius: 2,
-      }}
-    >
+    <Paper sx={paperStyles}>
       <Box sx={topRowBoxStyles}>
         <Typography fontWeight={600} sx={titleStyles}>
           {client.name}
@@ -32,13 +29,7 @@ export function ClientInfo({ client }: Props) {
         <ClientEditDialog client={client} />
       </Box>
       <Divider sx={{ my: 2, backgroundColor: "#444" }} />
-      <Box
-        sx={{
-          display: "flex",
-          gap: 4,
-          flexDirection: { xs: "column", md: "row" },
-        }}
-      >
+      <Box sx={mainBoxStyles}>
         <Box sx={{ flex: 1, mt: 0.5 }}>
           <Stack spacing={3}>
             <InfoBlock icon={<Email />} label="Email" value={client.email} />

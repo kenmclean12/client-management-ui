@@ -1,3 +1,12 @@
+export const paperStyles = {
+  p: 3,
+  m: 1,
+  mt: 2,
+  backgroundColor: "black",
+  border: "1px solid #444",
+  borderRadius: 2,
+};
+
 export const topRowBoxStyles = {
   display: "flex",
   alignItems: "flex-start",
@@ -14,6 +23,12 @@ export const titleStyles = {
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
+};
+
+export const mainBoxStyles = {
+  display: "flex",
+  flexDirection: { xs: "column", md: "row" },
+  gap: 4,
 };
 
 export const infoBoxStyles = {

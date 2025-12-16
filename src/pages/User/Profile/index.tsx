@@ -29,7 +29,6 @@ export function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const userId = Number(id);
   const { user: self } = useAuth();
-
   const { data: user, refetch } = useUsersGetById(userId, {
     enabled: userId > 0,
   });
@@ -108,78 +107,76 @@ export function ProfilePage() {
               </Stack>
             </Stack>
           </Stack>
-          {user?.role === UserRole.Admin && (
-            <Stack width="100%">
-              <Divider sx={{ my: 2, backgroundColor: "#444" }} />
-              <Box pb={2}>
-                <Typography fontSize="16px" color="white" mb={2}>
-                  Assigned Projects
-                </Typography>
-                <Stack
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing={2}
-                  py={5}
-                  width="100%"
-                  border="1px solid #444"
-                  sx={{ backgroundColor: "#1e1e1e" }}
-                >
-                  {projects.length > 0 ? (
-                    projects.map((project) => (
-                      <Paper key={project.id} variant="outlined" sx={{ p: 2 }}>
-                        <Typography fontWeight={600} sx={ellipsisTextStyles}>
-                          {project.name}
-                        </Typography>
-
-                        {project.description && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            mt={0.5}
-                          >
-                            {project.description}
-                          </Typography>
-                        )}
-
-                        {jobsByProject[project.id]?.length > 0 && (
-                          <>
-                            <Divider sx={{ my: 2 }} />
-                            <Stack spacing={1}>
-                              {jobsByProject[project.id].map((job) => (
-                                <Box key={job.id}>
-                                  <Typography
-                                    fontSize={14}
-                                    fontWeight={500}
-                                    sx={ellipsisTextStyles}
-                                  >
-                                    {job.name}
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={ellipsisTextStyles}
-                                  >
-                                    {job.status} · {job.priority}
-                                  </Typography>
-                                </Box>
-                              ))}
-                            </Stack>
-                          </>
-                        )}
-                      </Paper>
-                    ))
-                  ) : (
-                    <Box textAlign="center">
-                      <Work sx={{ fontSize: 40, color: "#ccc" }} />
-                      <Typography fontSize={16} color="#ccc">
-                        No Projects Found
+          <Stack width="100%">
+            <Divider sx={{ my: 2, backgroundColor: "#444" }} />
+            <Box pb={2}>
+              <Typography fontSize="16px" color="white" mb={2}>
+                Assigned Projects
+              </Typography>
+              <Stack
+                alignItems="center"
+                justifyContent="center"
+                spacing={2}
+                py={5}
+                width="100%"
+                border="1px solid #444"
+                sx={{ backgroundColor: "#1e1e1e" }}
+              >
+                {projects.length > 0 ? (
+                  projects.map((project) => (
+                    <Paper key={project.id} variant="outlined" sx={{ p: 2 }}>
+                      <Typography fontWeight={600} sx={ellipsisTextStyles}>
+                        {project.name}
                       </Typography>
-                    </Box>
-                  )}
-                </Stack>
-              </Box>
-            </Stack>
-          )}
+
+                      {project.description && (
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          mt={0.5}
+                        >
+                          {project.description}
+                        </Typography>
+                      )}
+
+                      {jobsByProject[project.id]?.length > 0 && (
+                        <>
+                          <Divider sx={{ my: 2 }} />
+                          <Stack spacing={1}>
+                            {jobsByProject[project.id].map((job) => (
+                              <Box key={job.id}>
+                                <Typography
+                                  fontSize={14}
+                                  fontWeight={500}
+                                  sx={ellipsisTextStyles}
+                                >
+                                  {job.name}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                  sx={ellipsisTextStyles}
+                                >
+                                  {job.status} · {job.priority}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Stack>
+                        </>
+                      )}
+                    </Paper>
+                  ))
+                ) : (
+                  <Box textAlign="center">
+                    <Work sx={{ fontSize: 40, color: "#ccc" }} />
+                    <Typography fontSize={16} color="#ccc">
+                      No Projects Found
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Box>
+          </Stack>
           <Stack width="100%">
             <Divider sx={{ my: 2, backgroundColor: "#444" }} />
             <Box pb={1}>
