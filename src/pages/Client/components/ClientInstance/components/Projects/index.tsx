@@ -144,7 +144,7 @@ export function ClientProjects({ client }: Props) {
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h5" fontWeight={600} sx={{ color: "white" }}>
+        <Typography fontSize={18} fontWeight={600} sx={{ color: "white" }}>
           Projects
         </Typography>
       </Box>

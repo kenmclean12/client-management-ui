@@ -20,6 +20,13 @@ import {
   ContactDeleteDialog,
   ContactEditDialog,
 } from "../../../../../../components";
+import {
+  paperStyles,
+  tableRowStyles,
+  tableStyles,
+  titleStyles,
+  topRowBoxStyles,
+} from "./styles";
 
 interface Props {
   client: Client;
@@ -29,34 +36,15 @@ export function ClientContacts({ client }: Props) {
   const { data: contacts = [] } = useContactsGetByClient(client.id);
 
   return (
-    <Paper
-      sx={{
-        p: 2,
-        paddingInline: 3,
-        m: 1,
-        mt: 2,
-        backgroundColor: "black",
-        border: "1px solid #444",
-        borderRadius: 2,
-        color: "white",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography fontSize={18} fontWeight={600} sx={{ color: "white" }}>
-          Contacts
-        </Typography>
+    <Paper sx={paperStyles}>
+      <Box sx={topRowBoxStyles}>
+        <Typography sx={titleStyles}>Contacts</Typography>
         <ContactAddDialog clientId={client.id} />
       </Box>
       <Divider sx={{ my: 1, backgroundColor: "#444" }} />
       {contacts.length === 0 ? (
-        <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
-          <Person sx={{ fontSize: 60, mb: 2, color: "#555" }} />
+        <Box sx={{ textAlign: "center", py: 4, color: "#aaa" }}>
+          <Person sx={{ fontSize: 50, mb: 0.5, color: "#555" }} />
           <Typography variant="h6">No contacts yet</Typography>
           <Typography sx={{ mt: 1 }}>
             Add the first contact to this client
@@ -64,12 +52,7 @@ export function ClientContacts({ client }: Props) {
         </Box>
       ) : (
         <TableContainer>
-          <Table
-            sx={{
-              "& th": { color: "#ccc", borderColor: "#333" },
-              "& td": { color: "white", borderColor: "#333" },
-            }}
-          >
+          <Table sx={tableStyles}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -80,19 +63,15 @@ export function ClientContacts({ client }: Props) {
             </TableHead>
             <TableBody>
               {contacts.map((contact) => (
-                <TableRow
-                  key={contact.id}
-                  hover
-                  sx={{ "&:hover": { backgroundColor: "#111" } }}
-                >
+                <TableRow key={contact.id} sx={tableRowStyles} hover>
                   <TableCell>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" alignItems="center" spacing={1}>
                       <Person fontSize="small" sx={{ color: "#777" }} />
                       <Typography>{contact.name}</Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" alignItems="center" spacing={1}>
                       <Email fontSize="small" sx={{ color: "#777" }} />
                       <Typography>{contact.email}</Typography>
                     </Stack>
@@ -115,8 +94,8 @@ export function ClientContacts({ client }: Props) {
                   <TableCell align="right">
                     <Stack
                       direction="row"
-                      spacing={1}
                       justifyContent="flex-end"
+                      spacing={1}
                     >
                       <ContactEditDialog contact={contact} />
                       <ContactDeleteDialog
