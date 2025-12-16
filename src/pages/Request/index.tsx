@@ -15,12 +15,7 @@ import {
   Stack,
   Chip,
   TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Card,
-  CardContent,
 } from "@mui/material";
 import {
   Edit,
@@ -33,8 +28,7 @@ import {
 } from "@mui/icons-material";
 import { Request, RequestUpdateDto } from "../../types";
 import { useRequestsGetAll, useRequestsUpdate } from "../../hooks";
-import { format } from "date-fns";
-import { PageShell } from "../../components";
+import { PageShell, UniversalDialog } from "../../components";
 import {
   priorityConfig,
   statusConfig,
@@ -47,6 +41,8 @@ import {
   tableCellStyles,
   titleBoxStyles,
 } from "./styles";
+import { textFieldStyles } from "../styles";
+import { formatDate } from "../../utils";
 
 interface EditingRequest {
   id: number | null;
@@ -59,7 +55,9 @@ export default function RequestsPage() {
     null
   );
   const { data: requests, refetch } = useRequestsGetAll();
-  const updateMutation = useRequestsUpdate(editingRequest?.id || 0);
+  const { mutateAsync: updateRequest } = useRequestsUpdate(
+    editingRequest?.id || 0
+  );
 
   const handleEditClick = (request: Request) => {
     setEditingRequest({
@@ -81,9 +79,8 @@ export default function RequestsPage() {
 
   const handleSaveEdit = async () => {
     if (!editingRequest) return;
-
     if (editingRequest.id !== null) {
-      await updateMutation.mutateAsync({
+      await updateRequest({
         id: editingRequest.id,
         dto: editingRequest.data,
       });
@@ -104,9 +101,6 @@ export default function RequestsPage() {
       });
     };
 
-  const formatDate = (d?: string | null) =>
-    d ? format(new Date(d), "MMM dd, yyyy HH:mm") : "—";
-
   const sortedRequests = [...(requests || [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
@@ -117,14 +111,12 @@ export default function RequestsPage() {
         <Stack direction="row" spacing={2} mb={4}>
           {statusLabels(sortedRequests).map((s) => (
             <Card key={s.label} sx={cardStyles}>
-              <CardContent>
-                <Typography fontSize={13} color="#aaa">
-                  {s.label}
-                </Typography>
-                <Typography variant="h5" color="white" mt={0.5}>
-                  {s.count}
-                </Typography>
-              </CardContent>
+              <Typography fontSize={13} color="#aaa">
+                {s.label}
+              </Typography>
+              <Typography variant="h5" color="white" mt={0.5}>
+                {s.count}
+              </Typography>
             </Card>
           ))}
         </Stack>
@@ -212,46 +204,42 @@ export default function RequestsPage() {
           )}
         </Paper>
       </Box>
-      <Dialog
+      <UniversalDialog
         open={showAddDialog}
         onClose={handleCancelEdit}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle sx={{ bgcolor: "#0b0b0b", color: "white" }}>
-          {editingRequest?.id === null ? "Create Request" : "Edit Request"}
-        </DialogTitle>
-        <DialogContent sx={{ bgcolor: "#0b0b0b" }}>
-          <Stack spacing={3} sx={{ mt: 1 }}>
-            <TextField
-              label="User Id"
-              value={editingRequest?.data.assignedUserId || 0}
-              onChange={handleChange("assignedUserId")}
-              fullWidth
-            />
-            <TextField
-              label="Due date"
-              value={editingRequest?.data.dueDate || ""}
-              onChange={handleChange("dueDate")}
-              fullWidth
-              multiline
-              rows={4}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions sx={{ bgcolor: "#0b0b0b" }}>
-          <Button sx={{ color: "white" }} onClick={handleCancelEdit}>
-            Cancel
-          </Button>
+        title={editingRequest?.id === null ? "Create Request" : "Edit Request"}
+        footer={
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={handleSaveEdit}
             startIcon={<Save />}
+            sx={{ mx: 2 }}
           >
             Save
           </Button>
-        </DialogActions>
-      </Dialog>
+        }
+      >
+        <Stack spacing={3} sx={{ mt: 1 }}>
+          <TextField
+            label="User Id"
+            value={editingRequest?.data.assignedUserId || 0}
+            onChange={handleChange("assignedUserId")}
+            size="small"
+            sx={textFieldStyles}
+            fullWidth
+          />
+          <TextField
+            label="Due date"
+            value={editingRequest?.data.dueDate || ""}
+            onChange={handleChange("dueDate")}
+            fullWidth
+            size="small"
+            sx={textFieldStyles}
+            multiline
+            rows={4}
+          />
+        </Stack>
+      </UniversalDialog>
     </PageShell>
   );
 }

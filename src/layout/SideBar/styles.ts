@@ -1,4 +1,5 @@
 export const mainContainerStyles = {
+  maxHeight: "calc(100vh - 60px)",
   width: "200px",
   backgroundColor: "black",
   color: "white",

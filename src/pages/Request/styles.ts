@@ -1,13 +1,18 @@
 export const cardStyles = {
+  display: "flex",
   flex: 1,
-  bgcolor: "#0b0b0b",
-  border: "1px solid #1f1f1f",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  py: 1.5,
+  bgcolor: "black",
+  border: "1px solid #444",
 };
 
 export const paperStyles = {
   p: 3,
-  bgcolor: "#0b0b0b",
-  border: "1px solid #1f1f1f",
+  bgcolor: "black",
+  border: "1px solid #444",
 };
 
 export const tableCellStyles = {

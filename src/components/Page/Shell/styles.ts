@@ -1,7 +1,8 @@
 export const mainContainerStyles = {
   position: "relative",
-  minHeight: "93vh",
+  minHeight: "calc(100vh - 60px)",
   backgroundColor: "#1e1e1e",
+  overflow: "hidden",
 };
 
 export const titleContainerStyles = {
@@ -9,4 +10,4 @@ export const titleContainerStyles = {
   flexDirection: "row",
   alignItems: "center",
   gap: 0.5,
-}
+};

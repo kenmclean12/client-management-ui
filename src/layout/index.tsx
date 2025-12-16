@@ -7,7 +7,14 @@ export default function Layout() {
   return (
     <Stack direction="column" minWidth="550px">
       <TopBar />
-      <Stack direction="row" sx={{ maxWidth: "calc(100vw)", overflowX: "hidden" }}>
+      <Stack
+        direction="row"
+        sx={{
+          maxHeight: "calc(100vh - 60px)",
+          maxWidth: "calc(100vw)",
+          overflowX: "hidden",
+        }}
+      >
         <SideBar />
         <Stack sx={{ flex: 1 }}>
           <Outlet />

@@ -35,7 +35,15 @@ export function NoteSection({ clientId, data: notes }: Props) {
           </Typography>
         </Box>
       ) : (
-        <Stack spacing={1}>
+        <Stack
+         spacing={.5}
+  sx={{
+    height: 200,
+    overflowY: "auto",
+    flexShrink: 0,
+  }}
+>
+
           {sortedNotes.map((note) => (
             <NoteCard note={note} />
           ))}

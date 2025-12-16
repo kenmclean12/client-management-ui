@@ -1,7 +1,9 @@
 export const cardStyles = {
+  minHeight: "75px",
+  p: 1,
+  px: 1.5,
   backgroundColor: "#191717ff",
   border: "1px solid #444",
-  borderLeft: "2px solid white",
   transition: "all 0.2s",
 };
 

@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Divider, Stack, Typography } from "@mui/material";
 import { Note } from "../../../types";
 import { AccessTime, EditCalendar } from "@mui/icons-material";
 import { DeleteNoteDialog } from "../DeleteNoteDialog";
@@ -25,34 +18,31 @@ interface Props {
 export function NoteCard({ note }: Props) {
   return (
     <Card key={note.id} variant="outlined" sx={cardStyles}>
-      <CardContent>
-        <Box color="white" whiteSpace="pre-wrap">
-          {note.content}
-        </Box>
-        <Divider sx={{ my: 1 }} />
-        <Stack sx={rowContainerStyles}>
-          <Box sx={dateContainerStyles}>
+      <Box color="white" whiteSpace="pre-wrap">
+        {note.content}
+      </Box>
+      <Stack sx={rowContainerStyles}>
+        <Box sx={dateContainerStyles}>
+          <Box sx={dateInnerContainerStyles}>
+            <AccessTime fontSize="small" />
+            <Typography variant="caption">
+              Created: {formatDate(note.createdAt)}
+            </Typography>
+          </Box>
+          {note.updatedAt && (
             <Box sx={dateInnerContainerStyles}>
-              <AccessTime fontSize="small" />
+              <EditCalendar fontSize="small" />
               <Typography variant="caption">
-                Created: {formatDate(note.createdAt)}
+                Updated: {formatDate(note.updatedAt)}
               </Typography>
             </Box>
-            {note.updatedAt && (
-              <Box sx={dateInnerContainerStyles}>
-                <EditCalendar fontSize="small" />
-                <Typography variant="caption">
-                  Updated: {formatDate(note.updatedAt)}
-                </Typography>
-              </Box>
-            )}
-          </Box>
-          <Stack direction="row" spacing={1}>
-            <EditNoteDialog note={note} />
-            <DeleteNoteDialog noteId={note.id} />
-          </Stack>
+          )}
+        </Box>
+        <Stack direction="row" spacing={1}>
+          <EditNoteDialog note={note} />
+          <DeleteNoteDialog noteId={note.id} />
         </Stack>
-      </CardContent>
+      </Stack>
     </Card>
   );
 }
