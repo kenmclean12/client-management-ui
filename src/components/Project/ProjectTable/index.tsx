@@ -64,7 +64,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
   const toggleExpand = (id: number) =>
     setExpandedProjectId((current) => (current === id ? null : id));
 
-
   const handleEditClick = (project: Project) => {
     setEditingProject({
       id: project.id,
