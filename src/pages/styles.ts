@@ -1,15 +1,7 @@
 export const textFieldStyles = {
-  "& .MuiInputBase-input": {
-    color: "white",
-    backgroundColor: "black",
-  },
-  "& .MuiInputLabel-root": {
-    color: "white",
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: "white",
-  },
   "& .MuiOutlinedInput-root": {
+    backgroundColor: "black",
+
     "& fieldset": {
       borderColor: "#444",
     },
@@ -20,7 +12,24 @@ export const textFieldStyles = {
       borderColor: "#444",
     },
   },
+
+  "& .MuiInputBase-input": {
+    color: "white",
+  },
+
+  "& .MuiInputBase-inputMultiline": {
+    color: "white",
+  },
+
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
+
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "white",
+  },
 };
+
 
 export const selectStyles = {
   height: "40px",

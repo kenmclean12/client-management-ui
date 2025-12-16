@@ -71,7 +71,7 @@ export function ClientInfo({ client }: Props) {
           <ClientAddressMap client={client} />
         </Box>
       </Box>
-      <Divider sx={{ my: 3, backgroundColor: "#444" }} />
+      <Divider sx={{ mt: 3, mb: 1, backgroundColor: "#444" }} />
       <NoteSection clientId={client.id} data={notes} />
     </Paper>
   );

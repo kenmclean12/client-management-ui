@@ -134,7 +134,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
         }}
       >
         <Typography variant="h6" color="white" fontWeight={600}>
-          Notes
+          Notes ({notes ? notes.length : 0})
         </Typography>
         <IconButton
           onClick={handleAddClick}
@@ -162,7 +162,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
           </Typography>
         </Box>
       ) : (
-        <Stack spacing={3}>
+        <Stack spacing={1}>
           {sortedNotes.map((note) => (
             <Card
               key={note.id}
@@ -309,7 +309,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
           value={editingNote?.data.content || ""}
           onChange={handleChange("content")}
           multiline
-          rows={4}
+          rows={3}
           fullWidth
           required
           placeholder="Enter note content..."
