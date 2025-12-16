@@ -7,3 +7,18 @@ export const mainContainerStyles = {
   backgroundColor: "black",
   color: "white",
 };
+
+export const rowContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+};
+
+export const actionsContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 1,
+};

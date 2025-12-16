@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { PageTopBar } from "../TopBar";
-import { mainContainerStyles } from "./styles";
+import { mainContainerStyles, titleContainerStyles } from "./styles";
 
 type Props = {
   title: string;
@@ -15,7 +15,7 @@ export function PageShell({ title, icon, actions, children }: Props) {
     <Box sx={mainContainerStyles}>
       <PageTopBar
         title={
-          <Stack direction="row" alignItems="center" spacing={0.5}>
+          <Stack sx={titleContainerStyles}>
             <Typography>{title}</Typography>
             {icon}
           </Stack>

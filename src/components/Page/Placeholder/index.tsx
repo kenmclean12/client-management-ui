@@ -5,6 +5,8 @@ import {
   avatarStyles,
   contentContainerStyles,
   mainContainerStyles,
+  subTextStyles,
+  textStyles,
 } from "./styles";
 
 export function PagePlaceholder({ type, textOverride }: Props) {
@@ -14,11 +16,11 @@ export function PagePlaceholder({ type, textOverride }: Props) {
     <Box sx={mainContainerStyles}>
       <Stack sx={contentContainerStyles}>
         <Avatar sx={avatarStyles}>{config.icon}</Avatar>
-        <Typography variant="h6" color="grey" fontWeight={600}>
+        <Typography variant="h6" sx={textStyles}>
           {textOverride ?? config.text}
         </Typography>
         {config.subText && (
-          <Typography variant="body2" color="grey" textAlign="center">
+          <Typography variant="body2" sx={subTextStyles}>
             {config.subText}
           </Typography>
         )}
