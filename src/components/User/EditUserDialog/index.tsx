@@ -21,7 +21,11 @@ import {
   inputLabelStyles,
   selectMenuProps,
 } from "./styles";
-import { selectStyles, textFieldStyles } from "../../../pages/styles";
+import {
+  dialogButtonStyles,
+  selectStyles,
+  textFieldStyles,
+} from "../../../pages/styles";
 import { userTextFields } from "./config";
 
 interface Props {
@@ -71,18 +75,14 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
       onClose={onClose}
       title="Edit User"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button onClick={onClose} sx={{ color: "white" }}>
-            Cancel
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleSave}
-            disabled={updateMutation.isPending}
-          >
-            Save
-          </Button>
-        </Stack>
+        <Button
+          variant="outlined"
+          onClick={handleSave}
+          sx={dialogButtonStyles}
+          disabled={updateMutation.isPending}
+        >
+          Save
+        </Button>
       }
     >
       <Stack spacing={2.5}>
@@ -127,6 +127,7 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
             value={formData.role}
             label="Role"
             sx={selectStyles}
+            size="small"
             MenuProps={selectMenuProps}
             onChange={(e) =>
               setFormData((p) => ({

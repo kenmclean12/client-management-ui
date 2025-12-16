@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button, IconButton, Stack, TextField } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useAuth } from "../../../context";
 import { UserRole } from "../../../types";
 import { useUsersInvite } from "../../../hooks";
 import { UniversalDialog } from "../../UniversalDialog";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 export function UserInviteForm() {
   const [open, setOpen] = useState<boolean>(false);
@@ -31,14 +31,14 @@ export function UserInviteForm() {
         onClose={() => setOpen(false)}
         title="Invite User"
         footer={
-          <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-            <Button onClick={() => setOpen(false)} sx={{ color: "white" }}>
-              Cancel
-            </Button>
-            <Button variant="outlined" sx={{ color: "white", border: "1px solid white" }} onClick={handleSend} disabled={!email}>
-              Send
-            </Button>
-          </Stack>
+          <Button
+            variant="outlined"
+            sx={dialogButtonStyles}
+            onClick={handleSend}
+            disabled={!email}
+          >
+            Send
+          </Button>
         }
       >
         <TextField

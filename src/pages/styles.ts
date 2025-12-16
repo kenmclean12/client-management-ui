@@ -30,9 +30,18 @@ export const textFieldStyles = {
   },
 };
 
+export const dialogButtonStyles = {
+  color: "white",
+  border: "1px solid #444",
+  mx: 1.5,
+  "&.Mui-disabled": {
+    color: "white",
+    borderColor: "#444",
+    opacity: 0.5,
+  },
+};
 
 export const selectStyles = {
-  height: "40px",
   color: "white",
   backgroundColor: "black",
   "& .MuiOutlinedInput-notchedOutline": {

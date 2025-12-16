@@ -1,6 +1,6 @@
 import { Stack, Button, TextField } from "@mui/material";
 import { UniversalDialog } from "../../UniversalDialog";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   open: boolean;
@@ -29,14 +29,14 @@ export function ResetPasswordDialog({
       onClose={onClose}
       title="Reset Password"
       footer={
-        <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button onClick={onClose} sx={{ color: "white" }}>
-            Cancel
-          </Button>
-          <Button onClick={onConfirm} variant="outlined" disabled={isPending}>
-            Reset
-          </Button>
-        </Stack>
+        <Button
+          onClick={onConfirm}
+          variant="outlined"
+          sx={dialogButtonStyles}
+          disabled={isPending}
+        >
+          Reset
+        </Button>
       }
     >
       <Stack spacing={2}>
