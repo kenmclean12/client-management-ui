@@ -2,7 +2,6 @@ export const mainContainerStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  width: "80vw",
   minHeight: "75vh",
 };
 
