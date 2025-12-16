@@ -43,8 +43,3 @@ export const personIconStyles = {
 export const tableRowStyles = {
   "&:hover": { backgroundColor: "#111" },
 };
-
-export const tableContainerStyles = {
-  height: "680px",
-  overflowY: "auto",
-};

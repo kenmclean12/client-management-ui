@@ -45,6 +45,11 @@ export const tableStyles = {
   "& td": { color: "white", borderColor: "#333" },
 };
 
+export const tableContainerStyles = {
+  height: "680px",
+  overflowY: "auto",
+};
+
 export const dialogButtonStyles = {
   color: "white",
   border: "1px solid #444",

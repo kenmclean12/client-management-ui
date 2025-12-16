@@ -24,12 +24,11 @@ import {
   emptyBoxStyles,
   paperStyles,
   personIconStyles,
-  tableContainerStyles,
   tableRowStyles,
   titleStyles,
   topRowBoxStyles,
 } from "./styles";
-import { tableStyles } from "../../../../../styles";
+import { tableContainerStyles, tableStyles } from "../../../../../styles";
 
 interface Props {
   client: Client;

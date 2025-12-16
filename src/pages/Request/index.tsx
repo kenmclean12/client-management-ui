@@ -45,7 +45,12 @@ import {
   paperStyles,
   tableCellStyles,
 } from "./styles";
-import { dialogButtonStyles, tableStyles, textFieldStyles } from "../styles";
+import {
+  dialogButtonStyles,
+  tableContainerStyles,
+  tableStyles,
+  textFieldStyles,
+} from "../styles";
 import { formatDate } from "../../utils";
 
 interface EditingRequest {
@@ -134,7 +139,7 @@ export default function RequestsPage() {
               </Typography>
             </Box>
           ) : (
-            <TableContainer>
+            <TableContainer sx={{ ...tableContainerStyles, height: "670px" }}>
               <Table stickyHeader sx={tableStyles}>
                 <TableHead>
                   <TableRow>
