@@ -148,9 +148,7 @@ export function ClientProjects({ client }: Props) {
           Projects
         </Typography>
       </Box>
-
       <Divider sx={{ my: 2, backgroundColor: "#444" }} />
-
       {projects?.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
           <Work sx={{ fontSize: 60, mb: 2, color: "#555" }} />
