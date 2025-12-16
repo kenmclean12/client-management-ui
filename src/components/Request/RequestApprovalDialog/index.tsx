@@ -74,7 +74,7 @@ export function RequestApprovalDialog({ request, onRefetch }: Props) {
 
   return (
     <>
-      <IconButton sx={{ color: "white" }} onClick={handleApproveClick}>
+      <IconButton sx={{ color: "green" }} onClick={handleApproveClick}>
         <Check />
       </IconButton>
       <UniversalDialog

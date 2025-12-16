@@ -59,7 +59,7 @@ export function RequestsTable({ requests, onRefetch }: Props) {
                 <TableCell align="center" sx={tableCellStyles}>
                   <Box sx={ellipsisTextBoxStyles}>
                     <Title fontSize="small" sx={{ color: "#777" }} />
-                    <Typography variant="body2" noWrap color="white">
+                    <Typography variant="body2" noWrap color="#aaa">
                       {r.title}
                     </Typography>
                   </Box>

@@ -145,7 +145,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
           </CardContent>
         </Card>
       </Stack>
-
       <Paper
         sx={{
           p: 3,
@@ -190,8 +189,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                               navigate(`/users/${p.assignedUserId}`)
                             }
                             showUserName
-                            color="transparent"
-                            hoverColor="transparent"
                           />
                         ) : (
                           <Typography color="#666">—</Typography>
@@ -202,6 +199,7 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           <Typography
                             noWrap
                             sx={{
+                              color: "#aaa",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                             }}
@@ -248,7 +246,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           "—"
                         )}
                       </TableCell>
-
                       <TableCell align="center" sx={{ maxWidth: 180 }}>
                         {p.client ? (
                           <Tooltip title={p.client.name} arrow>
@@ -257,6 +254,7 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                               sx={{
                                 cursor: "pointer",
                                 overflow: "hidden",
+                                color: "#aaa",
                                 textOverflow: "ellipsis",
                                 "&:hover": {
                                   color: "white",
@@ -274,7 +272,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           "—"
                         )}
                       </TableCell>
-
                       <TableCell align="center" sx={{ maxWidth: 200 }}>
                         <Tooltip
                           title={`${formatDate(p.startDate)} → ${formatDate(
@@ -282,12 +279,11 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           )}`}
                           arrow
                         >
-                          <Typography noWrap variant="body2">
+                          <Typography noWrap variant="body2" color="#aaa">
                             {formatDate(p.startDate)} → {formatDate(p.dueDate)}
                           </Typography>
                         </Tooltip>
                       </TableCell>
-
                       <TableCell align="center">
                         <Chip
                           clickable
@@ -341,11 +337,10 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           color={projectStatusConfig[p.projectStatus].color}
                         />
                       </TableCell>
-
                       <TableCell align="center">
                         <IconButton
                           onClick={() => handleEditClick(p)}
-                          sx={{ color: "#aaa" }}
+                          sx={{ color: "green" }}
                         >
                           <Check />
                         </IconButton>
