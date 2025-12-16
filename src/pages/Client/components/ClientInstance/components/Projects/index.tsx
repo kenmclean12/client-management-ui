@@ -138,6 +138,7 @@ export function ClientProjects({ client }: Props) {
   return (
     <Paper
       sx={{
+        height: "80.25vh",
         p: 3,
         m: 1,
         mt: 2,
