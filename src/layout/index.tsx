@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <Stack direction="column" sx={{ height: "90vh" }}>
+    <Stack direction="column" minWidth="550px">
       <TopBar />
-      <Stack direction="row" sx={{ flex: 1 }}>
+      <Stack direction="row" sx={{ maxWidth: "calc(100vw)", overflowX: "hidden" }}>
         <SideBar />
         <Stack sx={{ flex: 1 }}>
           <Outlet />

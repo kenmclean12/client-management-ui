@@ -1,11 +1,9 @@
 export const mainContainerStyles = {
-  minWidth: "250px",
-  maxWidth: "350px",
-  height: "100vh",
+  width: "200px",
+  height: "90vh",
   backgroundColor: "black",
   color: "white",
   py: 3,
-  px: 2,
   borderRight: "1px solid #222",
   gap: 1.5,
   overflowY: "auto",

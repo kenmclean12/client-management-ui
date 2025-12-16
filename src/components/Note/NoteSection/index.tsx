@@ -19,6 +19,8 @@ import {
   AccessTime,
   EditCalendar,
   Note as NoteIcon,
+  Close,
+  Send,
 } from "@mui/icons-material";
 import { NoteCreateDto, NoteUpdateDto, Note } from "../../../types";
 import { useNotesCreate, useNotesUpdate, useNotesDelete } from "../../../hooks";
@@ -170,6 +172,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
               sx={{
                 backgroundColor: "#191717ff",
                 borderLeft: "2px solid",
+                border: "1px solid #444",
                 borderLeftColor: isEditing(note.id) ? "primary.main" : "white",
                 transition: "all 0.2s",
               }}
@@ -183,6 +186,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
                     rows={4}
                     fullWidth
                     required
+                    sx={textFieldStyles}
                     placeholder="Enter note content..."
                     variant="outlined"
                     error={!editingNote?.data.content}
@@ -201,7 +205,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
                       onClick={handleCancelEdit}
                       disabled={updateMutation.isPending}
                     >
-                      <Cancel />
+                      <Close sx={{ color: "red" }} />
                     </IconButton>
                     <IconButton
                       size="small"
@@ -211,7 +215,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
                         updateMutation.isPending || !editingNote?.data.content
                       }
                     >
-                      <Save />
+                      <Send />
                     </IconButton>
                   </Box>
                 </Box>

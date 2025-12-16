@@ -58,8 +58,10 @@ export default function Sidebar() {
           </Box>
         );
       })}
-      {isUsersPage && <UserSearchSection />}
-      {isClientsPage && <ClientSearchSection />}
+      <Stack mx={1}>
+        {isUsersPage && <UserSearchSection />}
+        {isClientsPage && <ClientSearchSection />}
+      </Stack>
     </Stack>
   );
 }

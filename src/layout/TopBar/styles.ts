@@ -3,6 +3,8 @@ export const mainContainerStyles = {
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
+  height: "10vh",
+  width: "100vw",
   px: 2.5,
   py: 2,
   backgroundColor: "black",

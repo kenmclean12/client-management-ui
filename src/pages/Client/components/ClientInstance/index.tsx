@@ -34,11 +34,8 @@ export function ClientInstancePage() {
 
   return (
     <PageShell title="Clients" actions={<ClientAddDialog />}>
-      <Tabs
-        value={tab}
-        onChange={(_, v) => setTab(v)}
-        sx={{ px: 2.5 }}
-      >
+      <Stack>
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ px: 2.5 }}>
         <Tab label="Info" />
         <Tab label="Contacts" />
         <Tab label="Projects" />
@@ -48,11 +45,9 @@ export function ClientInstancePage() {
         ref={scrollRef}
         onScroll={handleScroll}
         sx={{
-          maxHeight: "80vh",
-          width: "80vw",
+          height: "76vh",
           overflowY: "auto",
           position: "relative",
-          pr: 1,
         }}
       >
         {client && (
@@ -78,6 +73,7 @@ export function ClientInstancePage() {
             <KeyboardArrowUp />
           </Fab>
         </Fade>
+      </Stack>
       </Stack>
     </PageShell>
   );
