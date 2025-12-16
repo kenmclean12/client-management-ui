@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
   Box,
   Stack,
   Chip,
@@ -28,7 +27,6 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   Work,
-  Check,
   Visibility,
 } from "@mui/icons-material";
 import { Project, ProjectUpdateDto } from "../../../types";
@@ -42,6 +40,7 @@ import { JobTable } from "../../Job";
 import { projectPriorityConfig, projectStatusConfig } from "./config";
 import { UserRow } from "../../User";
 import { DescriptionDialog } from "../../DescriptionDialog";
+import { ProjectCompletionDialog } from "../ProjectCompletionDialog";
 
 interface EditingProject {
   id: number | null;
@@ -68,20 +67,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
 
   const toggleExpand = (id: number) =>
     setExpandedProjectId((current) => (current === id ? null : id));
-
-  const handleEditClick = (project: Project) => {
-    setEditingProject({
-      id: project.id,
-      data: {
-        name: project.name,
-        description: project.description,
-        clientId: project.clientId,
-        startDate: project.startDate,
-        endDate: project.endDate,
-      },
-    });
-    setShowDialog(true);
-  };
 
   const handleSave = async () => {
     if (!editingProject) return;
@@ -338,12 +323,7 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                         />
                       </TableCell>
                       <TableCell align="center">
-                        <IconButton
-                          onClick={() => handleEditClick(p)}
-                          sx={{ color: "green" }}
-                        >
-                          <Check />
-                        </IconButton>
+                        <ProjectCompletionDialog project={p} />
                       </TableCell>
                     </TableRow>
                     <TableRow>
