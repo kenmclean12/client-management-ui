@@ -14,24 +14,28 @@ import {
   Box,
   Stack,
   Chip,
-  TextField,
   Card,
   Tooltip,
 } from "@mui/material";
 import {
-  Edit,
   Assignment,
   PriorityHigh,
   CalendarToday,
   Title,
   Visibility,
+  Check,
 } from "@mui/icons-material";
-import { Request, RequestUpdateDto } from "../../types";
-import { useRequestsGetAll, useRequestsUpdate } from "../../hooks";
+import { Request, RequestUpdateDto, UserResponseDto } from "../../types";
+import {
+  useRequestsGetAll,
+  useRequestsUpdate,
+  useUsersGetAllAdmins,
+} from "../../hooks";
 import {
   PageShell,
   RequestDescriptionDialog,
   UniversalDialog,
+  UserSelect,
 } from "../../components";
 import {
   priorityConfig,
@@ -44,14 +48,20 @@ import {
   ellipsisTextBoxStyles,
   paperStyles,
   tableCellStyles,
+  textFieldStyles,
 } from "./styles";
 import {
   dialogButtonStyles,
   tableContainerStyles,
   tableStyles,
-  textFieldStyles,
 } from "../styles";
 import { formatDate } from "../../utils";
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 interface EditingRequest {
   id: number | null;
@@ -61,10 +71,14 @@ interface EditingRequest {
 export default function RequestsPage() {
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
   const [openDescription, setOpenDescription] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<UserResponseDto | null>(
+    null
+  );
   const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
     null
   );
   const { data: requests, refetch } = useRequestsGetAll();
+  const { data: users } = useUsersGetAllAdmins();
   const { mutateAsync: updateRequest } = useRequestsUpdate(
     editingRequest?.id || 0
   );
@@ -75,10 +89,11 @@ export default function RequestsPage() {
       data: {
         priority: request.priority,
         status: request.status,
-        assignedUserId: 0,
-        dueDate: new Date().toString(),
+        assignedUserId: null,
+        dueDate: null,
       },
     });
+
     setShowAddDialog(true);
   };
 
@@ -100,16 +115,6 @@ export default function RequestsPage() {
     setShowAddDialog(false);
     refetch();
   };
-
-  const handleChange =
-    (field: keyof RequestUpdateDto) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!editingRequest) return;
-      setEditingRequest({
-        ...editingRequest,
-        data: { ...editingRequest.data, [field]: e.target.value },
-      });
-    };
 
   const sortedRequests = [...(requests || [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -233,7 +238,7 @@ export default function RequestsPage() {
                           sx={{ color: "white" }}
                           onClick={() => handleEditClick(r)}
                         >
-                          <Edit />
+                          <Check />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -247,7 +252,7 @@ export default function RequestsPage() {
       <UniversalDialog
         open={showAddDialog}
         onClose={handleCancelEdit}
-        title="Edit Request"
+        title="Approve Request"
         footer={
           <Button
             variant="outlined"
@@ -259,24 +264,48 @@ export default function RequestsPage() {
         }
       >
         <Stack spacing={3} sx={{ mt: 1 }}>
-          <TextField
-            label="User Id"
-            value={editingRequest?.data.assignedUserId || 0}
-            onChange={handleChange("assignedUserId")}
-            size="small"
-            sx={textFieldStyles}
-            fullWidth
+          <UserSelect
+            users={users ?? []}
+            value={selectedUser}
+            onChange={(user: UserResponseDto | null) => {
+              if (!editingRequest) return;
+              setSelectedUser(user);
+              setEditingRequest({
+                ...editingRequest,
+                data: {
+                  ...editingRequest.data,
+                  assignedUserId: user?.id as number,
+                },
+              });
+            }}
           />
-          <TextField
-            label="Due date"
-            value={editingRequest?.data.dueDate || ""}
-            onChange={handleChange("dueDate")}
-            fullWidth
-            size="small"
-            sx={textFieldStyles}
-            multiline
-            rows={4}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Due date"
+              value={
+                editingRequest?.data.dueDate
+                  ? dayjs.utc(editingRequest.data.dueDate)
+                  : null
+              }
+              onChange={(value: Dayjs | null) => {
+                if (!editingRequest) return;
+                setEditingRequest({
+                  ...editingRequest,
+                  data: {
+                    ...editingRequest.data,
+                    dueDate: value ? value.utc().toISOString() : null,
+                  },
+                });
+              }}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  fullWidth: true,
+                  sx: textFieldStyles,
+                },
+              }}
+            />
+          </LocalizationProvider>
         </Stack>
       </UniversalDialog>
       {openDescription && (

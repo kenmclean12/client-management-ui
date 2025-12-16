@@ -17,6 +17,14 @@ export function useUsersGetAll(options?: { enabled?: boolean }) {
   });
 }
 
+export function useUsersGetAllAdmins(options?: { enabled?: boolean }) {
+  return useQuery<UserResponseDto[]>({
+    queryKey: ["users"],
+    queryFn: () => get<UserResponseDto[]>("/user/admin"),
+    ...options,
+  });
+}
+
 export function useUsersGetById(id: number, options?: { enabled?: boolean }) {
   return useQuery<UserResponseDto>({
     queryKey: ["user", id],

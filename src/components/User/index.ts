@@ -4,3 +4,4 @@ export * from "./UserInviteForm";
 export * from "./EditUserDialog";
 export * from "./DeleteUserDialog";
 export * from "./ResetPasswordDialog";
+export * from "./UserSelect";

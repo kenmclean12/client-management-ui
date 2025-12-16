@@ -2,7 +2,6 @@ export const paperStyles = {
   display: "flex",
   alignItems: "center",
   width: "100%",
-  maxWidth: "250px",
   p: 1,
   transition: "background-color 0.15s ease",
   cursor: "pointer",
