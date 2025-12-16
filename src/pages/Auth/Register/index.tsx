@@ -19,6 +19,7 @@ import {
   authInputStyles,
 } from "../styles";
 import { useAuth } from "../../../context";
+import { dialogButtonStyles } from "../../styles";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export function RegisterPage() {
           ...authInputStyles,
           border: errors[field.key as keyof FormErrors]
             ? "1px solid red"
-            : "1px solid black",
+            : "1px solid #444",
         }}
         fullWidth
         disableUnderline
@@ -89,13 +90,10 @@ export function RegisterPage() {
   return (
     <Stack sx={mainContainerStyles}>
       <Stack sx={authInnerContainerStyles}>
-        <Typography fontSize={24}>Register</Typography>
-        <Stack
-          sx={{
-            ...contentContainerStyles,
-            gap: step == Step.One ? "16px" : "24px",
-          }}
-        >
+        <Typography fontSize={24} color="white">
+          Register
+        </Typography>
+        <Stack sx={contentContainerStyles}>
           {stepFields[step].map(renderField)}
         </Stack>
         <Stack sx={buttonContainerStyles}>
@@ -103,19 +101,27 @@ export function RegisterPage() {
             {step !== Step.One && (
               <Button
                 onClick={() => setStep(previousStep(step))}
-                sx={authButtonStyles}
+                sx={{ ...dialogButtonStyles, mx: 0 }}
                 fullWidth
               >
-                <ArrowBackIos /> Back
+                <ArrowBackIos sx={{ height: 15 }} /> Back
               </Button>
             )}
             {step === Step.Two ? (
-              <Button onClick={handleRegister} sx={authButtonStyles} fullWidth>
-                Register <Check />
+              <Button
+                onClick={handleRegister}
+                sx={{ ...dialogButtonStyles, mx: 0 }}
+                fullWidth
+              >
+                Register <Check sx={{ height: 15 }} />
               </Button>
             ) : (
-              <Button onClick={handleNext} sx={authButtonStyles} fullWidth>
-                Next <ArrowForwardIos />
+              <Button
+                onClick={handleNext}
+                sx={{ ...dialogButtonStyles, mx: 0 }}
+                fullWidth
+              >
+                Next <ArrowForwardIos sx={{ height: 15 }} />
               </Button>
             )}
           </Stack>

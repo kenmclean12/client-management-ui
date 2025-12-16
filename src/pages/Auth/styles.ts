@@ -17,7 +17,8 @@ export const authInnerContainerStyles = {
   maxHeight: "400px",
   maxWidth: "500px",
   padding: 4,
-  border: "2px solid black",
+  backgroundColor: "#1e1e1e",
+  border: "2px solid #444",
   borderRadius: "16px",
   opacity: 0.9,
 };
@@ -26,6 +27,8 @@ export const authInputStyles = {
   height: 40,
   padding: "0 12px",
   fontSize: 14,
+  color: "white",
+  backgroundColor: "black",
   lineHeight: "40px",
   borderRadius: 2,
   "&::placeholder": { opacity: 0.7 },

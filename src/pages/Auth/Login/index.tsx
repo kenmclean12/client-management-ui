@@ -16,6 +16,7 @@ import {
   authInputStyles,
 } from "../styles";
 import { useAuth } from "../../../context";
+import { dialogButtonStyles } from "../../styles";
 
 export interface Errors {
   email: boolean;
@@ -68,7 +69,9 @@ export function LoginPage() {
     >
       <Stack sx={authInnerContainerStyles}>
         <Stack sx={titleContainerStyles}>
-          <Typography fontSize={24}>Login</Typography>
+          <Typography fontSize={24} color="white">
+            Login
+          </Typography>
         </Stack>
         <Stack sx={contentContainerStyles}>
           <Input
@@ -82,7 +85,7 @@ export function LoginPage() {
             }
             sx={{
               ...authInputStyles,
-              border: errors.email ? "1px solid red" : "1px solid black",
+              border: errors.email ? "1px solid red" : "1px solid #444",
             }}
             fullWidth
             disableUnderline
@@ -101,7 +104,7 @@ export function LoginPage() {
             }}
             sx={{
               ...authInputStyles,
-              border: errors.password ? "1px solid red" : "1px solid black",
+              border: errors.password ? "1px solid red" : "1px solid #444",
             }}
             fullWidth
             disableUnderline
@@ -109,9 +112,9 @@ export function LoginPage() {
         </Stack>
         <Stack sx={buttonContainerStyles}>
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={handleLogin}
-            sx={authButtonStyles}
+            sx={{ ...dialogButtonStyles, mx: 0 }}
           >
             Login
             <Login style={{ height: 16 }} />
