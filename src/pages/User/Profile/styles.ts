@@ -5,6 +5,15 @@ export const innerBoxStyles = {
   p: 3,
 };
 
+export const infoRowContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  rowGap: "8px",
+  gap: "32px",
+  pt: 0.75,
+};
+
 export const paperStyles = {
   position: "relative",
   p: 4,
@@ -18,4 +27,30 @@ export const ellipsisTextStyles = {
   overflow: "hidden",
   textOverflow: "ellipsis",
   color: "white",
+};
+
+export const assignedProjectsContainerStyles = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "230px",
+  width: "100%",
+  gap: "16px",
+  border: "1px solid #444",
+  backgroundColor: "#1e1e1e",
+  overflowY: "auto",
+}
+
+export const assignedJobsContainerStyles = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "230px",
+  width: "100%",
+  gap: "16px",
+  border: "1px solid #444",
+  backgroundColor: "#1e1e1e",
+  overflowY: "auto",
 };

@@ -23,7 +23,13 @@ import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
 import { PageShell, UserInviteForm } from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
-import { ellipsisTextStyles, paperStyles } from "./styles";
+import {
+  assignedJobsContainerStyles,
+  assignedProjectsContainerStyles,
+  ellipsisTextStyles,
+  infoRowContainerStyles,
+  paperStyles,
+} from "./styles";
 
 export function ProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -82,13 +88,7 @@ export function ProfilePage() {
               >
                 @{user?.userName}
               </Typography>
-              <Stack
-                direction="row"
-                spacing={4}
-                flexWrap="wrap"
-                rowGap={1}
-                pt={0.75}
-              >
+              <Stack sx={infoRowContainerStyles}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <Email fontSize="small" sx={{ color: "white" }} />
                   <Typography fontSize={14} sx={ellipsisTextStyles}>
@@ -113,15 +113,7 @@ export function ProfilePage() {
               <Typography fontSize="16px" color="white" mb={2}>
                 Assigned Projects
               </Typography>
-              <Stack
-                alignItems="center"
-                justifyContent="center"
-                spacing={2}
-                py={5}
-                width="100%"
-                border="1px solid #444"
-                sx={{ backgroundColor: "#1e1e1e" }}
-              >
+              <Stack sx={assignedProjectsContainerStyles}>
                 {projects.length > 0 ? (
                   projects.map((project) => (
                     <Paper key={project.id} variant="outlined" sx={{ p: 2 }}>
@@ -183,15 +175,7 @@ export function ProfilePage() {
               <Typography fontSize="16px" color="white" mb={2}>
                 Assigned Jobs
               </Typography>
-              <Stack
-                alignItems="center"
-                justifyContent="center"
-                spacing={2}
-                py={5}
-                width="100%"
-                border="1px solid #444"
-                sx={{ backgroundColor: "#1e1e1e" }}
-              >
+              <Stack sx={assignedJobsContainerStyles}>
                 {jobs.length > 0 ? (
                   jobs.map((job) => (
                     <Paper key={job.id} variant="outlined" sx={{ p: 2 }}>
@@ -203,7 +187,10 @@ export function ProfilePage() {
                       </Typography>
                       {job.dueDate && (
                         <Typography variant="caption" color="text.secondary">
-                          Due {format(new Date(job.dueDate), "PPP")}
+                          Due:{" "}
+                          {job.dueDate
+                            ? format(new Date(job.dueDate), "PPP")
+                            : "n/a"}
                         </Typography>
                       )}
                     </Paper>
