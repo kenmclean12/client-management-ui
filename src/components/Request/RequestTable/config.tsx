@@ -1,6 +1,6 @@
+import { JSX } from "react";
 import { Block, CheckCircle, NewReleases, Pending } from "@mui/icons-material";
 import { RequestPriority, RequestStatus } from "../../../types";
-import { JSX } from "react";
 
 export const priorityConfig: Record<RequestPriority, string> = {
   [RequestPriority.Low]: "Low",

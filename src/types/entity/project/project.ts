@@ -1,6 +1,8 @@
 import { UserResponseDto } from "../../dto";
 import { Client } from "../client";
 import { Job } from "../job";
+import { RequestPriority } from "../request";
+import { ProjectStatus } from "./ProjectStatus";
 
 export interface Project {
   id: number;
@@ -13,6 +15,8 @@ export interface Project {
   createdAt: string;
   updatedAt?: string | null;
   assignedUserId: string | null;
+  projectPriority: RequestPriority;
+  projectStatus: ProjectStatus;
 
   client?: Client;
   assignedUser?: UserResponseDto;

@@ -9,3 +9,4 @@ export * from "./Note";
 export * from "./Contact";
 export * from "./Request";
 export * from "./Project";
+export * from "./DescriptionDialog";

@@ -18,7 +18,6 @@ import {
   Visibility,
 } from "@mui/icons-material";
 import { Request } from "../../../types";
-import { RequestDescriptionDialog } from "../../../components";
 import { priorityConfig, statusConfig, tableHeaders } from "./config";
 import { formatDate } from "../../../utils";
 import { tableContainerStyles, tableStyles } from "../../../pages/styles";
@@ -26,6 +25,7 @@ import { ellipsisTextBoxStyles, tableCellStyles } from "./styles";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { RequestApprovalDialog } from "../RequestApprovalDialog";
+import { DescriptionDialog } from "../../DescriptionDialog";
 dayjs.extend(utc);
 
 interface Props {
@@ -129,7 +129,7 @@ export function RequestsTable({ requests, onRefetch }: Props) {
         </Table>
       </TableContainer>
       {openDescription && (
-        <RequestDescriptionDialog
+        <DescriptionDialog
           open
           title="Task Request Description"
           description={openDescription}

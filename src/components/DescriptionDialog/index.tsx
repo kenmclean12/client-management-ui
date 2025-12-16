@@ -1,6 +1,5 @@
-import { Typography, Box, Button } from "@mui/material";
-import { UniversalDialog } from "../../UniversalDialog";
-import { dialogButtonStyles } from "../../../pages/styles";
+import { Typography, Box } from "@mui/material";
+import { UniversalDialog } from "../UniversalDialog";
 import { boxStyles } from "./styles";
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
   onClose: () => void;
 }
 
-export function RequestDescriptionDialog({
+export function DescriptionDialog({
   open,
   title,
   description,
@@ -21,11 +20,6 @@ export function RequestDescriptionDialog({
       open={open}
       onClose={onClose}
       title={title}
-      footer={
-        <Button variant="outlined" onClick={onClose} sx={dialogButtonStyles}>
-          Close
-        </Button>
-      }
     >
       <Box sx={boxStyles}>
         <Typography>

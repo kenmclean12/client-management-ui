@@ -29,6 +29,7 @@ import {
   KeyboardArrowUp,
   Work,
   Check,
+  Visibility,
 } from "@mui/icons-material";
 import { Project, ProjectUpdateDto } from "../../../types";
 import {
@@ -38,6 +39,9 @@ import {
 } from "../../../pages/styles";
 import { useNavigate } from "react-router-dom";
 import { JobTable } from "../../Job";
+import { projectPriorityConfig, projectStatusConfig } from "./config";
+import { UserRow } from "../../User";
+import { DescriptionDialog } from "../../DescriptionDialog";
 
 interface EditingProject {
   id: number | null;
@@ -52,6 +56,7 @@ interface Props {
 
 export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
   const navigate = useNavigate();
+  const [openDescription, setOpenDescription] = useState<string>("");
   const [expandedProjectId, setExpandedProjectId] = useState<number | null>(
     null
   );
@@ -159,11 +164,14 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
             <Table stickyHeader sx={tableStyles}>
               <TableHead>
                 <TableRow>
+                  <TableCell align="center">Assigned To</TableCell>
                   <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Client</TableCell>
                   <TableCell align="center">Timeline</TableCell>
                   <TableCell align="center">Jobs</TableCell>
+                  <TableCell align="center">Priority</TableCell>
+                  <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -174,7 +182,22 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                       hover
                       sx={{ "&:hover": { backgroundColor: "#111" } }}
                     >
-                      <TableCell align="center" sx={{ maxWidth: 220 }}>
+                      <TableCell align="center" sx={{ maxWidth: 200 }}>
+                        {p.assignedUser ? (
+                          <UserRow
+                            user={p.assignedUser}
+                            onClick={() =>
+                              navigate(`/users/${p.assignedUserId}`)
+                            }
+                            showUserName
+                            color="transparent"
+                            hoverColor="transparent"
+                          />
+                        ) : (
+                          <Typography color="#666">—</Typography>
+                        )}
+                      </TableCell>
+                      <TableCell align="center" sx={{ maxWidth: 150 }}>
                         <Tooltip title={p.name} arrow>
                           <Typography
                             noWrap
@@ -187,19 +210,43 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           </Typography>
                         </Tooltip>
                       </TableCell>
-
-                      <TableCell align="center" sx={{ maxWidth: 300 }}>
-                        <Tooltip title={p.description || ""} arrow>
-                          <Typography
-                            noWrap
+                      <TableCell align="center" sx={{ maxWidth: 150 }}>
+                        {p.description ? (
+                          <Box
                             sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 1,
+                              cursor: "pointer",
                               overflow: "hidden",
-                              textOverflow: "ellipsis",
+                              "&:hover .desc": {
+                                color: "white",
+                                textDecoration: "underline",
+                              },
                             }}
+                            onClick={() =>
+                              setOpenDescription(p.description ?? "")
+                            }
                           >
-                            {p.description || "—"}
-                          </Typography>
-                        </Tooltip>
+                            <Visibility
+                              fontSize="small"
+                              sx={{ color: "#777" }}
+                            />
+                            <Typography
+                              className="desc"
+                              noWrap
+                              sx={{
+                                color: "#aaa",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {p.description}
+                            </Typography>
+                          </Box>
+                        ) : (
+                          "—"
+                        )}
                       </TableCell>
 
                       <TableCell align="center" sx={{ maxWidth: 180 }}>
@@ -271,6 +318,27 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                               borderColor: "white",
                             },
                           }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={projectPriorityConfig[p.projectPriority].label}
+                          icon={projectPriorityConfig[p.projectPriority].icon}
+                          sx={{
+                            color: "white",
+                            borderColor: "#444",
+                            "& .MuiChip-icon": { color: "#888" },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={projectStatusConfig[p.projectStatus].label}
+                          icon={projectStatusConfig[p.projectStatus].icon}
+                          color={projectStatusConfig[p.projectStatus].color}
                         />
                       </TableCell>
 
@@ -360,6 +428,14 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
+      {openDescription && (
+        <DescriptionDialog
+          open
+          title="Project Description"
+          description={openDescription}
+          onClose={() => setOpenDescription("")}
+        />
+      )}
     </Box>
   );
 }
