@@ -16,6 +16,7 @@ import {
   Chip,
   TextField,
   Card,
+  Tooltip,
 } from "@mui/material";
 import {
   Edit,
@@ -40,6 +41,7 @@ import {
 } from "./config";
 import {
   cardStyles,
+  ellipsisTextBoxStyles,
   paperStyles,
   tableCellStyles,
 } from "./styles";
@@ -151,15 +153,38 @@ export default function RequestsPage() {
                       sx={{ "&:hover": { bgcolor: "#111" } }}
                     >
                       <TableCell sx={tableCellStyles}>
-                        <Title fontSize="small" sx={{ color: "#777" }} />
-                        {r.title}
+                        <Tooltip title={r.title}>
+                          <Box sx={ellipsisTextBoxStyles}>
+                            <Title
+                              fontSize="small"
+                              sx={{ color: "#777", flexShrink: 0 }}
+                            />
+                            <Typography
+                              variant="body2"
+                              noWrap
+                              sx={{ color: "white" }}
+                            >
+                              {r.title}
+                            </Typography>
+                          </Box>
+                        </Tooltip>
                       </TableCell>
                       <TableCell sx={tableCellStyles}>
-                        <CalendarToday
-                          fontSize="small"
-                          sx={{ mr: 0.5, color: "#888" }}
-                        />
-                        {formatDate(r.createdAt)}
+                        <Tooltip title={r.title}>
+                          <Box sx={ellipsisTextBoxStyles}>
+                            <CalendarToday
+                              fontSize="small"
+                              sx={{ mr: 0.5, color: "#888" }}
+                            />
+                            <Typography
+                              variant="body2"
+                              noWrap
+                              sx={{ color: "white" }}
+                            >
+                              {formatDate(r.createdAt)}
+                            </Typography>
+                          </Box>
+                        </Tooltip>
                       </TableCell>
                       <TableCell sx={tableCellStyles}>
                         <Stack

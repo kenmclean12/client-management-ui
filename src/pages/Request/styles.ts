@@ -15,6 +15,17 @@ export const paperStyles = {
   border: "1px solid #444",
 };
 
+export const ellipsisTextBoxStyles = {
+  display: "flex",
+  alignItems: "center",
+  gap: 0.5,
+  maxWidth: 200,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  cursor: "default",
+};
+
 export const tableCellStyles = {
   maxWidth: 200,
   color: "#aaa",
