@@ -3,7 +3,12 @@ import { Note as NoteIcon } from "@mui/icons-material";
 import { Note } from "../../../types";
 import { AddNoteDialog } from "../AddNoteDialog";
 import { NoteCard } from "../NoteCard";
-import { boxStyles, noContentContainerStyles, noteIconStyles } from "./styles";
+import {
+  boxStyles,
+  noContentContainerStyles,
+  noteContainerStyles,
+  noteIconStyles,
+} from "./styles";
 
 interface Props {
   clientId: number;
@@ -35,15 +40,7 @@ export function NoteSection({ clientId, data: notes }: Props) {
           </Typography>
         </Box>
       ) : (
-        <Stack
-         spacing={.5}
-  sx={{
-    height: 200,
-    overflowY: "auto",
-    flexShrink: 0,
-  }}
->
-
+        <Stack sx={noteContainerStyles}>
           {sortedNotes.map((note) => (
             <NoteCard note={note} />
           ))}

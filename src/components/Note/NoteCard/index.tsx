@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Stack, Typography } from "@mui/material";
+import { Box, Card, Stack, Typography } from "@mui/material";
 import { Note } from "../../../types";
 import { AccessTime, EditCalendar } from "@mui/icons-material";
 import { DeleteNoteDialog } from "../DeleteNoteDialog";

@@ -16,3 +16,10 @@ export const noteIconStyles = {
   mb: 2,
   color: "white",
 };
+
+export const noteContainerStyles = {
+  flexShrink: 0,
+  height: 200,
+  gap: "8px",
+  overflowY: "auto",
+};
