@@ -33,11 +33,3 @@ export const authInputStyles = {
   borderRadius: 2,
   "&::placeholder": { opacity: 0.7 },
 };
-
-export const authButtonStyles = {
-  backgroundColor: "white",
-  color: "black",
-  border: "1.5px solid black",
-  boxShadow: "none",
-  borderRadius: 2,
-};

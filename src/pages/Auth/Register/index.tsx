@@ -14,7 +14,6 @@ import { UserCreateDto } from "../../../types";
 import { previousStep, update, validateStep } from "./utils";
 import { stepFields } from "./config";
 import {
-  authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
 } from "../styles";

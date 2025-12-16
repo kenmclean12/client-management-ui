@@ -11,7 +11,6 @@ import {
 import { validateLogin } from "./utils";
 import { LoginRequestDto } from "../../../types";
 import {
-  authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
 } from "../styles";
