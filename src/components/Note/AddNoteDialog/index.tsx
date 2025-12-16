@@ -2,11 +2,10 @@ import { useState } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 import { useNotesCreate } from "../../../hooks";
 import { useAuth } from "../../../context";
 import { UserRole } from "../../../types";
-import { addButtonStyles } from "./styles";
 
 interface Props {
   clientId: number;
@@ -41,7 +40,7 @@ export function AddNoteDialog({ clientId }: Props) {
           <Button
             variant="outlined"
             onClick={handleAddClick}
-            sx={addButtonStyles}
+            sx={dialogButtonStyles}
           >
             Add
           </Button>

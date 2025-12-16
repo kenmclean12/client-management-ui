@@ -3,6 +3,7 @@ import { Button, IconButton, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
 import { useNotesDelete } from "../../../hooks";
+import { dialogButtonStyles } from "../../../pages/styles";
 
 interface Props {
   noteId: number;
@@ -28,10 +29,9 @@ export function DeleteNoteDialog({ noteId }: Props) {
         title="Delete Note"
         footer={
           <Button
-            color="error"
             variant="outlined"
             onClick={() => deleteNote()}
-            sx={{ mx: 2 }}
+            sx={dialogButtonStyles}
           >
             Delete
           </Button>

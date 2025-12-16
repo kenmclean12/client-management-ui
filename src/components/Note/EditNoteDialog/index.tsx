@@ -2,10 +2,9 @@ import { useState } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 import { useNotesUpdate } from "../../../hooks";
 import { Note } from "../../../types";
-import { saveButtonStyles } from "./styles";
 
 interface Props {
   note: Note;
@@ -41,7 +40,7 @@ export function EditNoteDialog({ note }: Props) {
           <Button
             variant="outlined"
             onClick={handleSave}
-            sx={saveButtonStyles}
+            sx={dialogButtonStyles}
             disabled={!content || isPending}
           >
             Save

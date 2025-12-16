@@ -6,7 +6,7 @@ import { useClientsCreate } from "../../../hooks";
 import { UserRole, type ClientCreateDto } from "../../../types";
 import { useAuth } from "../../../context";
 import { CLIENT_FIELD_ROWS, CLIENT_FIELDS, emptyForm } from "../config";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 export default function ClientAddDialog() {
   const { user } = useAuth();
@@ -41,7 +41,7 @@ export default function ClientAddDialog() {
         onClose={() => setOpen(false)}
         title="Add Client"
         footer={
-          <Button variant="outlined" onClick={handleSubmit} sx={{ color: "#ccc", border: "1px solid #444", mx: 2 }}>
+          <Button variant="outlined" onClick={handleSubmit} sx={dialogButtonStyles}>
             Add Client
           </Button>
         }

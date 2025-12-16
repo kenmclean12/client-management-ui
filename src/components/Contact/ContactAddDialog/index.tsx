@@ -4,7 +4,7 @@ import { Add } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useContactsCreate } from "../../../hooks";
 import { ContactCreateDto } from "../../../types";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   clientId: number;
@@ -51,7 +51,7 @@ export function ContactAddDialog({ clientId }: Props) {
           <Button
             variant="outlined"
             onClick={handleCreate}
-            sx={{ color: "white", borderColor: "#444" }}
+            sx={dialogButtonStyles}
             fullWidth
           >
             Add

@@ -1,6 +1,6 @@
 export const textFieldStyles = {
   "& .MuiOutlinedInput-root": {
-    backgroundColor: "black",
+    backgroundColor: "#1e1e1e",
 
     "& fieldset": {
       borderColor: "#444",
@@ -43,7 +43,7 @@ export const dialogButtonStyles = {
 
 export const selectStyles = {
   color: "white",
-  backgroundColor: "black",
+  backgroundColor: "#1e1e1e",
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: "#444",
   },

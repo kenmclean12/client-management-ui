@@ -7,7 +7,7 @@ import { UniversalDialog } from "../../../components";
 import { Client, ClientUpdateDto } from "../../../types";
 import { useClientsUpdate } from "../../../hooks";
 import { CLIENT_FIELD_ROWS, CLIENT_FIELDS } from "../config";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   client: Client;
@@ -83,7 +83,7 @@ export function ClientEditDialog({ client }: Props) {
           <Button
             variant="outlined"
             onClick={handleSave}
-            sx={{ mx: 2, color: "white", border: "1px solid #444" }}
+            sx={dialogButtonStyles}
             disabled={isPending}
           >
             Save

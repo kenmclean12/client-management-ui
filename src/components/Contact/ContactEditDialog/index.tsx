@@ -4,7 +4,7 @@ import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useContactsUpdate } from "../../../hooks";
 import { Contact, ContactUpdateDto } from "../../../types";
-import { textFieldStyles } from "../../../pages/styles";
+import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   contact: Contact;
@@ -42,7 +42,7 @@ export function ContactEditDialog({ contact }: Props) {
           <Button
             variant="outlined"
             onClick={handleSave}
-            sx={{ color: "white", borderColor: "#444" }}
+            sx={dialogButtonStyles}
             fullWidth
           >
             Save
