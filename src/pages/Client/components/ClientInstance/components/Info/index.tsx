@@ -1,17 +1,19 @@
 import { Stack, Typography, Box, Divider, Paper } from "@mui/material";
 import { Phone, Email, LocationOn } from "@mui/icons-material";
 import { Client } from "../../../../../../types";
-import { ClientNotes } from "./Notes";
 import { ClientEditDialog } from "../../../../../../components/Client/ClientEditForm";
 import { InfoBlock } from "./InfoBlock";
 import { titleStyles, topRowBoxStyles } from "./styles";
 import { ClientAddressMap } from "./Map";
+import { useNotesGetByClient } from "../../../../../../hooks";
+import { NoteSection } from "../../../../../../components";
 
 interface Props {
   client: Client;
 }
 
 export function ClientInfo({ client }: Props) {
+  const { data: notes } = useNotesGetByClient(client.id);
   return (
     <Paper
       sx={{
@@ -70,7 +72,7 @@ export function ClientInfo({ client }: Props) {
         </Box>
       </Box>
       <Divider sx={{ my: 3, backgroundColor: "#444" }} />
-      <ClientNotes clientId={client.id} />
+      <NoteSection clientId={client.id} data={notes} />
     </Paper>
   );
 }

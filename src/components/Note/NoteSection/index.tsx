@@ -6,15 +6,9 @@ import {
   TextField,
   Button,
   IconButton,
-  CircularProgress,
   Divider,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Card,
   CardContent,
-  CardActions,
 } from "@mui/material";
 import {
   Edit,
@@ -22,51 +16,41 @@ import {
   Save,
   Cancel,
   Add,
-  Note,
   AccessTime,
   EditCalendar,
+  Note as NoteIcon,
 } from "@mui/icons-material";
-import {
-  Note as NoteType,
-  NoteCreateDto,
-  NoteUpdateDto,
-} from "../../../../../../../types";
-import {
-  useNotesGetByClient,
-  useNotesCreate,
-  useNotesUpdate,
-  useNotesDelete,
-} from "../../../../../../../hooks";
-import { formatDate } from "../../../../../../../utils";
-import { UniversalDialog } from "../../../../../../../components";
-import { textFieldStyles } from "../../../../../../styles";
+import { NoteCreateDto, NoteUpdateDto, Note } from "../../../types";
+import { useNotesCreate, useNotesUpdate, useNotesDelete } from "../../../hooks";
+import { formatDate } from "../../../utils";
+import { UniversalDialog } from "../../../components";
+import { textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   clientId: number;
+  data: Note[] | undefined;
 }
 
 interface EditingNote {
-  id: number | null; // null for new note
+  id: number | null;
   data: NoteUpdateDto;
 }
 
-export function ClientNotes({ clientId }: Props) {
+export function NoteSection({ clientId, data: notes }: Props) {
   const [editingNote, setEditingNote] = useState<EditingNote | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [noteToDelete, setNoteToDelete] = useState<NoteType | null>(null);
-  const { data: notes } = useNotesGetByClient(clientId);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const createMutation = useNotesCreate();
   const updateMutation = useNotesUpdate(editingNote?.id || 0);
   const deleteMutation = useNotesDelete(noteToDelete?.id || 0);
 
   // Handlers
-  const handleEditClick = (note: NoteType) => {
+  const handleEditClick = (note: Note) => {
     setEditingNote({
       id: note.id,
       data: {
         content: note.content,
-        clientId: note.clientId,
       },
     });
   };
@@ -77,7 +61,6 @@ export function ClientNotes({ clientId }: Props) {
       id: null,
       data: {
         content: "",
-        clientId: clientId,
       },
     });
   };
@@ -108,7 +91,7 @@ export function ClientNotes({ clientId }: Props) {
     setShowAddDialog(false);
   };
 
-  const handleDeleteClick = (note: NoteType) => {
+  const handleDeleteClick = (note: Note) => {
     setNoteToDelete(note);
     setDeleteDialogOpen(true);
   };
@@ -128,7 +111,7 @@ export function ClientNotes({ clientId }: Props) {
           ...editingNote,
           data: {
             ...editingNote.data,
-            [field]: e.target.value || null,
+            [field]: e.target.value,
           },
         });
       }
@@ -147,8 +130,7 @@ export function ClientNotes({ clientId }: Props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mt: 1,
-          mb: 3,
+          mb: 1,
         }}
       >
         <Typography variant="h6" color="white" fontWeight={600}>
@@ -161,17 +143,20 @@ export function ClientNotes({ clientId }: Props) {
           <Add sx={{ color: "white" }} />
         </IconButton>
       </Box>
+      <Divider sx={{ backgroundColor: "#444" }} />
       {sortedNotes.length === 0 ? (
         <Box
           sx={{
             textAlign: "center",
             py: 4,
-            pt: 2,
+            pt: 5,
             color: "text.secondary",
           }}
         >
-          <Note sx={{ fontSize: 60, mb: 2, color: "white" }} />
-          <Typography variant="h6" color="white">No notes yet</Typography>
+          <NoteIcon sx={{ fontSize: 60, mb: 2, color: "white" }} />
+          <Typography variant="h6" color="white">
+            No notes yet
+          </Typography>
           <Typography variant="body1" sx={{ color: "white", mt: 1 }}>
             Add the first note for this client
           </Typography>
@@ -185,9 +170,7 @@ export function ClientNotes({ clientId }: Props) {
               sx={{
                 backgroundColor: "#191717ff",
                 borderLeft: "2px solid",
-                borderLeftColor: isEditing(note.id)
-                  ? "primary.main"
-                  : "white",
+                borderLeftColor: isEditing(note.id) ? "primary.main" : "white",
                 transition: "all 0.2s",
               }}
             >
@@ -239,51 +222,66 @@ export function ClientNotes({ clientId }: Props) {
                       {note.content}
                     </Box>
                     <Divider sx={{ my: 1 }} />
-                    <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
-                    <Box
-                      sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 1 }}
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      width="100%"
                     >
                       <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "white" }}
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 2,
+                          mt: 1,
+                        }}
                       >
-                        <AccessTime fontSize="small"/>
-                        <Typography variant="caption">
-                          Created: {formatDate(note.createdAt)}
-                        </Typography>
-                      </Box>
-                      {note.updatedAt && (
                         <Box
                           sx={{
                             display: "flex",
                             alignItems: "center",
                             gap: 0.5,
-                            color: "white"
+                            color: "white",
                           }}
                         >
-                          <EditCalendar fontSize="small" />
+                          <AccessTime fontSize="small" />
                           <Typography variant="caption">
-                            Updated: {formatDate(note.updatedAt)}
+                            Created: {formatDate(note.createdAt)}
                           </Typography>
                         </Box>
-                      )}
-                    </Box>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleEditClick(note)}
-                      sx={{ ml: "auto", color: "white" }}
-                      disabled={!!editingNote}
-                    >
-                      <Edit />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={() => handleDeleteClick(note)}
-                      sx={{ ml: 1 }}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Delete />
-                    </IconButton>
+                        {note.updatedAt && (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                              color: "white",
+                            }}
+                          >
+                            <EditCalendar fontSize="small" />
+                            <Typography variant="caption">
+                              Updated: {formatDate(note.updatedAt)}
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEditClick(note)}
+                        sx={{ ml: "auto", color: "white" }}
+                        disabled={!!editingNote}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleDeleteClick(note)}
+                        sx={{ ml: 1 }}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Delete />
+                      </IconButton>
                     </Stack>
                   </CardContent>
                 </>

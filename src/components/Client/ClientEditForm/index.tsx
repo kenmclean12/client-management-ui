@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import { Button, Stack, TextField, IconButton } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { Client, ClientUpdateDto } from "../../../types";
@@ -21,6 +22,7 @@ const emptyForm: ClientUpdateDto = {
   state: null,
   zipCode: null,
   country: null,
+  softDeleted: null,
 };
 
 export function ClientEditDialog({ client }: Props) {
@@ -38,6 +40,7 @@ export function ClientEditDialog({ client }: Props) {
       state: client.state,
       zipCode: client.zipCode,
       country: client.country,
+      softDeleted: client.softDeleted,
     });
   }, [client]);
 
@@ -53,7 +56,7 @@ export function ClientEditDialog({ client }: Props) {
 
     (Object.keys(form) as (keyof ClientUpdateDto)[]).forEach((key) => {
       if (form[key] !== client[key]) {
-        changes[key] = form[key];
+        changes[key] = form[key] as any;
       }
     });
 
