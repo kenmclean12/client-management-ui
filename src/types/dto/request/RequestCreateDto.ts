@@ -5,6 +5,4 @@ export interface RequestCreateDto {
   description: string;
   clientId: number;
   priority: RequestPriority;
-  projectId: number | null;
-  jobId: number | null;
 }

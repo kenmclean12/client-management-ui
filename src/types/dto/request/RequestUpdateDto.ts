@@ -8,5 +8,4 @@ export interface RequestUpdateDto {
   assignedUserId: number | null;
   dueDate: string | null;
   projectId: number | null;
-  jobId: number | null;
 }
