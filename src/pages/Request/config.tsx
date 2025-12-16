@@ -29,3 +29,24 @@ export const priorityConfig = {
   [RequestPriority.Normal]: "Normal",
   [RequestPriority.High]: "High",
 };
+
+export const statusLabels = (sortedRequests: { status: RequestStatus }[]) => [
+  {
+    label: "New",
+    count: sortedRequests.filter((r) => r.status === RequestStatus.New).length,
+  },
+  {
+    label: "Pending",
+    count: sortedRequests.filter((r) => r.status === RequestStatus.Reviewed)
+      .length,
+  },
+];
+
+export const tableHeaders = [
+  "Title",
+  "Status",
+  "Priority",
+  "Created",
+  "Description",
+  "Actions",
+];

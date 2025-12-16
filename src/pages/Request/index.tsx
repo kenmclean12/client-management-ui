@@ -31,11 +31,22 @@ import {
   Description,
   Title,
 } from "@mui/icons-material";
-import { Request, RequestStatus, RequestUpdateDto } from "../../types";
+import { Request, RequestUpdateDto } from "../../types";
 import { useRequestsGetAll, useRequestsUpdate } from "../../hooks";
 import { format } from "date-fns";
 import { PageShell } from "../../components";
-import { priorityConfig, statusConfig } from "./config";
+import {
+  priorityConfig,
+  statusConfig,
+  statusLabels,
+  tableHeaders,
+} from "./config";
+import {
+  cardStyles,
+  paperStyles,
+  tableCellStyles,
+  titleBoxStyles,
+} from "./styles";
 
 interface EditingRequest {
   id: number | null;
@@ -43,7 +54,7 @@ interface EditingRequest {
 }
 
 export default function RequestsPage() {
-  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
   const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
     null
   );
@@ -103,43 +114,23 @@ export default function RequestsPage() {
   return (
     <PageShell title="Requests">
       <Box sx={{ p: 3 }}>
-        <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
-          {[
-            {
-              label: "New",
-              count: sortedRequests.filter(
-                (r) => r.status === RequestStatus.New
-              ).length,
-            },
-            {
-              label: "Pending",
-              count: sortedRequests.filter(
-                (r) => r.status === RequestStatus.Reviewed
-              ).length,
-            },
-          ].map((s) => (
-            <Card
-              key={s.label}
-              sx={{
-                flex: 1,
-                bgcolor: "#0b0b0b",
-                border: "1px solid #1f1f1f",
-              }}
-            >
+        <Stack direction="row" spacing={2} mb={4}>
+          {statusLabels(sortedRequests).map((s) => (
+            <Card key={s.label} sx={cardStyles}>
               <CardContent>
-                <Typography fontSize={13} sx={{ color: "#aaa" }}>
+                <Typography fontSize={13} color="#aaa">
                   {s.label}
                 </Typography>
-                <Typography variant="h5" sx={{ color: "white", mt: 0.5 }}>
+                <Typography variant="h5" color="white" mt={0.5}>
                   {s.count}
                 </Typography>
               </CardContent>
             </Card>
           ))}
         </Stack>
-        <Paper sx={{ p: 3, bgcolor: "#0b0b0b", border: "1px solid #1f1f1f" }}>
+        <Paper sx={paperStyles}>
           {sortedRequests.length === 0 ? (
-            <Box sx={{ textAlign: "center", py: 6 }}>
+            <Box textAlign="center" py={6}>
               <Assignment sx={{ fontSize: 56, color: "#555" }} />
               <Typography sx={{ color: "#aaa", mt: 1 }}>
                 No requests found
@@ -150,21 +141,13 @@ export default function RequestsPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    {[
-                      "Title",
-                      "Status",
-                      "Priority",
-                      "Created",
-                      "Description",
-                      "Actions",
-                    ].map((h) => (
-                      <TableCell key={h} sx={{ color: "#aaa", fontSize: 13 }}>
+                    {tableHeaders.map((h) => (
+                      <TableCell key={h} sx={tableCellStyles}>
                         {h}
                       </TableCell>
                     ))}
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
                   {sortedRequests.map((r) => (
                     <TableRow
@@ -173,14 +156,11 @@ export default function RequestsPage() {
                       sx={{ "&:hover": { bgcolor: "#111" } }}
                     >
                       <TableCell sx={{ color: "white" }}>
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
+                        <Box sx={titleBoxStyles}>
                           <Title fontSize="small" sx={{ color: "#777" }} />
                           {r.title}
                         </Box>
                       </TableCell>
-
                       <TableCell>
                         <Chip
                           size="small"
@@ -189,7 +169,6 @@ export default function RequestsPage() {
                           color={statusConfig[r.status].color as any}
                         />
                       </TableCell>
-
                       <TableCell>
                         <Chip
                           size="small"
@@ -203,7 +182,6 @@ export default function RequestsPage() {
                           }}
                         />
                       </TableCell>
-
                       <TableCell sx={{ color: "#ccc" }}>
                         <CalendarToday
                           fontSize="small"
@@ -211,7 +189,6 @@ export default function RequestsPage() {
                         />
                         {formatDate(r.createdAt)}
                       </TableCell>
-
                       <TableCell sx={{ color: "#aaa", maxWidth: 240 }}>
                         <Description
                           fontSize="small"
@@ -219,7 +196,6 @@ export default function RequestsPage() {
                         />
                         {r.description || "—"}
                       </TableCell>
-
                       <TableCell align="right">
                         <IconButton
                           sx={{ color: "white" }}
@@ -245,17 +221,16 @@ export default function RequestsPage() {
         <DialogTitle sx={{ bgcolor: "#0b0b0b", color: "white" }}>
           {editingRequest?.id === null ? "Create Request" : "Edit Request"}
         </DialogTitle>
-
         <DialogContent sx={{ bgcolor: "#0b0b0b" }}>
           <Stack spacing={3} sx={{ mt: 1 }}>
             <TextField
-              label="Title"
+              label="User Id"
               value={editingRequest?.data.assignedUserId || 0}
               onChange={handleChange("assignedUserId")}
               fullWidth
             />
             <TextField
-              label="Description"
+              label="Due date"
               value={editingRequest?.data.dueDate || ""}
               onChange={handleChange("dueDate")}
               fullWidth
@@ -264,7 +239,6 @@ export default function RequestsPage() {
             />
           </Stack>
         </DialogContent>
-
         <DialogActions sx={{ bgcolor: "#0b0b0b" }}>
           <Button sx={{ color: "white" }} onClick={handleCancelEdit}>
             Cancel
