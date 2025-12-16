@@ -1,3 +1,4 @@
+import { RequestPriority } from "./RequestPriority";
 import { RequestStatus } from "./RequestStatus";
 
 export interface Request {

@@ -1,7 +1,21 @@
 import { Block, CheckCircle, NewReleases, Pending } from "@mui/icons-material";
 import { RequestPriority, RequestStatus } from "../../../types";
+import { JSX } from "react";
 
-export const statusConfig = {
+export const priorityConfig: Record<RequestPriority, string> = {
+  [RequestPriority.Low]: "Low",
+  [RequestPriority.Normal]: "Normal",
+  [RequestPriority.High]: "High",
+};
+
+export const statusConfig: Record<
+  RequestStatus,
+  {
+    label: string;
+    color: "info" | "warning" | "success" | "error";
+    icon: JSX.Element;
+  }
+> = {
   [RequestStatus.New]: {
     label: "New",
     color: "info",
@@ -22,12 +36,6 @@ export const statusConfig = {
     color: "error",
     icon: <Block fontSize="small" />,
   },
-};
-
-export const priorityConfig = {
-  [RequestPriority.Low]: "Low",
-  [RequestPriority.Normal]: "Normal",
-  [RequestPriority.High]: "High",
 };
 
 export const statusLabels = (sortedRequests: { status: RequestStatus }[]) => [

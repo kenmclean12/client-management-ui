@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Button, IconButton, Stack } from "@mui/material";
 import { Check } from "@mui/icons-material";
@@ -44,7 +45,7 @@ export function RequestApprovalDialog({ request, onRefetch }: Props) {
     setEditingRequest({
       id: request.id,
       data: {
-        priority: request.priority,
+        priority: request.priority as any,
         status: RequestStatus.Approved,
         assignedUserId: null,
         dueDate: null,

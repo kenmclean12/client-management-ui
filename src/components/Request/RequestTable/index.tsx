@@ -67,7 +67,7 @@ export function RequestsTable({ requests, onRefetch }: Props) {
                 <TableCell align="center" sx={tableCellStyles}>
                   <Box sx={ellipsisTextBoxStyles}>
                     <CalendarToday fontSize="small" sx={{ color: "#888" }} />
-                    <Typography variant="body2" noWrap color="white">
+                    <Typography variant="body2" noWrap sx={{ color: "#aaa" }}>
                       {formatDate(r.createdAt)}
                     </Typography>
                   </Box>

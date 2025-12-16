@@ -2,6 +2,7 @@ export const ellipsisTextBoxStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  gap: .5,
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
