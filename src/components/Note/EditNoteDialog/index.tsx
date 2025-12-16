@@ -5,6 +5,7 @@ import { UniversalDialog } from "../../UniversalDialog";
 import { textFieldStyles } from "../../../pages/styles";
 import { useNotesUpdate } from "../../../hooks";
 import { Note } from "../../../types";
+import { saveButtonStyles } from "./styles";
 
 interface Props {
   note: Note;
@@ -32,7 +33,6 @@ export function EditNoteDialog({ note }: Props) {
       >
         <Edit />
       </IconButton>
-
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -41,12 +41,8 @@ export function EditNoteDialog({ note }: Props) {
           <Button
             variant="outlined"
             onClick={handleSave}
+            sx={saveButtonStyles}
             disabled={!content || isPending}
-            sx={{
-              mx: 2,
-              color: "#ccc",
-              border: "1px solid #444",
-            }}
           >
             Save
           </Button>

@@ -6,6 +6,7 @@ import { textFieldStyles } from "../../../pages/styles";
 import { useNotesCreate } from "../../../hooks";
 import { useAuth } from "../../../context";
 import { UserRole } from "../../../types";
+import { addButtonStyles } from "./styles";
 
 interface Props {
   clientId: number;
@@ -40,11 +41,7 @@ export function AddNoteDialog({ clientId }: Props) {
           <Button
             variant="outlined"
             onClick={handleAddClick}
-            sx={{
-              mx: 2,
-              color: "#ccc",
-              border: "1px solid #444",
-            }}
+            sx={addButtonStyles}
           >
             Add
           </Button>
