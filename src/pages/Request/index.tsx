@@ -13,8 +13,6 @@ import {
   Button,
   Box,
   Stack,
-  Alert,
-  Snackbar,
   Chip,
   TextField,
   Dialog,
@@ -29,57 +27,15 @@ import {
   Save,
   Assignment,
   PriorityHigh,
-  CheckCircle,
-  Pending,
-  Block,
-  NewReleases,
   CalendarToday,
   Description,
   Title,
 } from "@mui/icons-material";
-import {
-  Request,
-  RequestCreateDto,
-  RequestPriority,
-  RequestStatus,
-  RequestUpdateDto,
-} from "../../types";
-import {
-  useRequestsGetAll,
-  useRequestsCreate,
-  useRequestsUpdate,
-} from "../../hooks";
+import { Request, RequestStatus, RequestUpdateDto } from "../../types";
+import { useRequestsGetAll, useRequestsUpdate } from "../../hooks";
 import { format } from "date-fns";
 import { PageShell } from "../../components";
-
-const statusConfig = {
-  [RequestStatus.New]: {
-    label: "New",
-    color: "info",
-    icon: <NewReleases fontSize="small" />,
-  },
-  [RequestStatus.Reviewed]: {
-    label: "Reviewed",
-    color: "warning",
-    icon: <Pending fontSize="small" />,
-  },
-  [RequestStatus.Approved]: {
-    label: "Approved",
-    color: "success",
-    icon: <CheckCircle fontSize="small" />,
-  },
-  [RequestStatus.Rejected]: {
-    label: "Rejected",
-    color: "error",
-    icon: <Block fontSize="small" />,
-  },
-};
-
-const priorityConfig = {
-  [RequestPriority.Low]: "Low",
-  [RequestPriority.Normal]: "Normal",
-  [RequestPriority.High]: "High",
-};
+import { priorityConfig, statusConfig } from "./config";
 
 interface EditingRequest {
   id: number | null;
@@ -87,27 +43,21 @@ interface EditingRequest {
 }
 
 export default function RequestsPage() {
-  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
-
+  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
+    null
+  );
   const { data: requests, refetch } = useRequestsGetAll();
-  const createMutation = useRequestsCreate();
   const updateMutation = useRequestsUpdate(editingRequest?.id || 0);
 
   const handleEditClick = (request: Request) => {
     setEditingRequest({
       id: request.id,
       data: {
-        title: request.title,
-        description: request.description,
         priority: request.priority,
         status: request.status,
-        projectId: request.projectId,
-        jobId: request.jobId,
+        assignedUserId: 0,
+        dueDate: new Date().toString(),
       },
     });
     setShowAddDialog(true);
@@ -121,35 +71,16 @@ export default function RequestsPage() {
   const handleSaveEdit = async () => {
     if (!editingRequest) return;
 
-    try {
-      if (editingRequest.id === null) {
-        const dto: RequestCreateDto = {
-          title: editingRequest.data.title || "",
-          description: editingRequest.data.description || "",
-          clientId: 1,
-          priority: editingRequest.data.priority ?? RequestPriority.Normal,
-          projectId: editingRequest.data.projectId,
-          jobId: editingRequest.data.jobId,
-        };
-        await createMutation.mutateAsync(dto);
-        setNotification({ message: "Request created", type: "success" });
-      } else {
-        await updateMutation.mutateAsync({
-          id: editingRequest.id,
-          dto: editingRequest.data,
-        });
-        setNotification({ message: "Request updated", type: "success" });
-      }
-
-      setEditingRequest(null);
-      setShowAddDialog(false);
-      refetch();
-    } catch (err: any) {
-      setNotification({
-        message: err.message || "Operation failed",
-        type: "error",
+    if (editingRequest.id !== null) {
+      await updateMutation.mutateAsync({
+        id: editingRequest.id,
+        dto: editingRequest.data,
       });
     }
+
+    setEditingRequest(null);
+    setShowAddDialog(false);
+    refetch();
   };
 
   const handleChange =
@@ -166,26 +97,27 @@ export default function RequestsPage() {
     d ? format(new Date(d), "MMM dd, yyyy HH:mm") : "—";
 
   const sortedRequests = [...(requests || [])].sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() -
-      new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
   return (
     <PageShell title="Requests">
       <Box sx={{ p: 3 }}>
-        {/* STATS */}
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           {[
             {
               label: "New",
-              count: sortedRequests.filter(r => r.status === RequestStatus.New).length,
+              count: sortedRequests.filter(
+                (r) => r.status === RequestStatus.New
+              ).length,
             },
             {
               label: "Pending",
-              count: sortedRequests.filter(r => r.status === RequestStatus.Reviewed).length,
+              count: sortedRequests.filter(
+                (r) => r.status === RequestStatus.Reviewed
+              ).length,
             },
-          ].map(s => (
+          ].map((s) => (
             <Card
               key={s.label}
               sx={{
@@ -205,8 +137,6 @@ export default function RequestsPage() {
             </Card>
           ))}
         </Stack>
-
-        {/* TABLE */}
         <Paper sx={{ p: 3, bgcolor: "#0b0b0b", border: "1px solid #1f1f1f" }}>
           {sortedRequests.length === 0 ? (
             <Box sx={{ textAlign: "center", py: 6 }}>
@@ -220,7 +150,14 @@ export default function RequestsPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    {["Title", "Status", "Priority", "Created", "Description", "Actions"].map(h => (
+                    {[
+                      "Title",
+                      "Status",
+                      "Priority",
+                      "Created",
+                      "Description",
+                      "Actions",
+                    ].map((h) => (
                       <TableCell key={h} sx={{ color: "#aaa", fontSize: 13 }}>
                         {h}
                       </TableCell>
@@ -229,14 +166,16 @@ export default function RequestsPage() {
                 </TableHead>
 
                 <TableBody>
-                  {sortedRequests.map(r => (
+                  {sortedRequests.map((r) => (
                     <TableRow
                       key={r.id}
                       hover
                       sx={{ "&:hover": { bgcolor: "#111" } }}
                     >
                       <TableCell sx={{ color: "white" }}>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
                           <Title fontSize="small" sx={{ color: "#777" }} />
                           {r.title}
                         </Box>
@@ -266,17 +205,26 @@ export default function RequestsPage() {
                       </TableCell>
 
                       <TableCell sx={{ color: "#ccc" }}>
-                        <CalendarToday fontSize="small" sx={{ mr: 0.5, color: "#888" }} />
+                        <CalendarToday
+                          fontSize="small"
+                          sx={{ mr: 0.5, color: "#888" }}
+                        />
                         {formatDate(r.createdAt)}
                       </TableCell>
 
-                      <TableCell sx={{ color: "#aaa", maxWidth: 240 }} noWrap>
-                        <Description fontSize="small" sx={{ mr: 0.5, color: "#888" }} />
+                      <TableCell sx={{ color: "#aaa", maxWidth: 240 }}>
+                        <Description
+                          fontSize="small"
+                          sx={{ mr: 0.5, color: "#888" }}
+                        />
                         {r.description || "—"}
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton sx={{ color: "white" }} onClick={() => handleEditClick(r)}>
+                        <IconButton
+                          sx={{ color: "white" }}
+                          onClick={() => handleEditClick(r)}
+                        >
                           <Edit />
                         </IconButton>
                       </TableCell>
@@ -288,17 +236,32 @@ export default function RequestsPage() {
           )}
         </Paper>
       </Box>
-
-      {/* DIALOG */}
-      <Dialog open={showAddDialog} onClose={handleCancelEdit} maxWidth="md" fullWidth>
+      <Dialog
+        open={showAddDialog}
+        onClose={handleCancelEdit}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle sx={{ bgcolor: "#0b0b0b", color: "white" }}>
           {editingRequest?.id === null ? "Create Request" : "Edit Request"}
         </DialogTitle>
 
         <DialogContent sx={{ bgcolor: "#0b0b0b" }}>
           <Stack spacing={3} sx={{ mt: 1 }}>
-            <TextField label="Title" value={editingRequest?.data.title || ""} onChange={handleChange("title")} fullWidth />
-            <TextField label="Description" value={editingRequest?.data.description || ""} onChange={handleChange("description")} fullWidth multiline rows={4} />
+            <TextField
+              label="Title"
+              value={editingRequest?.data.assignedUserId || 0}
+              onChange={handleChange("assignedUserId")}
+              fullWidth
+            />
+            <TextField
+              label="Description"
+              value={editingRequest?.data.dueDate || ""}
+              onChange={handleChange("dueDate")}
+              fullWidth
+              multiline
+              rows={4}
+            />
           </Stack>
         </DialogContent>
 
@@ -306,15 +269,15 @@ export default function RequestsPage() {
           <Button sx={{ color: "white" }} onClick={handleCancelEdit}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleSaveEdit} startIcon={<Save />}>
+          <Button
+            variant="contained"
+            onClick={handleSaveEdit}
+            startIcon={<Save />}
+          >
             Save
           </Button>
         </DialogActions>
       </Dialog>
-
-      <Snackbar open={!!notification} autoHideDuration={5000} onClose={() => setNotification(null)}>
-        <Alert severity={notification?.type}>{notification?.message}</Alert>
-      </Snackbar>
     </PageShell>
   );
 }
