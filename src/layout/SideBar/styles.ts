@@ -1,6 +1,5 @@
 export const mainContainerStyles = {
   width: "200px",
-  height: "90vh",
   backgroundColor: "black",
   color: "white",
   py: 3,

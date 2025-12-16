@@ -45,7 +45,7 @@ export function ClientInstancePage() {
         ref={scrollRef}
         onScroll={handleScroll}
         sx={{
-          height: "76vh",
+          height: "85vh",
           overflowY: "auto",
           position: "relative",
         }}
