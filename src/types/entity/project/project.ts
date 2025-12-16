@@ -9,6 +9,7 @@ export interface Project {
   clientId: number;
   startDate: string;
   endDate?: string | null;
+  dueDate: string | null;
   createdAt: string;
   updatedAt?: string | null;
   assignedUserId: string | null;

@@ -40,7 +40,7 @@ interface Props {
   refreshParent: () => void;
 }
 
-export function ProjectJobsDropdown({
+export function JobTable({
   clientId,
   projectId,
   jobs = [],

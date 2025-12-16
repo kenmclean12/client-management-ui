@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Paper,
   Typography,
@@ -22,18 +22,22 @@ import {
   CircularProgress,
   Card,
   CardContent,
-  Divider,
+  Tooltip,
 } from "@mui/material";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
-  Edit,
-  CalendarToday,
   Work,
+  Check,
 } from "@mui/icons-material";
 import { Project, ProjectUpdateDto } from "../../../types";
-import { ProjectJobsDropdown } from "../../../components";
-import { textFieldStyles } from "../../../pages/styles";
+import {
+  tableContainerStyles,
+  tableStyles,
+  textFieldStyles,
+} from "../../../pages/styles";
+import { useNavigate } from "react-router-dom";
+import { JobTable } from "../../Job";
 
 interface EditingProject {
   id: number | null;
@@ -46,12 +50,11 @@ interface Props {
   onUpdate?: (id: number, dto: ProjectUpdateDto) => Promise<void>;
 }
 
-export function ProjectTable({
-  projects,
-  onCreate,
-  onUpdate,
-}: Props) {
-  const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
+export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
+  const navigate = useNavigate();
+  const [expandedProjectId, setExpandedProjectId] = useState<number | null>(
+    null
+  );
   const [editingProject, setEditingProject] = useState<EditingProject | null>(
     null
   );
@@ -59,9 +62,8 @@ export function ProjectTable({
   const [loading, setLoading] = useState(false);
 
   const toggleExpand = (id: number) =>
-    setExpandedProjects((p) =>
-      p.includes(id) ? p.filter((x) => x !== id) : [...p, id]
-    );
+    setExpandedProjectId((current) => (current === id ? null : id));
+
 
   const handleEditClick = (project: Project) => {
     setEditingProject({
@@ -87,6 +89,7 @@ export function ProjectTable({
     }
     setEditingProject(null);
     setShowDialog(false);
+    setLoading(false);
   };
 
   const formatDate = (d?: string | null) =>
@@ -112,7 +115,7 @@ export function ProjectTable({
 
   return (
     <Box sx={{ p: 0 }}>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+      <Stack direction="row" spacing={2} flex={1} sx={{ mb: 2 }}>
         <Card
           sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
         >
@@ -147,93 +150,145 @@ export function ProjectTable({
           color: "white",
         }}
       >
-        <Divider sx={{ mb: 2, backgroundColor: "#444" }} />
-
         {sortedProjects.length === 0 ? (
           <Box sx={{ textAlign: "center", py: 6, color: "#aaa" }}>
             <Work sx={{ fontSize: 56, color: "#555" }} />
             <Typography>No projects found</Typography>
           </Box>
         ) : (
-          <TableContainer>
-            <Table
-              sx={{
-                "& th": { color: "#ccc", borderColor: "#333" },
-                "& td": { color: "white", borderColor: "#333" },
-              }}
-            >
+          <TableContainer sx={{ ...tableContainerStyles, height: 600 }}>
+            <Table stickyHeader sx={tableStyles}>
               <TableHead>
                 <TableRow>
-                  <TableCell width={50} />
-                  <TableCell>Project</TableCell>
-                  <TableCell>Client</TableCell>
-                  <TableCell>Timeline</TableCell>
-                  <TableCell>Jobs</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Description</TableCell>
+                  <TableCell align="center">Client</TableCell>
+                  <TableCell align="center">Timeline</TableCell>
+                  <TableCell align="center">Jobs</TableCell>
+                  <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {sortedProjects.map((p) => (
-                  <Box key={p.id}>
+                  <Fragment key={p.id}>
                     <TableRow
                       hover
                       sx={{ "&:hover": { backgroundColor: "#111" } }}
                     >
-                      <TableCell>
-                        <IconButton
-                          onClick={() => toggleExpand(p.id)}
-                          sx={{ color: "#aaa" }}
-                        >
-                          {expandedProjects.includes(p.id) ? (
-                            <KeyboardArrowUp />
-                          ) : (
-                            <KeyboardArrowDown />
-                          )}
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>{p.name}</TableCell>
-                      <TableCell sx={{ color: "#aaa" }}>
-                        {p.client?.name || "—"}
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarToday
-                            fontSize="small"
-                            sx={{ color: "#777" }}
-                          />
-                          <Typography variant="body2">
-                            {formatDate(p.startDate)} → {formatDate(p.endDate)}
+                      <TableCell align="center" sx={{ maxWidth: 220 }}>
+                        <Tooltip title={p.name} arrow>
+                          <Typography
+                            noWrap
+                            sx={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {p.name}
                           </Typography>
-                        </Stack>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell>
+
+                      <TableCell align="center" sx={{ maxWidth: 300 }}>
+                        <Tooltip title={p.description || ""} arrow>
+                          <Typography
+                            noWrap
+                            sx={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {p.description || "—"}
+                          </Typography>
+                        </Tooltip>
+                      </TableCell>
+
+                      <TableCell align="center" sx={{ maxWidth: 180 }}>
+                        {p.client ? (
+                          <Tooltip title={p.client.name} arrow>
+                            <Typography
+                              noWrap
+                              sx={{
+                                cursor: "pointer",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                "&:hover": {
+                                  color: "white",
+                                  textDecoration: "underline",
+                                },
+                              }}
+                              onClick={() =>
+                                navigate(`/clients/${p.client?.id}`)
+                              }
+                            >
+                              {p.client.name}
+                            </Typography>
+                          </Tooltip>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+
+                      <TableCell align="center" sx={{ maxWidth: 200 }}>
+                        <Tooltip
+                          title={`${formatDate(p.startDate)} → ${formatDate(
+                            p.dueDate
+                          )}`}
+                          arrow
+                        >
+                          <Typography noWrap variant="body2">
+                            {formatDate(p.startDate)} → {formatDate(p.dueDate)}
+                          </Typography>
+                        </Tooltip>
+                      </TableCell>
+
+                      <TableCell align="center">
                         <Chip
-                          label={`${p.jobs?.length || 0} jobs`}
-                          size="small"
+                          clickable
+                          onClick={() => toggleExpand(p.id)}
+                          label={
+                            <Stack
+                              direction="row"
+                              spacing={0.5}
+                              alignItems="center"
+                            >
+                              <Typography variant="body2">
+                                {p.jobs?.length || 0} jobs
+                              </Typography>
+                              {expandedProjectId === p.id ? (
+                                <KeyboardArrowUp fontSize="small" />
+                              ) : (
+                                <KeyboardArrowDown fontSize="small" />
+                              )}
+                            </Stack>
+                          }
                           variant="outlined"
-                          sx={{ color: "#aaa", borderColor: "#555" }}
+                          size="small"
+                          sx={{
+                            color: "#aaa",
+                            borderColor: "#555",
+                            "&:hover": {
+                              color: "white",
+                              borderColor: "white",
+                            },
+                          }}
                         />
                       </TableCell>
-                      <TableCell align="right">
-                        {onUpdate && (
-                          <IconButton
-                            onClick={() => handleEditClick(p)}
-                            sx={{ color: "#aaa" }}
-                          >
-                            <Edit />
-                          </IconButton>
-                        )}
+
+                      <TableCell align="center">
+                        <IconButton
+                          onClick={() => handleEditClick(p)}
+                          sx={{ color: "#aaa" }}
+                        >
+                          <Check />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell colSpan={6} sx={{ p: 0 }}>
-                        <Collapse in={expandedProjects.includes(p.id)}>
+                        <Collapse in={expandedProjectId === p.id}>
                           <Box sx={{ m: 2, ml: 6 }}>
-                            <ProjectJobsDropdown
+                            <JobTable
                               clientId={p.clientId}
                               projectId={p.id}
                               jobs={p.jobs || []}
@@ -243,14 +298,13 @@ export function ProjectTable({
                         </Collapse>
                       </TableCell>
                     </TableRow>
-                  </Box>
+                  </Fragment>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         )}
       </Paper>
-
       <Dialog
         open={showDialog}
         onClose={() => setShowDialog(false)}

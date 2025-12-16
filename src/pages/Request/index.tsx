@@ -79,9 +79,7 @@ export default function RequestsPage() {
   );
   const { data: requests, refetch } = useRequestsGetAll();
   const { data: users } = useUsersGetAllAdmins();
-  const { mutateAsync: updateRequest } = useRequestsUpdate(
-    editingRequest?.id || 0
-  );
+  const { mutateAsync: updateRequest } = useRequestsUpdate(editingRequest?.id as number);
 
   const handleEditClick = (request: Request) => {
     setEditingRequest({
