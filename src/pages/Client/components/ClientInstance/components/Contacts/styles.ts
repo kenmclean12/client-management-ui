@@ -1,4 +1,5 @@
 export const paperStyles = {
+  height: "80.25vh",
   p: 2,
   paddingInline: 3,
   m: 1,
@@ -22,9 +23,15 @@ export const titleStyles = {
 };
 
 export const emptyBoxStyles = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: "70vh",
   textAlign: "center",
-  py: 4,
   color: "#aaa",
+  pb: 12,
 };
 
 export const personIconStyles = {
@@ -34,10 +41,25 @@ export const personIconStyles = {
 };
 
 export const tableStyles = {
+  border: "1px solid #444",
+  "& .MuiTableCell-head": {
+    color: "#ccc",
+    backgroundColor: "black",
+    borderColor: "#333",
+  },
+  "& .MuiTableCell-body": {
+    color: "white",
+    borderColor: "#333",
+  },
   "& th": { color: "#ccc", borderColor: "#333" },
   "& td": { color: "white", borderColor: "#333" },
 };
 
 export const tableRowStyles = {
   "&:hover": { backgroundColor: "#111" },
+};
+
+export const tableContainerStyles = {
+  height: "680px",
+  overflowY: "auto",
 };

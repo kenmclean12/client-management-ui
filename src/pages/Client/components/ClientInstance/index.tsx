@@ -41,7 +41,7 @@ export function ClientInstancePage() {
           <Tab label="Contacts" />
           <Tab label="Projects" />
         </Tabs>
-        <Divider />
+        <Divider sx={{ backgroundColor: "#444" }} />
         <Stack ref={scrollRef} onScroll={handleScroll}>
           {client && (
             <>

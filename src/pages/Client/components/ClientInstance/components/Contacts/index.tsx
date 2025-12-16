@@ -24,6 +24,7 @@ import {
   emptyBoxStyles,
   paperStyles,
   personIconStyles,
+  tableContainerStyles,
   tableRowStyles,
   tableStyles,
   titleStyles,
@@ -43,7 +44,7 @@ export function ClientContacts({ client }: Props) {
         <Typography sx={titleStyles}>Contacts</Typography>
         <ContactAddDialog clientId={client.id} />
       </Box>
-      <Divider sx={{ my: 1, backgroundColor: "#444" }} />
+      <Divider sx={{ my: 1, mb: 2, backgroundColor: "#444" }} />
       {contacts.length === 0 ? (
         <Box sx={emptyBoxStyles}>
           <Person sx={personIconStyles} />
@@ -53,8 +54,8 @@ export function ClientContacts({ client }: Props) {
           </Typography>
         </Box>
       ) : (
-        <TableContainer>
-          <Table sx={tableStyles}>
+        <TableContainer sx={tableContainerStyles}>
+          <Table stickyHeader sx={tableStyles}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
