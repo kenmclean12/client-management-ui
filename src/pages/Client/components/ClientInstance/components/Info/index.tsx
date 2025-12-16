@@ -21,12 +21,12 @@ export function ClientInfo({ client }: Props) {
         m: 1,
         mt: 2,
         backgroundColor: "black",
-        border: "1px solid lightgrey",
+        border: "1px solid #444",
         borderRadius: 2,
       }}
     >
       <Box sx={topRowBoxStyles}>
-        <Typography variant="h5" fontWeight={600} sx={titleStyles}>
+        <Typography fontWeight={600} sx={titleStyles}>
           {client.name}
         </Typography>
         <ClientEditDialog client={client} />

@@ -68,12 +68,14 @@ const darkTextFieldSx = {
 };
 
 export function ClientContacts({ client }: Props) {
-  const [editingContact, setEditingContact] = useState<EditingContact | null>(null);
+  const [editingContact, setEditingContact] = useState<EditingContact | null>(
+    null
+  );
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
 
-  const { data: contacts, refetch } = useContactsGetByClient(client.id);
+  const { data: contacts = [], refetch } = useContactsGetByClient(client.id);
   const createMutation = useContactsCreate(client.id);
   const updateMutation = useContactsUpdate(editingContact?.id || 0);
   const deleteMutation = useContactsDelete(contactToDelete?.id || 0);
@@ -114,7 +116,10 @@ export function ClientContacts({ client }: Props) {
       };
       await createMutation.mutateAsync(dto);
     } else {
-      await updateMutation.mutateAsync({ id: editingContact.id, dto: editingContact.data });
+      await updateMutation.mutateAsync({
+        id: editingContact.id,
+        dto: editingContact.data,
+      });
     }
     setEditingContact(null);
     setShowAddDialog(false);
@@ -134,13 +139,15 @@ export function ClientContacts({ client }: Props) {
     refetch();
   };
 
-  const handleChange = (field: keyof ContactUpdateDto) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editingContact) return;
-    setEditingContact({
-      ...editingContact,
-      data: { ...editingContact.data, [field]: e.target.value || null },
-    });
-  };
+  const handleChange =
+    (field: keyof ContactUpdateDto) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!editingContact) return;
+      setEditingContact({
+        ...editingContact,
+        data: { ...editingContact.data, [field]: e.target.value || null },
+      });
+    };
 
   const isEditing = (id: number) => editingContact?.id === id;
 
@@ -148,7 +155,8 @@ export function ClientContacts({ client }: Props) {
     <>
       <Paper
         sx={{
-          p: 3,
+          p: 2,
+          paddingInline: 3,
           m: 1,
           mt: 2,
           backgroundColor: "black",
@@ -157,27 +165,31 @@ export function ClientContacts({ client }: Props) {
           color: "white",
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography variant="h5" fontWeight={600} sx={{ color: "white" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography fontSize={18} fontWeight={600} sx={{ color: "white" }}>
             Contacts
           </Typography>
-          <Button
-            variant="outlined"
-            startIcon={<Add />}
+          <IconButton
             onClick={handleAddClick}
             sx={{ color: "white", borderColor: "#666" }}
           >
-            Add Contact
-          </Button>
+            <Add />
+          </IconButton>
         </Box>
-
-        <Divider sx={{ my: 2, backgroundColor: "#444" }} />
-
+        <Divider sx={{ my: 1, backgroundColor: "#444" }} />
         {contacts?.length === 0 ? (
           <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
             <Person sx={{ fontSize: 60, mb: 2, color: "#555" }} />
             <Typography variant="h6">No contacts yet</Typography>
-            <Typography sx={{ mt: 1 }}>Add the first contact to this client</Typography>
+            <Typography sx={{ mt: 1 }}>
+              Add the first contact to this client
+            </Typography>
           </Box>
         ) : (
           <TableContainer>
@@ -197,10 +209,20 @@ export function ClientContacts({ client }: Props) {
               </TableHead>
               <TableBody>
                 {contacts?.map((contact) => (
-                  <TableRow key={contact.id} hover sx={{ "&:hover": { backgroundColor: "#111" } }}>
+                  <TableRow
+                    key={contact.id}
+                    hover
+                    sx={{ "&:hover": { backgroundColor: "#111" } }}
+                  >
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField fullWidth size="small" value={editingContact?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editingContact?.data.name || ""}
+                          onChange={handleChange("name")}
+                          sx={darkTextFieldSx}
+                        />
                       ) : (
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Person fontSize="small" sx={{ color: "#777" }} />
@@ -210,7 +232,13 @@ export function ClientContacts({ client }: Props) {
                     </TableCell>
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField fullWidth size="small" value={editingContact?.data.email || ""} onChange={handleChange("email")} sx={darkTextFieldSx} />
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editingContact?.data.email || ""}
+                          onChange={handleChange("email")}
+                          sx={darkTextFieldSx}
+                        />
                       ) : (
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Email fontSize="small" sx={{ color: "#777" }} />
@@ -220,32 +248,63 @@ export function ClientContacts({ client }: Props) {
                     </TableCell>
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField fullWidth size="small" value={editingContact?.data.phone || ""} onChange={handleChange("phone")} sx={darkTextFieldSx} />
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editingContact?.data.phone || ""}
+                          onChange={handleChange("phone")}
+                          sx={darkTextFieldSx}
+                        />
                       ) : contact.phone ? (
                         <Stack direction="row" spacing={1} alignItems="center">
                           <Phone fontSize="small" sx={{ color: "#777" }} />
                           <Typography>{contact.phone}</Typography>
                         </Stack>
                       ) : (
-                        <Chip label="No phone" size="small" variant="outlined" sx={{ color: "#aaa", borderColor: "#555" }} />
+                        <Chip
+                          label="No phone"
+                          size="small"
+                          variant="outlined"
+                          sx={{ color: "#aaa", borderColor: "#555" }}
+                        />
                       )}
                     </TableCell>
                     <TableCell align="right">
                       {isEditing(contact.id) ? (
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
-                          <IconButton onClick={handleCancelEdit} sx={{ color: "#aaa" }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
+                          <IconButton
+                            onClick={handleCancelEdit}
+                            sx={{ color: "#aaa" }}
+                          >
                             <Cancel />
                           </IconButton>
-                          <IconButton onClick={handleSaveEdit} sx={{ color: "white" }}>
+                          <IconButton
+                            onClick={handleSaveEdit}
+                            sx={{ color: "white" }}
+                          >
                             <Save />
                           </IconButton>
                         </Stack>
                       ) : (
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
-                          <IconButton onClick={() => handleEditClick(contact)} sx={{ color: "#aaa" }}>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
+                          <IconButton
+                            onClick={() => handleEditClick(contact)}
+                            sx={{ color: "#aaa" }}
+                          >
                             <Edit />
                           </IconButton>
-                          <IconButton onClick={() => handleDeleteClick(contact)} sx={{ color: "#f55" }}>
+                          <IconButton
+                            onClick={() => handleDeleteClick(contact)}
+                            sx={{ color: "#f55" }}
+                          >
                             <Delete />
                           </IconButton>
                         </Stack>
@@ -259,32 +318,83 @@ export function ClientContacts({ client }: Props) {
         )}
       </Paper>
 
-      <Dialog open={showAddDialog} onClose={handleCancelEdit} fullWidth maxWidth="sm" PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}>
+      <Dialog
+        open={showAddDialog}
+        onClose={handleCancelEdit}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}
+      >
         <DialogTitle>Add New Contact</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 2 }}>
-            <TextField label="Name" value={editingContact?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
-            <TextField label="Email" value={editingContact?.data.email || ""} onChange={handleChange("email")} sx={darkTextFieldSx} />
-            <TextField label="Phone" value={editingContact?.data.phone || ""} onChange={handleChange("phone")} sx={darkTextFieldSx} />
+            <TextField
+              label="Name"
+              value={editingContact?.data.name || ""}
+              onChange={handleChange("name")}
+              sx={darkTextFieldSx}
+            />
+            <TextField
+              label="Email"
+              value={editingContact?.data.email || ""}
+              onChange={handleChange("email")}
+              sx={darkTextFieldSx}
+            />
+            <TextField
+              label="Phone"
+              value={editingContact?.data.phone || ""}
+              onChange={handleChange("phone")}
+              sx={darkTextFieldSx}
+            />
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelEdit} sx={{ color: "#aaa" }}>Cancel</Button>
-          <Button variant="outlined" onClick={handleSaveEdit} sx={{ color: "white", borderColor: "#666" }}>
-            {createMutation.isPending ? <CircularProgress size={20} /> : "Create Contact"}
+          <Button onClick={handleCancelEdit} sx={{ color: "#aaa" }}>
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleSaveEdit}
+            sx={{ color: "white", borderColor: "#666" }}
+          >
+            {createMutation.isPending ? (
+              <CircularProgress size={20} />
+            ) : (
+              "Create Contact"
+            )}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}
+      >
         <DialogTitle>Delete Contact</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete <strong>{contactToDelete?.name}</strong>?</Typography>
+          <Typography>
+            Are you sure you want to delete{" "}
+            <strong>{contactToDelete?.name}</strong>?
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} sx={{ color: "#aaa" }}>Cancel</Button>
-          <Button variant="outlined" sx={{ color: "#f55", borderColor: "#f55" }} onClick={handleConfirmDelete}>
-            {deleteMutation.isPending ? <CircularProgress size={20} /> : "Delete"}
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            sx={{ color: "#aaa" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ color: "#f55", borderColor: "#f55" }}
+            onClick={handleConfirmDelete}
+          >
+            {deleteMutation.isPending ? (
+              <CircularProgress size={20} />
+            ) : (
+              "Delete"
+            )}
           </Button>
         </DialogActions>
       </Dialog>

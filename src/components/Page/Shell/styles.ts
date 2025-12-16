@@ -1,5 +1,5 @@
 export const mainContainerStyles = {
   position: "relative",
-  minHeight: "90vh",
+  minHeight: "93vh",
   backgroundColor: "#1e1e1e",
 };
