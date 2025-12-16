@@ -25,7 +25,7 @@ import {
   Visibility,
   Check,
 } from "@mui/icons-material";
-import { Request, RequestUpdateDto, UserResponseDto } from "../../types";
+import { Request, RequestStatus, RequestUpdateDto, UserResponseDto } from "../../types";
 import {
   useRequestsGetAll,
   useRequestsUpdate,
@@ -88,7 +88,7 @@ export default function RequestsPage() {
       id: request.id,
       data: {
         priority: request.priority,
-        status: request.status,
+        status: RequestStatus.Approved,
         assignedUserId: null,
         dueDate: null,
       },
