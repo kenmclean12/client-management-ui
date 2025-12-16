@@ -17,3 +17,15 @@ export const selectMenuProps = {
     },
   },
 };
+
+export const inputLabelStyles = {
+  color: "white",
+  "&.Mui-focused": {
+    color: "white",
+  },
+};
+
+export const avatarStyles = {
+  width: 96,
+  height: 96,
+};
