@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Divider,
 } from "@mui/material";
 import {
   Edit,
@@ -52,10 +53,22 @@ interface Props {
   client: Client;
 }
 
+const darkTextFieldSx = {
+  "& .MuiInputBase-input": {
+    color: "white",
+    backgroundColor: "black",
+  },
+  "& .MuiInputLabel-root": { color: "#ccc" },
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "black",
+    "& fieldset": { borderColor: "#444" },
+    "&:hover fieldset": { borderColor: "#777" },
+    "&.Mui-focused fieldset": { borderColor: "white" },
+  },
+};
+
 export function ClientContacts({ client }: Props) {
-  const [editingContact, setEditingContact] = useState<EditingContact | null>(
-    null
-  );
+  const [editingContact, setEditingContact] = useState<EditingContact | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
@@ -81,42 +94,31 @@ export function ClientContacts({ client }: Props) {
     setShowAddDialog(true);
     setEditingContact({
       id: null,
-      data: {
-        name: "",
-        email: "",
-        phone: "",
-        clientId: client.id,
-      },
+      data: { name: "", email: "", phone: "", clientId: client.id },
     });
   };
 
   const handleCancelEdit = () => {
     setEditingContact(null);
-    if (showAddDialog) {
-      setShowAddDialog(false);
-    }
+    setShowAddDialog(false);
   };
 
   const handleSaveEdit = async () => {
     if (!editingContact) return;
     if (editingContact.id === null) {
-      const createDto: ContactCreateDto = {
+      const dto: ContactCreateDto = {
         name: editingContact.data.name || "",
         email: editingContact.data.email || "",
         phone: editingContact.data.phone,
         clientId: client.id,
       };
-      await createMutation.mutateAsync(createDto);
-      refetch();
+      await createMutation.mutateAsync(dto);
     } else {
-      await updateMutation.mutateAsync({
-        id: editingContact.id,
-        dto: editingContact.data,
-      });
-      refetch();
+      await updateMutation.mutateAsync({ id: editingContact.id, dto: editingContact.data });
     }
     setEditingContact(null);
     setShowAddDialog(false);
+    refetch();
   };
 
   const handleDeleteClick = (contact: Contact) => {
@@ -132,70 +134,59 @@ export function ClientContacts({ client }: Props) {
     refetch();
   };
 
-  const handleChange =
-    (field: keyof ContactUpdateDto) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (editingContact) {
-        setEditingContact({
-          ...editingContact,
-          data: {
-            ...editingContact.data,
-            [field]: e.target.value || null,
-          },
-        });
-      }
-    };
+  const handleChange = (field: keyof ContactUpdateDto) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!editingContact) return;
+    setEditingContact({
+      ...editingContact,
+      data: { ...editingContact.data, [field]: e.target.value || null },
+    });
+  };
 
-  const isEditing = (contactId: number) => editingContact?.id === contactId;
+  const isEditing = (id: number) => editingContact?.id === id;
 
   return (
     <>
       <Paper
         sx={{
-          p: 4,
+          p: 3,
+          m: 1,
+          mt: 2,
+          backgroundColor: "black",
+          border: "1px solid #444",
           borderRadius: 2,
-          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+          color: "white",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            color: "black",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Typography variant="h5" fontWeight={600}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h5" fontWeight={600} sx={{ color: "white" }}>
             Contacts
           </Typography>
           <Button
-            variant="contained"
+            variant="outlined"
             startIcon={<Add />}
             onClick={handleAddClick}
-            disabled={createMutation.isPending}
+            sx={{ color: "white", borderColor: "#666" }}
           >
             Add Contact
           </Button>
         </Box>
 
+        <Divider sx={{ my: 2, backgroundColor: "#444" }} />
+
         {contacts?.length === 0 ? (
-          <Box
-            sx={{
-              textAlign: "center",
-              py: 8,
-              color: "text.secondary",
-            }}
-          >
-            <Person sx={{ fontSize: 60, mb: 2, color: "action.disabled" }} />
+          <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
+            <Person sx={{ fontSize: 60, mb: 2, color: "#555" }} />
             <Typography variant="h6">No contacts yet</Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              Add the first contact to this client
-            </Typography>
+            <Typography sx={{ mt: 1 }}>Add the first contact to this client</Typography>
           </Box>
         ) : (
           <TableContainer>
-            <Table>
+            <Table
+              sx={{
+                "& th": { color: "#ccc", borderColor: "#333" },
+                "& td": { color: "white", borderColor: "#333" },
+              }}
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
@@ -206,130 +197,55 @@ export function ClientContacts({ client }: Props) {
               </TableHead>
               <TableBody>
                 {contacts?.map((contact) => (
-                  <TableRow key={contact.id} hover>
-                    {/* Name Column */}
+                  <TableRow key={contact.id} hover sx={{ "&:hover": { backgroundColor: "#111" } }}>
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField
-                          value={editingContact?.data.name || ""}
-                          onChange={handleChange("name")}
-                          size="small"
-                          fullWidth
-                          required
-                          error={!editingContact?.data.name}
-                          helperText={
-                            !editingContact?.data.name ? "Required" : ""
-                          }
-                        />
+                        <TextField fullWidth size="small" value={editingContact?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
                       ) : (
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
-                          <Person color="action" fontSize="small" />
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Person fontSize="small" sx={{ color: "#777" }} />
                           <Typography>{contact.name}</Typography>
-                        </Box>
+                        </Stack>
                       )}
                     </TableCell>
-
-                    {/* Email Column */}
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField
-                          value={editingContact?.data.email || ""}
-                          onChange={handleChange("email")}
-                          size="small"
-                          fullWidth
-                          required
-                          type="email"
-                          error={!editingContact?.data.email}
-                          helperText={
-                            !editingContact?.data.email ? "Required" : ""
-                          }
-                        />
+                        <TextField fullWidth size="small" value={editingContact?.data.email || ""} onChange={handleChange("email")} sx={darkTextFieldSx} />
                       ) : (
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
-                          <Email color="action" fontSize="small" />
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Email fontSize="small" sx={{ color: "#777" }} />
                           <Typography>{contact.email}</Typography>
-                        </Box>
+                        </Stack>
                       )}
                     </TableCell>
-
-                    {/* Phone Column */}
                     <TableCell>
                       {isEditing(contact.id) ? (
-                        <TextField
-                          value={editingContact?.data.phone || ""}
-                          onChange={handleChange("phone")}
-                          size="small"
-                          fullWidth
-                          placeholder="Optional"
-                        />
+                        <TextField fullWidth size="small" value={editingContact?.data.phone || ""} onChange={handleChange("phone")} sx={darkTextFieldSx} />
                       ) : contact.phone ? (
-                        <Box
-                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                        >
-                          <Phone color="action" fontSize="small" />
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Phone fontSize="small" sx={{ color: "#777" }} />
                           <Typography>{contact.phone}</Typography>
-                        </Box>
+                        </Stack>
                       ) : (
-                        <Chip
-                          label="No phone"
-                          size="small"
-                          variant="outlined"
-                          color="default"
-                        />
+                        <Chip label="No phone" size="small" variant="outlined" sx={{ color: "#aaa", borderColor: "#555" }} />
                       )}
                     </TableCell>
-
-                    {/* Actions Column */}
                     <TableCell align="right">
                       {isEditing(contact.id) ? (
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          justifyContent="flex-end"
-                        >
-                          <IconButton
-                            size="small"
-                            onClick={handleCancelEdit}
-                            disabled={updateMutation.isPending}
-                          >
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <IconButton onClick={handleCancelEdit} sx={{ color: "#aaa" }}>
                             <Cancel />
                           </IconButton>
-                          <IconButton
-                            size="small"
-                            color="primary"
-                            onClick={handleSaveEdit}
-                            disabled={
-                              updateMutation.isPending ||
-                              !editingContact?.data.name ||
-                              !editingContact?.data.email
-                            }
-                          >
+                          <IconButton onClick={handleSaveEdit} sx={{ color: "white" }}>
                             <Save />
                           </IconButton>
                         </Stack>
                       ) : (
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          justifyContent="flex-end"
-                        >
-                          <IconButton
-                            size="small"
-                            onClick={() => handleEditClick(contact)}
-                            disabled={!!editingContact}
-                          >
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <IconButton onClick={() => handleEditClick(contact)} sx={{ color: "#aaa" }}>
                             <Edit />
                           </IconButton>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => handleDeleteClick(contact)}
-                            disabled={deleteMutation.isPending}
-                          >
+                          <IconButton onClick={() => handleDeleteClick(contact)} sx={{ color: "#f55" }}>
                             <Delete />
                           </IconButton>
                         </Stack>
@@ -342,103 +258,33 @@ export function ClientContacts({ client }: Props) {
           </TableContainer>
         )}
       </Paper>
-      <Dialog
-        open={showAddDialog}
-        onClose={handleCancelEdit}
-        maxWidth="sm"
-        fullWidth
-      >
+
+      <Dialog open={showAddDialog} onClose={handleCancelEdit} fullWidth maxWidth="sm" PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}>
         <DialogTitle>Add New Contact</DialogTitle>
         <DialogContent>
           <Stack spacing={3} sx={{ mt: 2 }}>
-            <TextField
-              label="Name"
-              value={editingContact?.data.name || ""}
-              onChange={handleChange("name")}
-              fullWidth
-              required
-              error={!editingContact?.data.name}
-              helperText={!editingContact?.data.name ? "Required" : ""}
-            />
-            <TextField
-              label="Email"
-              value={editingContact?.data.email || ""}
-              onChange={handleChange("email")}
-              fullWidth
-              required
-              type="email"
-              error={!editingContact?.data.email}
-              helperText={!editingContact?.data.email ? "Required" : ""}
-            />
-            <TextField
-              label="Phone"
-              value={editingContact?.data.phone || ""}
-              onChange={handleChange("phone")}
-              fullWidth
-              placeholder="Optional"
-            />
+            <TextField label="Name" value={editingContact?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
+            <TextField label="Email" value={editingContact?.data.email || ""} onChange={handleChange("email")} sx={darkTextFieldSx} />
+            <TextField label="Phone" value={editingContact?.data.phone || ""} onChange={handleChange("phone")} sx={darkTextFieldSx} />
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleCancelEdit}
-            disabled={createMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSaveEdit}
-            disabled={
-              createMutation.isPending ||
-              !editingContact?.data.name ||
-              !editingContact?.data.email
-            }
-          >
-            {createMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creating...
-              </>
-            ) : (
-              "Create Contact"
-            )}
+          <Button onClick={handleCancelEdit} sx={{ color: "#aaa" }}>Cancel</Button>
+          <Button variant="outlined" onClick={handleSaveEdit} sx={{ color: "white", borderColor: "#666" }}>
+            {createMutation.isPending ? <CircularProgress size={20} /> : "Create Contact"}
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-      >
+
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}>
         <DialogTitle>Delete Contact</DialogTitle>
         <DialogContent>
-          <Typography>
-            Are you sure you want to delete{" "}
-            <strong>{contactToDelete?.name}</strong>? This action cannot be
-            undone.
-          </Typography>
+          <Typography>Are you sure you want to delete <strong>{contactToDelete?.name}</strong>?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => setDeleteDialogOpen(false)}
-            disabled={deleteMutation.isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleConfirmDelete}
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
+          <Button onClick={() => setDeleteDialogOpen(false)} sx={{ color: "#aaa" }}>Cancel</Button>
+          <Button variant="outlined" sx={{ color: "#f55", borderColor: "#f55" }} onClick={handleConfirmDelete}>
+            {deleteMutation.isPending ? <CircularProgress size={20} /> : "Delete"}
           </Button>
         </DialogActions>
       </Dialog>

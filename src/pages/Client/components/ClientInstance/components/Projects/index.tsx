@@ -14,6 +14,7 @@ import {
   Chip,
   Collapse,
   TextField,
+  Divider,
 } from "@mui/material";
 import {
   KeyboardArrowDown,
@@ -43,22 +44,30 @@ interface EditingProject {
   data: ProjectUpdateDto;
 }
 
+const darkTextFieldSx = {
+  "& .MuiInputBase-input": {
+    color: "white",
+    backgroundColor: "black",
+  },
+  "& .MuiInputLabel-root": { color: "#ccc" },
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "black",
+    "& fieldset": { borderColor: "#444" },
+    "&:hover fieldset": { borderColor: "#777" },
+    "&.Mui-focused fieldset": { borderColor: "white" },
+  },
+};
+
 export function ClientProjects({ client }: Props) {
   const [expandedProjects, setExpandedProjects] = useState<number[]>([]);
-  const [editingProject, setEditingProject] = useState<EditingProject | null>(
-    null
-  );
+  const [editingProject, setEditingProject] = useState<EditingProject | null>(null);
 
   const { data: projects, refetch } = useProjectsGetByClient(client.id);
   const createMutation = useProjectsCreate();
   const updateMutation = useProjectsUpdate(editingProject?.id || 0);
 
-  const toggleProjectExpand = (projectId: number) => {
-    setExpandedProjects((prev) =>
-      prev.includes(projectId)
-        ? prev.filter((id) => id !== projectId)
-        : [...prev, projectId]
-    );
+  const toggleProjectExpand = (id: number) => {
+    setExpandedProjects((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const handleEditClick = (project: Project) => {
@@ -74,12 +83,11 @@ export function ClientProjects({ client }: Props) {
     });
   };
 
-  const handleCancelEdit = () => {
-    setEditingProject(null);
-  };
+  const handleCancelEdit = () => setEditingProject(null);
 
   const handleSaveEdit = async () => {
     if (!editingProject) return;
+
     const payload = {
       ...editingProject.data,
       startDate: toUTCDateString(editingProject.data.startDate),
@@ -95,10 +103,7 @@ export function ClientProjects({ client }: Props) {
         endDate: payload.endDate,
       });
     } else {
-      await updateMutation.mutateAsync({
-        id: editingProject.id,
-        dto: payload,
-      });
+      await updateMutation.mutateAsync({ id: editingProject.id, dto: payload });
     }
 
     setEditingProject(null);
@@ -108,262 +113,157 @@ export function ClientProjects({ client }: Props) {
   const handleChange =
     (field: keyof ProjectUpdateDto) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (editingProject) {
-        setEditingProject({
-          ...editingProject,
-          data: {
-            ...editingProject.data,
-            [field]: e.target.value || null,
-          },
-        });
-      }
+      if (!editingProject) return;
+      setEditingProject({
+        ...editingProject,
+        data: { ...editingProject.data, [field]: e.target.value || null },
+      });
     };
 
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "N/A";
+  const formatDate = (date: string | null | undefined) => {
+    if (!date) return "N/A";
     try {
-      return format(new Date(dateString), "MMM dd, yyyy");
+      return format(new Date(date), "MMM dd, yyyy");
     } catch {
       return "Invalid date";
     }
   };
 
-  const isEditing = (projectId: number) => editingProject?.id === projectId;
+  const isEditing = (id: number) => editingProject?.id === id;
 
   return (
-    <>
-      <Paper
-        sx={{
-          p: 4,
-          borderRadius: 2,
-          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Typography variant="h5" fontWeight={600}>
-            Projects
-          </Typography>
-        </Box>
+    <Paper
+      sx={{
+        p: 3,
+        m: 1,
+        mt: 2,
+        backgroundColor: "black",
+        border: "1px solid #444",
+        borderRadius: 2,
+        color: "white",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h5" fontWeight={600} sx={{ color: "white" }}>
+          Projects
+        </Typography>
+      </Box>
 
-        {projects?.length === 0 ? (
-          <Box
+      <Divider sx={{ my: 2, backgroundColor: "#444" }} />
+
+      {projects?.length === 0 ? (
+        <Box sx={{ textAlign: "center", py: 8, color: "#aaa" }}>
+          <Work sx={{ fontSize: 60, mb: 2, color: "#555" }} />
+          <Typography variant="h6">No projects yet</Typography>
+          <Typography sx={{ mt: 1 }}>Add the first project to this client</Typography>
+        </Box>
+      ) : (
+        <TableContainer>
+          <Table
             sx={{
-              textAlign: "center",
-              py: 8,
-              color: "text.secondary",
+              "& th": { color: "#ccc", borderColor: "#333" },
+              "& td": { color: "white", borderColor: "#333" },
             }}
           >
-            <Work sx={{ fontSize: 60, mb: 2, color: "action.disabled" }} />
-            <Typography variant="h6">No projects yet</Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              Add the first project to this client
-            </Typography>
-          </Box>
-        ) : (
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell width={50} />
-                  <TableCell>Project</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Timeline</TableCell>
-                  <TableCell>Jobs</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {projects?.map((project) => (
-                  <>
-                    {/* Project Row */}
-                    <TableRow key={project.id} hover>
-                      <TableCell>
-                        <IconButton
-                          size="small"
-                          onClick={() => toggleProjectExpand(project.id)}
-                        >
-                          {expandedProjects.includes(project.id) ? (
-                            <KeyboardArrowUp />
-                          ) : (
-                            <KeyboardArrowDown />
-                          )}
-                        </IconButton>
-                      </TableCell>
+            <TableHead>
+              <TableRow>
+                <TableCell width={50} />
+                <TableCell>Project</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Timeline</TableCell>
+                <TableCell>Jobs</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {projects?.map((project) => (
+                <>
+                  <TableRow key={project.id} hover sx={{ "&:hover": { backgroundColor: "#111" } }}>
+                    <TableCell>
+                      <IconButton size="small" onClick={() => toggleProjectExpand(project.id)} sx={{ color: "#aaa" }}>
+                        {expandedProjects.includes(project.id) ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                      </IconButton>
+                    </TableCell>
 
-                      {/* Project Name */}
-                      <TableCell>
-                        {isEditing(project.id) ? (
-                          <TextField
-                            value={editingProject?.data.name || ""}
-                            onChange={handleChange("name")}
-                            size="small"
-                            fullWidth
-                            required
-                            error={!editingProject?.data.name}
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-                            <Work color="action" fontSize="small" />
-                            <Typography fontWeight={500}>
-                              {project.name}
+                    <TableCell>
+                      {isEditing(project.id) ? (
+                        <TextField fullWidth size="small" value={editingProject?.data.name || ""} onChange={handleChange("name")} sx={darkTextFieldSx} />
+                      ) : (
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Work fontSize="small" sx={{ color: "#777" }} />
+                          <Typography fontWeight={500}>{project.name}</Typography>
+                        </Stack>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {isEditing(project.id) ? (
+                        <TextField fullWidth size="small" multiline rows={1} value={editingProject?.data.description || ""} onChange={handleChange("description")} sx={darkTextFieldSx} />
+                      ) : (
+                        <Typography variant="body2" sx={{ color: "#aaa" }}>
+                          {project.description || "No description"}
+                        </Typography>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {isEditing(project.id) ? (
+                        <Stack spacing={1}>
+                          <TextField type="date" label="Start" value={editingProject?.data.startDate || ""} onChange={handleChange("startDate")} size="small" InputLabelProps={{ shrink: true }} sx={darkTextFieldSx} />
+                          <TextField type="date" label="End" value={editingProject?.data.endDate || ""} onChange={handleChange("endDate")} size="small" InputLabelProps={{ shrink: true }} sx={darkTextFieldSx} />
+                        </Stack>
+                      ) : (
+                        <Box>
+                          <Stack direction="row" spacing={0.5} alignItems="center">
+                            <CalendarToday fontSize="small" sx={{ color: "#777" }} />
+                            <Typography variant="body2">{formatDate(project.startDate)}</Typography>
+                          </Stack>
+                          {project.endDate && (
+                            <Typography variant="caption" sx={{ color: "#888" }}>
+                              → {formatDate(project.endDate)}
                             </Typography>
-                          </Box>
-                        )}
-                      </TableCell>
+                          )}
+                        </Box>
+                      )}
+                    </TableCell>
 
-                      {/* Project Description */}
-                      <TableCell>
-                        {isEditing(project.id) ? (
-                          <TextField
-                            value={editingProject?.data.description || ""}
-                            onChange={handleChange("description")}
-                            size="small"
-                            fullWidth
-                            multiline
-                            rows={1}
-                          />
-                        ) : (
-                          <Typography variant="body2" color="text.secondary">
-                            {project.description || "No description"}
-                          </Typography>
-                        )}
-                      </TableCell>
+                    <TableCell>
+                      <Chip label={`${project.jobs?.length || 0} jobs`} size="small" variant="outlined" sx={{ color: "#aaa", borderColor: "#555" }} />
+                    </TableCell>
 
-                      {/* Timeline */}
-                      <TableCell>
-                        {isEditing(project.id) ? (
-                          <Stack spacing={1}>
-                            <TextField
-                              label="Start Date"
-                              type="date"
-                              value={editingProject?.data.startDate || ""}
-                              onChange={handleChange("startDate")}
-                              size="small"
-                              InputLabelProps={{ shrink: true }}
-                            />
-                            <TextField
-                              label="End Date"
-                              type="date"
-                              value={editingProject?.data.endDate || ""}
-                              onChange={handleChange("endDate")}
-                              size="small"
-                              InputLabelProps={{ shrink: true }}
-                            />
-                          </Stack>
-                        ) : (
-                          <Box>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 0.5,
-                              }}
-                            >
-                              <CalendarToday fontSize="small" color="action" />
-                              <Typography variant="body2">
-                                {formatDate(project.startDate)}
-                              </Typography>
-                            </Box>
-                            {project.endDate && (
-                              <Typography
-                                variant="caption"
-                                color="text.secondary"
-                              >
-                                → {formatDate(project.endDate)}
-                              </Typography>
-                            )}
-                          </Box>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          label={`${project.jobs?.length || 0} jobs`}
-                          size="small"
-                          variant="outlined"
-                          color="primary"
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        {isEditing(project.id) ? (
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="flex-end"
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={handleCancelEdit}
-                              disabled={updateMutation.isPending}
-                            >
-                              <Cancel />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={handleSaveEdit}
-                              disabled={
-                                updateMutation.isPending ||
-                                !editingProject?.data.name
-                              }
-                            >
-                              <Save />
-                            </IconButton>
-                          </Stack>
-                        ) : (
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="flex-end"
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={() => handleEditClick(project)}
-                              disabled={!!editingProject}
-                            >
-                              <Edit />
-                            </IconButton>
-                          </Stack>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell colSpan={6} sx={{ p: 0, borderTop: 0 }}>
-                        <Collapse
-                          in={expandedProjects.includes(project.id)}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Box sx={{ m: 2, ml: 6 }}>
-                            <ProjectJobsDropdown
-                              clientId={client.id}
-                              projectId={project.id}
-                              jobs={project.jobs || []}
-                              refreshParent={refetch}
-                            />
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </Paper>
-    </>
+                    <TableCell align="right">
+                      {isEditing(project.id) ? (
+                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                          <IconButton onClick={handleCancelEdit} sx={{ color: "#aaa" }}>
+                            <Cancel />
+                          </IconButton>
+                          <IconButton onClick={handleSaveEdit} sx={{ color: "white" }} disabled={!editingProject?.data.name}>
+                            <Save />
+                          </IconButton>
+                        </Stack>
+                      ) : (
+                        <IconButton onClick={() => handleEditClick(project)} disabled={!!editingProject} sx={{ color: "#aaa" }}>
+                          <Edit />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+
+                  <TableRow>
+                    <TableCell colSpan={6} sx={{ p: 0, borderTop: 0 }}>
+                      <Collapse in={expandedProjects.includes(project.id)} timeout="auto" unmountOnExit>
+                        <Box sx={{ m: 2, ml: 6 }}>
+                          <ProjectJobsDropdown clientId={client.id} projectId={project.id} jobs={project.jobs || []} refreshParent={refetch} />
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                </>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+    </Paper>
   );
 }

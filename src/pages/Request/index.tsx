@@ -15,24 +15,18 @@ import {
   Stack,
   Alert,
   Snackbar,
-  CircularProgress,
   Chip,
   TextField,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Card,
   CardContent,
 } from "@mui/material";
 import {
   Edit,
   Save,
-  Cancel,
   Assignment,
   PriorityHigh,
   CheckCircle,
@@ -82,18 +76,9 @@ const statusConfig = {
 };
 
 const priorityConfig = {
-  [RequestPriority.Low]: {
-    label: "Low",
-    color: "success",
-  },
-  [RequestPriority.Normal]: {
-    label: "Normal",
-    color: "info",
-  },
-  [RequestPriority.High]: {
-    label: "High",
-    color: "error",
-  },
+  [RequestPriority.Low]: "Low",
+  [RequestPriority.Normal]: "Normal",
+  [RequestPriority.High]: "High",
 };
 
 interface EditingRequest {
@@ -102,9 +87,7 @@ interface EditingRequest {
 }
 
 export default function RequestsPage() {
-  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
-    null
-  );
+  const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
@@ -115,7 +98,6 @@ export default function RequestsPage() {
   const createMutation = useRequestsCreate();
   const updateMutation = useRequestsUpdate(editingRequest?.id || 0);
 
-  // Handlers
   const handleEditClick = (request: Request) => {
     setEditingRequest({
       id: request.id,
@@ -128,6 +110,7 @@ export default function RequestsPage() {
         jobId: request.jobId,
       },
     });
+    setShowAddDialog(true);
   };
 
   const handleCancelEdit = () => {
@@ -140,37 +123,30 @@ export default function RequestsPage() {
 
     try {
       if (editingRequest.id === null) {
-        // Create new request
-        const createDto: RequestCreateDto = {
+        const dto: RequestCreateDto = {
           title: editingRequest.data.title || "",
           description: editingRequest.data.description || "",
-          clientId: 1, // You'll need to get this from context or props
-          priority: editingRequest.data.priority || RequestPriority.Normal,
+          clientId: 1,
+          priority: editingRequest.data.priority ?? RequestPriority.Normal,
           projectId: editingRequest.data.projectId,
           jobId: editingRequest.data.jobId,
         };
-        await createMutation.mutateAsync(createDto);
-        setNotification({
-          message: "Request created successfully",
-          type: "success",
-        });
+        await createMutation.mutateAsync(dto);
+        setNotification({ message: "Request created", type: "success" });
       } else {
-        // Update existing request
         await updateMutation.mutateAsync({
           id: editingRequest.id,
           dto: editingRequest.data,
         });
-        setNotification({
-          message: "Request updated successfully",
-          type: "success",
-        });
+        setNotification({ message: "Request updated", type: "success" });
       }
+
       setEditingRequest(null);
       setShowAddDialog(false);
       refetch();
-    } catch (error: any) {
+    } catch (err: any) {
       setNotification({
-        message: error.message || "Operation failed",
+        message: err.message || "Operation failed",
         type: "error",
       });
     }
@@ -178,291 +154,131 @@ export default function RequestsPage() {
 
   const handleChange =
     (field: keyof RequestUpdateDto) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (editingRequest) {
-        setEditingRequest({
-          ...editingRequest,
-          data: {
-            ...editingRequest.data,
-            [field]: e.target.value,
-          },
-        });
-      }
-    };
-
-  const handleSelectChange = (field: keyof RequestUpdateDto) => (e: any) => {
-    if (editingRequest) {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!editingRequest) return;
       setEditingRequest({
         ...editingRequest,
-        data: {
-          ...editingRequest.data,
-          [field]: e.target.value,
-        },
+        data: { ...editingRequest.data, [field]: e.target.value },
       });
-    }
-  };
+    };
 
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "N/A";
-    try {
-      return format(new Date(dateString), "MMM dd, yyyy HH:mm");
-    } catch {
-      return "Invalid date";
-    }
-  };
+  const formatDate = (d?: string | null) =>
+    d ? format(new Date(d), "MMM dd, yyyy HH:mm") : "—";
 
-  const isEditing = (requestId: number) => editingRequest?.id === requestId;
-
-  // Sort requests by creation date (newest first)
   const sortedRequests = [...(requests || [])].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) =>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
   );
-
-  // Count requests by status
-  const statusCounts = {
-    new: sortedRequests.filter((r) => r.status === RequestStatus.New).length,
-    reviewed: sortedRequests.filter((r) => r.status === RequestStatus.Reviewed)
-      .length,
-    approved: sortedRequests.filter((r) => r.status === RequestStatus.Approved)
-      .length,
-    rejected: sortedRequests.filter((r) => r.status === RequestStatus.Rejected)
-      .length,
-  };
 
   return (
     <PageShell title="Requests">
       <Box sx={{ p: 3 }}>
+        {/* STATS */}
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                New
-              </Typography>
-              <Typography variant="h5">{statusCounts.new}</Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: 1 }}>
-            <CardContent>
-              <Typography color="text.secondary" variant="body2">
-                Pending
-              </Typography>
-              <Typography variant="h5">{statusCounts.reviewed}</Typography>
-            </CardContent>
-          </Card>
-        </Stack>
-
-        {/* Requests Table */}
-        <Paper
-          sx={{
-            borderRadius: 2,
-            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
-          }}
-        >
-          {sortedRequests.length === 0 ? (
-            <Box
+          {[
+            {
+              label: "New",
+              count: sortedRequests.filter(r => r.status === RequestStatus.New).length,
+            },
+            {
+              label: "Pending",
+              count: sortedRequests.filter(r => r.status === RequestStatus.Reviewed).length,
+            },
+          ].map(s => (
+            <Card
+              key={s.label}
               sx={{
-                textAlign: "center",
-                py: 8,
-                color: "text.secondary",
+                flex: 1,
+                bgcolor: "#0b0b0b",
+                border: "1px solid #1f1f1f",
               }}
             >
-              <Assignment
-                sx={{ fontSize: 60, mb: 2, color: "action.disabled" }}
-              />
-              <Typography variant="h6">No requests yet</Typography>
+              <CardContent>
+                <Typography fontSize={13} sx={{ color: "#aaa" }}>
+                  {s.label}
+                </Typography>
+                <Typography variant="h5" sx={{ color: "white", mt: 0.5 }}>
+                  {s.count}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+        </Stack>
+
+        {/* TABLE */}
+        <Paper sx={{ p: 3, bgcolor: "#0b0b0b", border: "1px solid #1f1f1f" }}>
+          {sortedRequests.length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 6 }}>
+              <Assignment sx={{ fontSize: 56, color: "#555" }} />
+              <Typography sx={{ color: "#aaa", mt: 1 }}>
+                No requests found
+              </Typography>
             </Box>
           ) : (
             <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Priority</TableCell>
-                    <TableCell>Created</TableCell>
-                    <TableCell>Description</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    {["Title", "Status", "Priority", "Created", "Description", "Actions"].map(h => (
+                      <TableCell key={h} sx={{ color: "#aaa", fontSize: 13 }}>
+                        {h}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
+
                 <TableBody>
-                  {sortedRequests.map((request) => (
-                    <TableRow key={request.id} hover>
-                      {/* Title */}
-                      <TableCell>
-                        {isEditing(request.id) ? (
-                          <TextField
-                            value={editingRequest?.data.title || ""}
-                            onChange={handleChange("title")}
-                            size="small"
-                            fullWidth
-                            required
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-                            <Title color="action" fontSize="small" />
-                            <Typography>{request.title}</Typography>
-                          </Box>
-                        )}
-                      </TableCell>
-
-                      {/* Status */}
-                      <TableCell>
-                        {isEditing(request.id) ? (
-                          <FormControl fullWidth size="small">
-                            <Select
-                              value={
-                                editingRequest?.data.status || RequestStatus.New
-                              }
-                              onChange={handleSelectChange("status")}
-                            >
-                              {Object.entries(statusConfig).map(
-                                ([key, config]) => (
-                                  <MenuItem key={key} value={Number(key)}>
-                                    {config.label}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        ) : (
-                          <Chip
-                            label={statusConfig[request.status].label}
-                            color={statusConfig[request.status].color as any}
-                            icon={statusConfig[request.status].icon}
-                            size="small"
-                          />
-                        )}
-                      </TableCell>
-
-                      {/* Priority */}
-                      <TableCell>
-                        {isEditing(request.id) ? (
-                          <FormControl fullWidth size="small">
-                            <Select
-                              value={
-                                editingRequest?.data.priority ||
-                                RequestPriority.Normal
-                              }
-                              onChange={handleSelectChange("priority")}
-                            >
-                              {Object.entries(priorityConfig).map(
-                                ([key, config]) => (
-                                  <MenuItem key={key} value={Number(key)}>
-                                    {config.label}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        ) : (
-                          <Chip
-                            label={priorityConfig[request.priority].label}
-                            color={
-                              priorityConfig[request.priority].color as any
-                            }
-                            icon={<PriorityHigh fontSize="small" />}
-                            size="small"
-                            variant="outlined"
-                          />
-                        )}
-                      </TableCell>
-
-                      {/* Created Date */}
-                      <TableCell>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
-                          <CalendarToday fontSize="small" color="action" />
-                          <Typography variant="body2">
-                            {formatDate(request.createdAt)}
-                          </Typography>
+                  {sortedRequests.map(r => (
+                    <TableRow
+                      key={r.id}
+                      hover
+                      sx={{ "&:hover": { bgcolor: "#111" } }}
+                    >
+                      <TableCell sx={{ color: "white" }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <Title fontSize="small" sx={{ color: "#777" }} />
+                          {r.title}
                         </Box>
                       </TableCell>
 
-                      {/* Description */}
                       <TableCell>
-                        {isEditing(request.id) ? (
-                          <TextField
-                            value={editingRequest?.data.description || ""}
-                            onChange={handleChange("description")}
-                            size="small"
-                            fullWidth
-                            multiline
-                            rows={1}
-                          />
-                        ) : (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            noWrap
-                            sx={{ maxWidth: 200 }}
-                          >
-                            <Description
-                              fontSize="small"
-                              color="action"
-                              sx={{ mr: 0.5, verticalAlign: "middle" }}
-                            />
-                            {request.description?.substring(0, 50) ||
-                              "No description"}
-                            {request.description &&
-                            request.description.length > 50
-                              ? "..."
-                              : ""}
-                          </Typography>
-                        )}
+                        <Chip
+                          size="small"
+                          label={statusConfig[r.status].label}
+                          icon={statusConfig[r.status].icon}
+                          color={statusConfig[r.status].color as any}
+                        />
                       </TableCell>
+
+                      <TableCell>
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={priorityConfig[r.priority]}
+                          icon={<PriorityHigh fontSize="small" />}
+                          sx={{
+                            color: "white",
+                            borderColor: "#444",
+                            "& .MuiChip-icon": { color: "#888" },
+                          }}
+                        />
+                      </TableCell>
+
+                      <TableCell sx={{ color: "#ccc" }}>
+                        <CalendarToday fontSize="small" sx={{ mr: 0.5, color: "#888" }} />
+                        {formatDate(r.createdAt)}
+                      </TableCell>
+
+                      <TableCell sx={{ color: "#aaa", maxWidth: 240 }} noWrap>
+                        <Description fontSize="small" sx={{ mr: 0.5, color: "#888" }} />
+                        {r.description || "—"}
+                      </TableCell>
+
                       <TableCell align="right">
-                        {isEditing(request.id) ? (
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="flex-end"
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={handleCancelEdit}
-                              disabled={updateMutation.isPending}
-                            >
-                              <Cancel />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={handleSaveEdit}
-                              disabled={
-                                updateMutation.isPending ||
-                                !editingRequest?.data.title ||
-                                !editingRequest?.data.description
-                              }
-                            >
-                              <Save />
-                            </IconButton>
-                          </Stack>
-                        ) : (
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="flex-end"
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={() => handleEditClick(request)}
-                              disabled={!!editingRequest}
-                            >
-                              <Edit />
-                            </IconButton>
-                          </Stack>
-                        )}
+                        <IconButton sx={{ color: "white" }} onClick={() => handleEditClick(r)}>
+                          <Edit />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -472,133 +288,32 @@ export default function RequestsPage() {
           )}
         </Paper>
       </Box>
-      <Dialog
-        open={showAddDialog}
-        onClose={handleCancelEdit}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Create New Request</DialogTitle>
-        <DialogContent>
+
+      {/* DIALOG */}
+      <Dialog open={showAddDialog} onClose={handleCancelEdit} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ bgcolor: "#0b0b0b", color: "white" }}>
+          {editingRequest?.id === null ? "Create Request" : "Edit Request"}
+        </DialogTitle>
+
+        <DialogContent sx={{ bgcolor: "#0b0b0b" }}>
           <Stack spacing={3} sx={{ mt: 1 }}>
-            <TextField
-              label="Request Title"
-              value={editingRequest?.data.title || ""}
-              onChange={handleChange("title")}
-              fullWidth
-              required
-              placeholder="Enter a clear title for the request"
-              error={!editingRequest?.data.title}
-              helperText={!editingRequest?.data.title ? "Required" : ""}
-            />
-
-            <TextField
-              label="Description"
-              value={editingRequest?.data.description || ""}
-              onChange={handleChange("description")}
-              fullWidth
-              required
-              multiline
-              rows={4}
-              placeholder="Describe the request in detail..."
-              error={!editingRequest?.data.description}
-              helperText={!editingRequest?.data.description ? "Required" : ""}
-            />
-
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <FormControl fullWidth>
-                <InputLabel>Priority</InputLabel>
-                <Select
-                  value={
-                    editingRequest?.data.priority || RequestPriority.Normal
-                  }
-                  onChange={handleSelectChange("priority")}
-                  label="Priority"
-                >
-                  {Object.entries(priorityConfig).map(([key, config]) => (
-                    <MenuItem key={key} value={Number(key)}>
-                      {config.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={editingRequest?.data.status || RequestStatus.New}
-                  onChange={handleSelectChange("status")}
-                  label="Status"
-                >
-                  {Object.entries(statusConfig).map(([key, config]) => (
-                    <MenuItem key={key} value={Number(key)}>
-                      {config.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                label="Project ID (Optional)"
-                type="number"
-                value={editingRequest?.data.projectId || ""}
-                onChange={handleChange("projectId")}
-                fullWidth
-                placeholder="Enter project ID"
-              />
-              <TextField
-                label="Job ID (Optional)"
-                type="number"
-                value={editingRequest?.data.jobId || ""}
-                onChange={handleChange("jobId")}
-                fullWidth
-                placeholder="Enter job ID"
-              />
-            </Box>
+            <TextField label="Title" value={editingRequest?.data.title || ""} onChange={handleChange("title")} fullWidth />
+            <TextField label="Description" value={editingRequest?.data.description || ""} onChange={handleChange("description")} fullWidth multiline rows={4} />
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCancelEdit}
-            disabled={createMutation.isPending}
-          >
+
+        <DialogActions sx={{ bgcolor: "#0b0b0b" }}>
+          <Button sx={{ color: "white" }} onClick={handleCancelEdit}>
             Cancel
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleSaveEdit}
-            disabled={
-              createMutation.isPending ||
-              !editingRequest?.data.title ||
-              !editingRequest?.data.description
-            }
-          >
-            {createMutation.isPending ? (
-              <>
-                <CircularProgress size={20} sx={{ mr: 1 }} />
-                Creating...
-              </>
-            ) : (
-              "Create Request"
-            )}
+          <Button variant="contained" onClick={handleSaveEdit} startIcon={<Save />}>
+            Save
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={!!notification}
-        autoHideDuration={6000}
-        onClose={() => setNotification(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setNotification(null)}
-          severity={notification?.type}
-          sx={{ width: "100%" }}
-        >
-          {notification?.message}
-        </Alert>
+
+      <Snackbar open={!!notification} autoHideDuration={5000} onClose={() => setNotification(null)}>
+        <Alert severity={notification?.type}>{notification?.message}</Alert>
       </Snackbar>
     </PageShell>
   );
