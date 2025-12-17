@@ -1,6 +1,6 @@
 export const paperStyles = {
   height: "fit-content",
-  p: 3,
+  p: 2.5,
   m: 1,
   mt: 2,
   backgroundColor: "black",
@@ -10,7 +10,7 @@ export const paperStyles = {
 
 export const topRowBoxStyles = {
   display: "flex",
-  alignItems: "flex-start",
+  alignItems: "center",
   justifyContent: "space-between",
   gap: 2,
   mb: 2,

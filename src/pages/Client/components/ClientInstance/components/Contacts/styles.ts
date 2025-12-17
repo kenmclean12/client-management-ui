@@ -1,6 +1,6 @@
 export const paperStyles = {
   height: "fit-content",
-  p: 2,
+  p: 2.5,
   paddingInline: 3,
   m: 1,
   mt: 2,

@@ -91,7 +91,7 @@ export function EditJobDialog({ job }: Props) {
         title="Edit Job"
         footer={
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={handleSave}
             sx={dialogButtonStyles}
             disabled={!isDirty || !formData.name || !formData.dueDate}
