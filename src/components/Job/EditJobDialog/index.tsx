@@ -24,6 +24,7 @@ import {
   textFieldStyles,
 } from "../../../pages/styles";
 import { useJobsUpdate } from "../../../hooks";
+import { darkMenuProps } from "../styles";
 
 interface Props {
   job: Job;
@@ -101,6 +102,7 @@ export function EditJobDialog({ job }: Props) {
               value={formData.status}
               label="Status"
               size="small"
+              MenuProps={darkMenuProps}
               sx={selectStyles}
               onChange={(e) =>
                 setFormData({ ...formData, status: Number(e.target.value) })
@@ -120,6 +122,7 @@ export function EditJobDialog({ job }: Props) {
               label="Priority"
               size="small"
               sx={selectStyles}
+              MenuProps={darkMenuProps}
               onChange={(e) =>
                 setFormData({ ...formData, priority: Number(e.target.value) })
               }
