@@ -12,10 +12,10 @@ import {
 
 interface Props {
   clientId: number;
-  data: Note[] | undefined;
+  data: Note[];
 }
 
-export function NoteSection({ clientId, data: notes }: Props) {
+export function NoteSection({ clientId, data: notes = [] }: Props) {
   const sortedNotes = [...(notes || [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );

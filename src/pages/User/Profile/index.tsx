@@ -35,7 +35,7 @@ export function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const userId = Number(id);
   const { user: self } = useAuth();
-  const { data: user, refetch } = useUsersGetById(userId, {
+  const { data: user } = useUsersGetById(userId, {
     enabled: userId > 0,
   });
   const { data: projects = [] } = useProjectsGetByUserId(userId);
@@ -53,7 +53,6 @@ export function ProfilePage() {
             <Box sx={{ position: "absolute", top: 16, right: 16 }}>
               <ProfileActions
                 user={user as UserResponseDto}
-                onSaved={refetch}
                 isReadOnly={isReadOnly}
                 isAdmin={isAdmin}
                 isSelf={isSelf}

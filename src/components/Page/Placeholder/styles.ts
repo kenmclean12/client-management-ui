@@ -22,7 +22,7 @@ export const avatarStyles = {
 export const textStyles = {
   color: "grey",
   fontWeight: 600,
-}
+};
 
 export const subTextStyles = {
   color: "grey",

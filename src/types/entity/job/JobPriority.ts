@@ -4,8 +4,9 @@ export enum JobPriority {
   High = 3,
 }
 
-export const jobPriorityKeyMap: Record<JobPriority, "low" | "medium" | "high"> = {
-  [JobPriority.Low]: "low",
-  [JobPriority.Medium]: "medium",
-  [JobPriority.High]: "high",
-};
+export const jobPriorityKeyMap: Record<JobPriority, "Low" | "Medium" | "High"> =
+  {
+    [JobPriority.Low]: "Low",
+    [JobPriority.Medium]: "Medium",
+    [JobPriority.High]: "High",
+  };

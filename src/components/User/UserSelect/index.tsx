@@ -41,7 +41,7 @@ export function UserSelect({
         open={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        sx={{ ...selectStyles, backgroundColor: "#1e1e1e" }}
+        sx={selectStyles}
         input={<OutlinedInput label={label} sx={{ padding: 0 }} notched />}
         renderValue={() => {
           if (value) return <UserRow user={value} />;

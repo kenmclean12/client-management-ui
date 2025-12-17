@@ -29,13 +29,12 @@ import {
 import { userTextFields } from "./config";
 
 interface Props {
-  open: boolean;
   user: UserResponseDto;
+  open: boolean;
   onClose: () => void;
-  onSaved: () => void;
 }
 
-export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
+export function EditUserDialog({ user, open, onClose }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const updateMutation = useUsersUpdate(user?.id);
   const [formData, setFormData] = useState<UserUpdateDto>({
@@ -52,8 +51,6 @@ export function EditUserDialog({ open, user, onClose, onSaved }: Props) {
       id: user.id,
       dto: formData,
     });
-
-    onSaved();
     onClose();
   };
 

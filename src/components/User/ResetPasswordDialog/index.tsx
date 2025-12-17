@@ -1,28 +1,34 @@
+import { useState } from "react";
 import { Stack, Button, TextField } from "@mui/material";
 import { UniversalDialog } from "../../UniversalDialog";
 import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
+import { useUsersResetPassword } from "../../../hooks";
 
 interface Props {
+  userId: number;
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  isPending: boolean;
-  currentPassword: string;
-  newPassword: string;
-  onCurrentPasswordChange: (value: string) => void;
-  onNewPasswordChange: (value: string) => void;
 }
 
-export function ResetPasswordDialog({
-  open,
-  onClose,
-  onConfirm,
-  isPending,
-  currentPassword,
-  newPassword,
-  onCurrentPasswordChange,
-  onNewPasswordChange,
-}: Props) {
+export function ResetPasswordDialog({ userId, open, onClose }: Props) {
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const { mutateAsync: reset } = useUsersResetPassword(userId);
+
+  const handleResetPassword = async () => {
+    await reset({
+      id: userId,
+      dto: {
+        password: currentPassword,
+        newPassword,
+      },
+    });
+
+    setCurrentPassword("");
+    setNewPassword("");
+    onClose();
+  };
+
   return (
     <UniversalDialog
       open={open}
@@ -30,10 +36,10 @@ export function ResetPasswordDialog({
       title="Reset Password"
       footer={
         <Button
-          onClick={onConfirm}
+          onClick={handleResetPassword}
           variant="outlined"
           sx={dialogButtonStyles}
-          disabled={isPending}
+          disabled={!currentPassword || !newPassword}
         >
           Reset
         </Button>
@@ -44,7 +50,7 @@ export function ResetPasswordDialog({
           label="Current Password"
           type="password"
           value={currentPassword}
-          onChange={(e) => onCurrentPasswordChange(e.target.value)}
+          onChange={(e) => setCurrentPassword(e.target.value)}
           size="small"
           fullWidth
           sx={textFieldStyles}
@@ -53,7 +59,7 @@ export function ResetPasswordDialog({
           label="New Password"
           type="password"
           value={newPassword}
-          onChange={(e) => onNewPasswordChange(e.target.value)}
+          onChange={(e) => setNewPassword(e.target.value)}
           size="small"
           fullWidth
           sx={textFieldStyles}

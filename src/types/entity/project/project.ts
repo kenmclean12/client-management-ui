@@ -14,7 +14,7 @@ export interface Project {
   dueDate: string | null;
   createdAt: string;
   updatedAt?: string | null;
-  assignedUserId: string | null;
+  assignedUserId: number | null;
   projectPriority: RequestPriority;
   projectStatus: ProjectStatus;
 

@@ -52,6 +52,7 @@ export function AddNoteDialog({ clientId }: Props) {
           multiline
           rows={3}
           fullWidth
+          inputProps={{ maxLength: 1000 }}
           required
           placeholder="Enter note content..."
           variant="outlined"

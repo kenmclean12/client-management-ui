@@ -10,14 +10,14 @@ export const selectStyles = {
   },
 
   "& .MuiOutlinedInput-notchedOutline": {
-    borderColor: "none",
+    borderColor: "#444",
   },
 
   "&:hover .MuiOutlinedInput-notchedOutline": {
-    borderColor: "none",
+    borderColor: "#444",
   },
 
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-    borderColor: "none",
+    borderColor: "#444",
   },
 };

@@ -5,9 +5,12 @@ export enum JobStatus {
   Done = 4,
 }
 
-export const jobStatusKeyMap: Record<JobStatus, "not_started" | "in_progress" | "completed" | "blocked"> = {
-  [JobStatus.Stopped]: "not_started",
-  [JobStatus.Pending]: "blocked",
-  [JobStatus.InProgress]: "in_progress",
-  [JobStatus.Done]: "completed",
+export const jobStatusKeyMap: Record<
+  JobStatus,
+  "Not Started" | "In Progress" | "Completed" | "Blocked"
+> = {
+  [JobStatus.Stopped]: "Not Started",
+  [JobStatus.Pending]: "Blocked",
+  [JobStatus.InProgress]: "In Progress",
+  [JobStatus.Done]: "Completed",
 };

@@ -78,7 +78,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
         title="Add Job"
         footer={
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={handleAdd}
             sx={dialogButtonStyles}
             disabled={!formData.name || !formData.dueDate}
@@ -160,7 +160,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
             menuPaperStyles={{
               backgroundColor: "#121212",
               color: "white",
-              border: "1px solid #2a2a2a",
+              border: "1px solid #444",
             }}
           />
           <TextField

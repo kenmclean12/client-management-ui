@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
-import { useUsersDelete, useUsersResetPassword } from "../../../../hooks";
 import { UserResponseDto } from "../../../../types";
 import {
   DeleteUserDialog,
@@ -12,14 +10,8 @@ import {
   ResetPasswordDialog,
 } from "../../../../components";
 
-interface FormFields {
-  currentPassword: string;
-  newPassword: string;
-}
-
 interface Props {
   user: UserResponseDto;
-  onSaved: () => void;
   isReadOnly: boolean;
   isAdmin: boolean;
   isSelf: boolean;
@@ -27,41 +19,13 @@ interface Props {
 
 export function ProfileActions({
   user,
-  onSaved,
   isReadOnly,
   isAdmin,
   isSelf,
 }: Props) {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [editOpen, setEditOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
   const [resetOpen, setResetOpen] = useState<boolean>(false);
-  const [resetPassword, setResetPassword] = useState<FormFields>({
-    currentPassword: "",
-    newPassword: "",
-  });
-
-  const deleteMutation = useUsersDelete(Number(id));
-  const resetMutation = useUsersResetPassword(Number(id));
-
-  const handleDelete = async () => {
-    await deleteMutation.mutateAsync();
-    navigate("/users");
-  };
-
-  const handleResetPassword = async () => {
-    await resetMutation.mutateAsync({
-      id: Number(id),
-      dto: {
-        password: resetPassword.currentPassword,
-        newPassword: resetPassword.newPassword,
-      },
-    });
-
-    setResetOpen(false);
-    setResetPassword({ currentPassword: "", newPassword: "" });
-  };
 
   const menuItems = [
     {
@@ -72,7 +36,7 @@ export function ProfileActions({
     },
     {
       key: "reset",
-      show: isSelf || isAdmin,
+      show: isSelf,
       label: "Reset Password",
       onClick: () => setResetOpen(true),
     },
@@ -105,35 +69,19 @@ export function ProfileActions({
           ))}
       </PopoverMenu>
       <EditUserDialog
-        open={editOpen}
         user={user}
+        open={editOpen}
         onClose={() => setEditOpen(false)}
-        onSaved={() => {
-          onSaved();
-          setEditOpen(false);
-        }}
       />
       <DeleteUserDialog
+        user={user}
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
-        onConfirm={handleDelete}
-        isPending={deleteMutation.isPending}
-        firstName={user?.firstName}
-        lastName={user?.lastName}
       />
       <ResetPasswordDialog
+        userId={user?.id}
         open={resetOpen}
         onClose={() => setResetOpen(false)}
-        onConfirm={handleResetPassword}
-        isPending={resetMutation.isPending}
-        currentPassword={resetPassword.currentPassword}
-        newPassword={resetPassword.newPassword}
-        onCurrentPasswordChange={(v) =>
-          setResetPassword((p) => ({ ...p, currentPassword: v }))
-        }
-        onNewPasswordChange={(v) =>
-          setResetPassword((p) => ({ ...p, newPassword: v }))
-        }
       />
     </>
   );

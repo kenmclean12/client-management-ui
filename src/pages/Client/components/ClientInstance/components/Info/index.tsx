@@ -63,7 +63,7 @@ export function ClientInfo({ client }: Props) {
         </Box>
       </Box>
       <Divider sx={{ mt: 3, mb: 1, backgroundColor: "#444" }} />
-      <NoteSection clientId={client.id} data={notes} />
+      <NoteSection clientId={client.id} data={notes ?? []} />
     </Paper>
   );
 }

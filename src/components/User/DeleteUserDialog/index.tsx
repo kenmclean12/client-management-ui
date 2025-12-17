@@ -1,24 +1,21 @@
 import { Button, Typography } from "@mui/material";
 import { UniversalDialog } from "../../../components";
 import { dialogButtonStyles } from "../../../pages/styles";
+import { useAuth } from "../../../context";
+import { UserResponseDto, UserRole } from "../../../types";
+import { useUsersDelete } from "../../../hooks";
 
 interface Props {
+  user: UserResponseDto;
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
-  isPending: boolean;
-  firstName?: string;
-  lastName?: string;
 }
 
-export function DeleteUserDialog({
-  open,
-  onClose,
-  onConfirm,
-  isPending,
-  firstName,
-  lastName,
-}: Props) {
+export function DeleteUserDialog({ user, open, onClose }: Props) {
+  const { user: self } = useAuth();
+  const isAdmin = self?.role === UserRole.Admin;
+  const { mutateAsync: deleteUser } = useUsersDelete(Number(user?.id));
+
   return (
     <UniversalDialog
       open={open}
@@ -26,10 +23,10 @@ export function DeleteUserDialog({
       title="Delete User"
       footer={
         <Button
-          onClick={onConfirm}
+          onClick={async () => await deleteUser()}
           variant="outlined"
           sx={dialogButtonStyles}
-          disabled={isPending}
+          disabled={!isAdmin}
         >
           Delete
         </Button>
@@ -38,7 +35,7 @@ export function DeleteUserDialog({
       <Typography color="white">
         Are you sure you want to delete{" "}
         <strong>
-          {firstName} {lastName}
+          {user.firstName} {user.lastName}
         </strong>
         ? This action cannot be undone.
       </Typography>

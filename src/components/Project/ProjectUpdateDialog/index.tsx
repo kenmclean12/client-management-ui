@@ -39,6 +39,13 @@ export function ProjectUpdateDialog({ project }: Props) {
   );
   const { mutateAsync: updateProject } = useProjectsUpdate(project.id);
 
+  const handleOpen = () => {
+    setOpen(true);
+    setStatus(project.projectStatus);
+    setPriority(project.projectPriority);
+    setEndDate(dayjs(project.endDate));
+  };
+
   const handleSave = async () => {
     await updateProject({
       id: project.id,
@@ -51,14 +58,21 @@ export function ProjectUpdateDialog({ project }: Props) {
     setOpen(false);
   };
 
+  const onClose = () => {
+    setOpen(false);
+    setStatus(ProjectStatus.Pending);
+    setPriority(RequestPriority.Low);
+    setEndDate(null);
+  };
+
   return (
     <>
-      <IconButton sx={{ color: "white" }} onClick={() => setOpen(true)}>
+      <IconButton sx={{ color: "white" }} onClick={handleOpen}>
         <Edit />
       </IconButton>
       <UniversalDialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={onClose}
         title="Update Project"
         footer={
           <Button

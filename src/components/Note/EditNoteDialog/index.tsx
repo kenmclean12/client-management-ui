@@ -4,16 +4,25 @@ import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
 import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
 import { useNotesUpdate } from "../../../hooks";
-import { Note } from "../../../types";
+import { Note, UserRole } from "../../../types";
+import { useAuth } from "../../../context";
 
 interface Props {
   note: Note;
 }
 
 export function EditNoteDialog({ note }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [content, setContent] = useState<string>(note.content);
   const { mutateAsync: update, isPending } = useNotesUpdate(note.id);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isSelf = user?.id === note.userId;
+
+  const handleOpen = () => {
+    setContent(note.content);
+    setOpen(true);
+  };
 
   const handleSave = async () => {
     await update({
@@ -27,8 +36,9 @@ export function EditNoteDialog({ note }: Props) {
     <>
       <IconButton
         size="small"
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         sx={{ color: "white" }}
+        disabled={!isAdmin && !isSelf}
       >
         <Edit />
       </IconButton>
@@ -54,6 +64,7 @@ export function EditNoteDialog({ note }: Props) {
           rows={3}
           fullWidth
           required
+          inputProps={{ maxLength: 1000 }}
           placeholder="Edit note content..."
           variant="outlined"
           sx={textFieldStyles}

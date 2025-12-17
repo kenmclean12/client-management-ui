@@ -2,17 +2,22 @@ import { useState } from "react";
 import { IconButton, Button, Typography } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
-import { Project, ProjectStatus } from "../../../types";
+import { Project, ProjectStatus, UserRole } from "../../../types";
 import { dialogButtonStyles } from "../../../pages/styles";
 import { useProjectsUpdate } from "../../../hooks";
+import { useAuth } from "../../../context";
 
 interface Props {
   project: Project;
 }
 
 export function ProjectCompletionDialog({ project }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const { mutateAsync: updateProject } = useProjectsUpdate(project.id);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isAssignedUser = Number(user?.id) === project.assignedUserId;
+  const validUser = isAdmin && isAssignedUser;
 
   const handleConfirm = async () => {
     updateProject({
@@ -23,7 +28,11 @@ export function ProjectCompletionDialog({ project }: Props) {
 
   return (
     <>
-      <IconButton sx={{ color: "green" }} onClick={() => setOpen(true)}>
+      <IconButton
+        sx={{ color: "green" }}
+        onClick={() => setOpen(true)}
+        disabled={!validUser}
+      >
         <CheckCircle />
       </IconButton>
       <UniversalDialog
