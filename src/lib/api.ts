@@ -13,11 +13,11 @@ export async function api(path: string, options: RequestInit = {}) {
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
 
   if (!res.ok) {
-    // if (res.status === 401) {
-    //   localStorage.removeItem("access_token");
-    //   window.location.href = "/login";
-    //   return new Response(null, { status: 401 });
-    // }
+    if (res.status === 401) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/login";
+      return new Response(null, { status: 401 });
+    }
 
     const err = await res.json().catch(() => ({ message: res.statusText }));
     throw new Error(err.message || "API request failed");
