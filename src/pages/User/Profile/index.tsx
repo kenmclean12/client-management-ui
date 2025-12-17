@@ -45,13 +45,6 @@ export function ProfilePage() {
   const isReadOnly = self?.role === UserRole.ReadOnly;
   const isAdmin = self?.role === UserRole.Admin;
 
-  const jobsByProject = jobs.reduce<Record<number, typeof jobs>>((acc, job) => {
-    if (!job.projectId) return acc;
-    acc[job.projectId] ??= [];
-    acc[job.projectId].push(job);
-    return acc;
-  }, {});
-
   return (
     <PageShell title="Users" actions={<UserInviteForm />}>
       <Box p={2}>

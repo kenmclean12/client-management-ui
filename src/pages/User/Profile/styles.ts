@@ -42,7 +42,7 @@ export const assignedProjectsContainerStyles = {
   backgroundColor: "#1e1e1e",
   pt: 40,
   overflowY: "auto",
-}
+};
 
 export const assignedJobsContainerStyles = {
   display: "flex",
@@ -56,4 +56,11 @@ export const assignedJobsContainerStyles = {
   border: "1px solid #444",
   backgroundColor: "#1e1e1e",
   overflowY: "auto",
+};
+
+export const ellipsisCellSx = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  maxWidth: 0,
 };
