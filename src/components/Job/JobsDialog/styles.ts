@@ -9,5 +9,5 @@ export const noJobsDisplayStyles = {
   flexDirection: "column",
   alignItems: "center",
   textAlign: "center",
-  pt: 30,
+  pt: 35,
 };

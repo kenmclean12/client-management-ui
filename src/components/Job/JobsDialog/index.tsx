@@ -39,7 +39,7 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
           <AddJobDialog clientId={clientId} projectId={projectId} />
         }
       >
-        {jobs.length > 0 ? (
+        {jobs.length === 0 ? (
           <Stack sx={noJobsDisplayStyles}>
             <PendingActions sx={{ fontSize: 40, color: "#ccc" }} />
             <Typography fontSize={16} color="#ccc">
