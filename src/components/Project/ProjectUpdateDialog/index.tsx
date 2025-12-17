@@ -87,7 +87,7 @@ export function ProjectUpdateDialog({ project }: Props) {
             >
               {Object.entries(ProjectStatus)
                 .filter(
-                  ([key, val]) => typeof val === "number" && key !== "Approved"
+                  ([key, val]) => typeof val === "number" && key !== "Done"
                 )
                 .map(([key, val]) => (
                   <MenuItem key={val} value={val}>
