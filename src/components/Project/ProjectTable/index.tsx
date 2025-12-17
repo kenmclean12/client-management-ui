@@ -162,9 +162,9 @@ export function ProjectTable({
                     <TableCell align="center">Client</TableCell>
                   )}
                   <TableCell align="center">Timeline</TableCell>
-                  <TableCell align="center">Jobs</TableCell>
                   <TableCell align="center">Priority</TableCell>
                   <TableCell align="center">Status</TableCell>
+                  <TableCell align="center">Jobs</TableCell>
                   <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -282,6 +282,27 @@ export function ProjectTable({
                       </TableCell>
                       <TableCell align="center">
                         <Chip
+                          size="small"
+                          variant="outlined"
+                          label={projectPriorityConfig[p.projectPriority].label}
+                          icon={projectPriorityConfig[p.projectPriority].icon}
+                          sx={{
+                            color: "white",
+                            borderColor: "#444",
+                            "& .MuiChip-icon": { color: "#888" },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          size="small"
+                          label={projectStatusConfig[p.projectStatus].label}
+                          icon={projectStatusConfig[p.projectStatus].icon}
+                          color={projectStatusConfig[p.projectStatus].color}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
                           clickable
                           onClick={() => toggleExpand(p.id)}
                           label={
@@ -310,27 +331,6 @@ export function ProjectTable({
                               borderColor: "white",
                             },
                           }}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          size="small"
-                          variant="outlined"
-                          label={projectPriorityConfig[p.projectPriority].label}
-                          icon={projectPriorityConfig[p.projectPriority].icon}
-                          sx={{
-                            color: "white",
-                            borderColor: "#444",
-                            "& .MuiChip-icon": { color: "#888" },
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          size="small"
-                          label={projectStatusConfig[p.projectStatus].label}
-                          icon={projectStatusConfig[p.projectStatus].icon}
-                          color={projectStatusConfig[p.projectStatus].color}
                         />
                       </TableCell>
                       <TableCell align="center">
