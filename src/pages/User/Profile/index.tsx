@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { useUsersGetById } from "../../../hooks";
 import { useProjectsGetByUserId, useJobsGetByUserId } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
-import { JobTable, PageShell, UserInviteForm } from "../../../components";
+import { JobTable, PageShell, ProjectTable, UserInviteForm } from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
 import {
@@ -115,49 +115,9 @@ export function ProfilePage() {
               </Typography>
               <Stack sx={assignedProjectsContainerStyles}>
                 {projects.length > 0 ? (
-                  projects.map((project) => (
-                    <Paper key={project.id} variant="outlined" sx={{ p: 2 }}>
-                      <Typography fontWeight={600} sx={ellipsisTextStyles}>
-                        {project.name}
-                      </Typography>
-
-                      {project.description && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          mt={0.5}
-                        >
-                          {project.description}
-                        </Typography>
-                      )}
-
-                      {jobsByProject[project.id]?.length > 0 && (
-                        <>
-                          <Divider sx={{ my: 2 }} />
-                          <Stack spacing={1}>
-                            {jobsByProject[project.id].map((job) => (
-                              <Box key={job.id}>
-                                <Typography
-                                  fontSize={14}
-                                  fontWeight={500}
-                                  sx={ellipsisTextStyles}
-                                >
-                                  {job.name}
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                  sx={ellipsisTextStyles}
-                                >
-                                  {job.status} · {job.priority}
-                                </Typography>
-                              </Box>
-                            ))}
-                          </Stack>
-                        </>
-                      )}
-                    </Paper>
-                  ))
+                  <Stack width="96%" pt={1}>
+                    <ProjectTable projects={projects} userPage />
+                  </Stack>
                 ) : (
                   <Box textAlign="center">
                     <Work sx={{ fontSize: 40, color: "#ccc" }} />

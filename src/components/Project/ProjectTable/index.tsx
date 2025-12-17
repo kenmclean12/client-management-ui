@@ -29,9 +29,10 @@ import { ProjectUpdateDialog } from "../ProjectUpdateDialog";
 interface Props {
   projects: Project[];
   clientSpecific?: boolean;
+  userPage?: boolean;
 }
 
-export function ProjectTable({ projects, clientSpecific }: Props) {
+export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
   const navigate = useNavigate();
   const [openDescription, setOpenDescription] = useState<string>("");
   const formatDate = (d?: string | null) =>
@@ -57,35 +58,37 @@ export function ProjectTable({ projects, clientSpecific }: Props) {
 
   return (
     <Box sx={{ p: 0 }}>
-      <Stack direction="row" spacing={2} flex={1} sx={{ mb: 2 }}>
-        <Card
-          sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
-        >
-          <CardContent>
-            <Typography sx={{ color: "#aaa" }} variant="body2">
-              Total Projects
-            </Typography>
-            <Typography variant="h5" sx={{ color: "white" }}>
-              {projectCounts.total}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card
-          sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
-        >
-          <CardContent>
-            <Typography sx={{ color: "#aaa" }} variant="body2">
-              Total Jobs
-            </Typography>
-            <Typography variant="h5" sx={{ color: "white" }}>
-              {projectCounts.jobs}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Stack>
+      {!userPage && (
+        <Stack direction="row" spacing={2} flex={1} sx={{ mb: 2 }}>
+          <Card
+            sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
+          >
+            <CardContent>
+              <Typography sx={{ color: "#aaa" }} variant="body2">
+                Total Projects
+              </Typography>
+              <Typography variant="h5" sx={{ color: "white" }}>
+                {projectCounts.total}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card
+            sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
+          >
+            <CardContent>
+              <Typography sx={{ color: "#aaa" }} variant="body2">
+                Total Jobs
+              </Typography>
+              <Typography variant="h5" sx={{ color: "white" }}>
+                {projectCounts.jobs}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Stack>
+      )}
       <Paper
         sx={{
-          p: 3,
+          p: !userPage ? 3 : 0,
           backgroundColor: "black",
           border: "1px solid #444",
           color: "white",
@@ -101,7 +104,9 @@ export function ProjectTable({ projects, clientSpecific }: Props) {
             <Table stickyHeader sx={tableStyles}>
               <TableHead>
                 <TableRow>
-                  <TableCell align="center">Assigned To</TableCell>
+                  {!userPage && (
+                    <TableCell align="center">Assigned To</TableCell>
+                  )}
                   <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Description</TableCell>
                   {!clientSpecific && (
@@ -121,19 +126,21 @@ export function ProjectTable({ projects, clientSpecific }: Props) {
                       hover
                       sx={{ "&:hover": { backgroundColor: "#111" } }}
                     >
-                      <TableCell align="center" sx={{ maxWidth: 200 }}>
-                        {p.assignedUser ? (
-                          <UserRow
-                            user={p.assignedUser}
-                            onClick={() =>
-                              navigate(`/users/${p.assignedUserId}`)
-                            }
-                            showUserName
-                          />
-                        ) : (
-                          <Typography color="#666">—</Typography>
-                        )}
-                      </TableCell>
+                      {!userPage && (
+                        <TableCell align="center" sx={{ maxWidth: 200 }}>
+                          {p.assignedUser ? (
+                            <UserRow
+                              user={p.assignedUser}
+                              onClick={() =>
+                                navigate(`/users/${p.assignedUserId}`)
+                              }
+                              showUserName
+                            />
+                          ) : (
+                            <Typography color="#666">—</Typography>
+                          )}
+                        </TableCell>
+                      )}
                       <TableCell align="center" sx={{ maxWidth: 150 }}>
                         <Tooltip title={p.name} arrow>
                           <Typography
