@@ -16,7 +16,6 @@ export const infoRowContainerStyles = {
 
 export const paperStyles = {
   position: "relative",
-  minWidth: "550px",
   p: 4,
   backgroundColor: "black",
   border: "1px solid #444",

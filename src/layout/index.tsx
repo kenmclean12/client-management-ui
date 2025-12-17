@@ -10,7 +10,7 @@ export default function Layout() {
       <TopBar />
       <Stack sx={mainSectionContainerStyles}>
         <SideBar />
-        <Stack sx={{ flex: 1 }}>
+        <Stack sx={{ flex: 1, overflowX: "auto" }}>
           <Outlet />
         </Stack>
       </Stack>
