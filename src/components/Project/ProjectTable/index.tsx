@@ -11,83 +11,29 @@ import {
   Box,
   Stack,
   Chip,
-  Collapse,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  CircularProgress,
   Card,
   CardContent,
   Tooltip,
 } from "@mui/material";
-import {
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  Work,
-  Visibility,
-} from "@mui/icons-material";
-import { Project, ProjectUpdateDto } from "../../../types";
-import {
-  tableContainerStyles,
-  tableStyles,
-  textFieldStyles,
-} from "../../../pages/styles";
+import { Work, Visibility } from "@mui/icons-material";
+import { Project } from "../../../types";
+import { tableContainerStyles, tableStyles } from "../../../pages/styles";
 import { useNavigate } from "react-router-dom";
-import { JobTable } from "../../Job";
+import { JobsDialog } from "../../Job";
 import { projectPriorityConfig, projectStatusConfig } from "./config";
 import { UserRow } from "../../User";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import { ProjectCompletionDialog } from "../ProjectCompletionDialog";
 import { ProjectUpdateDialog } from "../ProjectUpdateDialog";
 
-interface EditingProject {
-  id: number | null;
-  data: ProjectUpdateDto;
-}
-
 interface Props {
   projects: Project[];
   clientSpecific?: boolean;
-  onCreate?: (dto: ProjectUpdateDto) => Promise<void>;
-  onUpdate?: (id: number, dto: ProjectUpdateDto) => Promise<void>;
 }
 
-export function ProjectTable({
-  projects,
-  clientSpecific,
-  onCreate,
-  onUpdate,
-}: Props) {
+export function ProjectTable({ projects, clientSpecific }: Props) {
   const navigate = useNavigate();
   const [openDescription, setOpenDescription] = useState<string>("");
-  const [expandedProjectId, setExpandedProjectId] = useState<number | null>(
-    null
-  );
-  const [editingProject, setEditingProject] = useState<EditingProject | null>(
-    null
-  );
-  const [showDialog, setShowDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const toggleExpand = (id: number) =>
-    setExpandedProjectId((current) => (current === id ? null : id));
-
-  const handleSave = async () => {
-    if (!editingProject) return;
-    setLoading(true);
-    if (editingProject.id === null && onCreate) {
-      await onCreate(editingProject.data);
-    } else if (editingProject.id !== null && onUpdate) {
-      await onUpdate(editingProject.id, editingProject.data);
-    }
-    setEditingProject(null);
-    setShowDialog(false);
-    setLoading(false);
-  };
-
   const formatDate = (d?: string | null) =>
     d ? new Date(d).toLocaleDateString() : "—";
 
@@ -302,35 +248,10 @@ export function ProjectTable({
                         />
                       </TableCell>
                       <TableCell align="center">
-                        <Chip
-                          clickable
-                          onClick={() => toggleExpand(p.id)}
-                          label={
-                            <Stack
-                              direction="row"
-                              spacing={0.5}
-                              alignItems="center"
-                            >
-                              <Typography variant="body2">
-                                {p.jobs?.length || 0} jobs
-                              </Typography>
-                              {expandedProjectId === p.id ? (
-                                <KeyboardArrowUp fontSize="small" />
-                              ) : (
-                                <KeyboardArrowDown fontSize="small" />
-                              )}
-                            </Stack>
-                          }
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            color: "#aaa",
-                            borderColor: "#555",
-                            "&:hover": {
-                              color: "white",
-                              borderColor: "white",
-                            },
-                          }}
+                        <JobsDialog
+                          jobs={p.jobs || []}
+                          clientId={p.clientId}
+                          projectId={p.id}
                         />
                       </TableCell>
                       <TableCell align="center">
@@ -344,19 +265,6 @@ export function ProjectTable({
                         </Stack>
                       </TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell colSpan={6} sx={{ p: 0 }}>
-                        <Collapse in={expandedProjectId === p.id}>
-                          <Box sx={{ m: 2, ml: 6 }}>
-                            <JobTable
-                              clientId={p.clientId}
-                              projectId={p.id}
-                              jobs={p.jobs || []}
-                            />
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
                   </Fragment>
                 ))}
               </TableBody>
@@ -364,62 +272,6 @@ export function ProjectTable({
           </TableContainer>
         )}
       </Paper>
-      <Dialog
-        open={showDialog}
-        onClose={() => setShowDialog(false)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{ sx: { backgroundColor: "black", color: "white" } }}
-      >
-        <DialogTitle>
-          {editingProject?.id === null ? "Create Project" : "Edit Project"}
-        </DialogTitle>
-        <DialogContent>
-          <Stack spacing={3} sx={{ mt: 1 }}>
-            <TextField
-              label="Project Name"
-              value={editingProject?.data.name || ""}
-              onChange={(e) =>
-                setEditingProject({
-                  ...editingProject!,
-                  data: { ...editingProject!.data, name: e.target.value },
-                })
-              }
-              sx={textFieldStyles}
-            />
-            <TextField
-              label="Description"
-              value={editingProject?.data.description || ""}
-              onChange={(e) =>
-                setEditingProject({
-                  ...editingProject!,
-                  data: {
-                    ...editingProject!.data,
-                    description: e.target.value,
-                  },
-                })
-              }
-              multiline
-              rows={4}
-              sx={textFieldStyles}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowDialog(false)} sx={{ color: "#aaa" }}>
-            Cancel
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleSave}
-            sx={{ color: "white", borderColor: "#666" }}
-            disabled={loading}
-          >
-            {loading && <CircularProgress size={20} sx={{ mr: 1 }} />}
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
       {openDescription && (
         <DescriptionDialog
           open
