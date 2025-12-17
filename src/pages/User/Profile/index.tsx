@@ -177,7 +177,9 @@ export function ProfilePage() {
               </Typography>
               <Stack sx={assignedJobsContainerStyles}>
                 {jobs.length > 0 ? (
-                  <JobTable jobs={jobs} userPage />
+                  <Stack mx={3} sx={{ backgroundColor: "black" }}>
+                    <JobTable jobs={jobs} userPage />
+                  </Stack>
                 ) : (
                   <Box textAlign="center">
                     <PendingActions sx={{ fontSize: 40, color: "#ccc" }} />

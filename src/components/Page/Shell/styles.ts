@@ -3,6 +3,7 @@ export const mainContainerStyles = {
   minHeight: "calc(100vh - 60px)",
   backgroundColor: "#1e1e1e",
   overflow: "hidden",
+  overflowY: "auto",
 };
 
 export const titleContainerStyles = {

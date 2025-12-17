@@ -17,8 +17,18 @@ interface Props {
 
 export function JobTable({ jobs = [], userPage }: Props) {
   return (
-    <Box>
-      <Table stickyHeader size="small" sx={tableStyles}>
+    <Box width="100%">
+      <Table
+        stickyHeader
+        size="small"
+        sx={{
+          ...tableStyles,
+          maxHeight: "650px",
+          width: "100%",
+          tableLayout: "fixed",
+          overflowY: "auto",
+        }}
+      >
         <TableHead>
           <TableRow>
             {!userPage && <TableCell align="left">Assigned</TableCell>}
@@ -30,6 +40,7 @@ export function JobTable({ jobs = [], userPage }: Props) {
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {jobs.map((job) => (
             <JobRow
