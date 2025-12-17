@@ -1,48 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react";
-import { Button, Stack, TextField } from "@mui/material";
+import { useState } from "react";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
-import { Client, ClientUpdateDto } from "../../../types";
+import { Client, ClientUpdateDto, UserRole } from "../../../types";
 import { useClientsUpdate } from "../../../hooks";
 import { CLIENT_FIELD_ROWS, CLIENT_FIELDS } from "../config";
 import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
+import { clientToForm, emptyForm, hasClientChanges } from "./config";
+import { useAuth } from "../../../context";
 
 interface Props {
   client: Client;
 }
 
-const emptyForm: ClientUpdateDto = {
-  name: "",
-  email: "",
-  phoneNumber: null,
-  address: null,
-  city: null,
-  state: null,
-  zipCode: null,
-  country: null,
-  softDeleted: null,
-};
-
 export function ClientEditDialog({ client }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [form, setForm] = useState<ClientUpdateDto>(emptyForm);
-  const { mutateAsync: update, isPending } = useClientsUpdate(client.id);
-
-  useEffect(() => {
-    setForm({
-      name: client.name,
-      email: client.email,
-      phoneNumber: client.phoneNumber,
-      address: client.address,
-      city: client.city,
-      state: client.state,
-      zipCode: client.zipCode,
-      country: client.country,
-      softDeleted: client.softDeleted,
-    });
-  }, [client]);
+  const { mutateAsync: update } = useClientsUpdate(client.id);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isDirty = hasClientChanges(form, client);
 
   const handleChange =
     (field: keyof ClientUpdateDto) =>
@@ -66,15 +44,20 @@ export function ClientEditDialog({ client }: Props) {
     }
 
     await update({ id: client.id, dto: changes as ClientUpdateDto });
+    setForm(emptyForm);
     setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setForm(clientToForm(client));
+    setOpen(true);
   };
 
   return (
     <>
-      <Edit
-        onClick={() => setOpen(true)}
-        sx={{ color: "white", cursor: "pointer" }}
-      />
+      <IconButton onClick={handleOpen} disabled={!isAdmin}>
+        <Edit sx={{ color: "white" }} />
+      </IconButton>
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -84,34 +67,38 @@ export function ClientEditDialog({ client }: Props) {
             variant="outlined"
             onClick={handleSave}
             sx={dialogButtonStyles}
-            disabled={isPending}
+            disabled={!isDirty}
           >
             Save
           </Button>
         }
       >
         <Stack spacing={2.5}>
-          {CLIENT_FIELDS.map(({ key, label, required, type, autoFocus }) => (
-            <TextField
-              key={key}
-              label={label}
-              value={(form[key] ?? "") as string}
-              onChange={handleChange(key)}
-              required={required}
-              size="small"
-              sx={textFieldStyles}
-              type={type}
-              autoFocus={autoFocus}
-              fullWidth
-            />
-          ))}
+          {CLIENT_FIELDS.map(
+            ({ key, label, maxLength, required, type, autoFocus }) => (
+              <TextField
+                key={key}
+                label={label}
+                value={(form[key] ?? "") as string}
+                onChange={handleChange(key)}
+                required={required}
+                inputProps={{ maxLength }}
+                size="small"
+                sx={textFieldStyles}
+                type={type}
+                autoFocus={autoFocus}
+                fullWidth
+              />
+            )
+          )}
           {CLIENT_FIELD_ROWS.map((row, i) => (
             <Stack key={i} direction="row" spacing={2}>
-              {row.map(({ key, label }) => (
+              {row.map(({ key, label, maxLength }) => (
                 <TextField
                   key={key}
                   size="small"
                   sx={textFieldStyles}
+                  inputProps={{ maxLength }}
                   label={label}
                   value={(form[key] ?? "") as string}
                   onChange={handleChange(key)}

@@ -16,11 +16,7 @@ export function DescriptionDialog({
   onClose,
 }: Props) {
   return (
-    <UniversalDialog
-      open={open}
-      onClose={onClose}
-      title={title}
-    >
+    <UniversalDialog open={open} onClose={onClose} title={title}>
       <Box sx={boxStyles}>
         <Typography>
           {description?.trim() || "No description provided."}

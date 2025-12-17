@@ -17,13 +17,6 @@ export function ContactAddDialog({ clientId }: Props) {
   const [phone, setPhone] = useState<string>("");
   const { mutateAsync: create } = useContactsCreate(clientId);
 
-  const handleClose = () => {
-    setOpen(false);
-    setName("");
-    setEmail("");
-    setPhone("");
-  };
-
   const handleCreate = async () => {
     const dto: ContactCreateDto = {
       name,
@@ -33,6 +26,13 @@ export function ContactAddDialog({ clientId }: Props) {
     };
 
     await create(dto);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setName("");
+    setEmail("");
+    setPhone("");
   };
 
   return (
@@ -63,6 +63,7 @@ export function ContactAddDialog({ clientId }: Props) {
             label="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            inputProps={{ maxLength: 100 }}
             size="small"
             sx={textFieldStyles}
           />
@@ -70,6 +71,7 @@ export function ContactAddDialog({ clientId }: Props) {
             label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            inputProps={{ maxLength: 100 }}
             size="small"
             sx={textFieldStyles}
           />
@@ -77,6 +79,7 @@ export function ContactAddDialog({ clientId }: Props) {
             label="Phone"
             value={phone}
             onChange={() => setPhone("")}
+            inputProps={{ maxLength: 20 }}
             size="small"
             sx={textFieldStyles}
           />
