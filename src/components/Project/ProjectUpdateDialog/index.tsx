@@ -19,13 +19,10 @@ import {
   ProjectUpdateDto,
   RequestPriority,
 } from "../../../types";
-import {
-  dialogButtonStyles,
-  selectStyles,
-  textFieldStyles,
-} from "../../../pages/styles";
+import { dialogButtonStyles, selectStyles } from "../../../pages/styles";
 import { useProjectsUpdate } from "../../../hooks";
 import { menuProps } from "./styles";
+import { textFieldStyles } from "../../Request/RequestApprovalDialog/styles";
 
 interface Props {
   project: Project;
@@ -91,7 +88,7 @@ export function ProjectUpdateDialog({ project }: Props) {
                 )
                 .map(([key, val]) => (
                   <MenuItem key={val} value={val}>
-                    {key}
+                    {key === "InProgress" ? "In Progress" : key}
                   </MenuItem>
                 ))}
             </Select>
