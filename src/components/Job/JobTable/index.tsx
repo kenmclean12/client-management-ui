@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Table,
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function JobTable({ clientId, projectId, jobs = [] }: Props) {
+  const navigate = useNavigate();
   const { data: allJobs } = useJobsGetByClient(clientId);
   const visibleJobs =
     jobs.length > 0
@@ -50,12 +52,14 @@ export function JobTable({ clientId, projectId, jobs = [] }: Props) {
             <TableRow key={job.id} hover>
               <TableCell align="left">
                 {job.assignedUser ? (
-                  <UserRow user={job.assignedUser} />
+                  <UserRow
+                    user={job.assignedUser}
+                    onClick={() => navigate(`/users/${job.assignedUserId}`)}
+                  />
                 ) : (
                   <Box height="32px" />
                 )}
               </TableCell>
-              <TableCell align="center">{job.name}</TableCell>
               <TableCell align="center">{job.name}</TableCell>
               <TableCell align="center">{job.description}</TableCell>
               <TableCell align="center">
