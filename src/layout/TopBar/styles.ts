@@ -12,6 +12,14 @@ export const mainContainerStyles = {
   borderBottom: "1px solid #222",
 };
 
+export const innerContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 8,
+  cursor: "pointer",
+};
+
 export const avatarStyles = {
   width: 32.5,
   height: 32.5,

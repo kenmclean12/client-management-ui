@@ -64,7 +64,7 @@ export function useJobsUpdate(id: number, clientId: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
-       qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["projects"] });
       qc.invalidateQueries({ queryKey: ["projects", "client", clientId] });
       enqueueSnackbar("Job updated successfully", {
         variant: "success",
@@ -86,7 +86,7 @@ export function useJobsDelete(id: number, clientId: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
-       qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["projects"] });
       qc.invalidateQueries({ queryKey: ["projects", "client", clientId] });
       enqueueSnackbar("Job deleted", {
         variant: "success",

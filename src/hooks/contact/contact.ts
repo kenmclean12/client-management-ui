@@ -21,8 +21,7 @@ export function useContactsCreate(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (dto: ContactCreateDto) =>
-      post<Contact>("/contact", dto),
+    mutationFn: (dto: ContactCreateDto) => post<Contact>("/contact", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
       qc.invalidateQueries({ queryKey: ["contacts", "client", clientId] });
@@ -63,8 +62,7 @@ export function useContactsDelete(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) =>
-      del<void>(`/contact/${id}`),
+    mutationFn: (id: number) => del<void>(`/contact/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["contacts"] });
       qc.invalidateQueries({ queryKey: ["contacts", "client", clientId] });

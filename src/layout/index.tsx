@@ -1,20 +1,14 @@
+import { Outlet } from "react-router-dom";
 import { Stack } from "@mui/material";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";
-import { Outlet } from "react-router-dom";
+import { mainSectionContainerStyles } from "./styles";
 
 export default function Layout() {
   return (
     <Stack direction="column" minWidth="550px">
       <TopBar />
-      <Stack
-        direction="row"
-        sx={{
-          maxHeight: "calc(100vh - 60px)",
-          maxWidth: "calc(100vw)",
-          overflowX: "hidden",
-        }}
-      >
+      <Stack sx={mainSectionContainerStyles}>
         <SideBar />
         <Stack sx={{ flex: 1 }}>
           <Outlet />

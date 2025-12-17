@@ -6,7 +6,7 @@ export const mainContainerStyles = {
   color: "white",
   py: 2,
   borderRight: "1px solid #222",
-  gap: .5,
+  gap: 0.5,
   overflowY: "auto",
 };
 

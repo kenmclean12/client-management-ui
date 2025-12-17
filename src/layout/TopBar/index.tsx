@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Stack, Typography, Avatar } from "@mui/material";
 import { PopoverMenu, PopoverMenuItem } from "../../components";
-import { avatarStyles, mainContainerStyles } from "./styles";
+import {
+  avatarStyles,
+  innerContainerStyles,
+  mainContainerStyles,
+} from "./styles";
 import { useAuth } from "../../context";
 
 export default function TopBar() {
@@ -10,13 +14,7 @@ export default function TopBar() {
 
   return (
     <Stack sx={mainContainerStyles}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
-        onClick={() => navigate("/")}
-        sx={{ cursor: "pointer" }}
-      >
+      <Stack onClick={() => navigate("/")} sx={innerContainerStyles}>
         <Typography fontSize={18} fontWeight={600}>
           Client Management
         </Typography>
