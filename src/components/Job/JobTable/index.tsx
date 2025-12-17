@@ -15,8 +15,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  MenuItem,
 } from "@mui/material";
-import { Edit, Delete, Save, Cancel, Add } from "@mui/icons-material";
+import { Edit, Delete, Save, Cancel } from "@mui/icons-material";
 import {
   Job,
   JobCreateDto,
@@ -32,6 +33,8 @@ import {
 } from "../../../hooks";
 import { format } from "date-fns";
 import { toUTCDateString } from "../../../utils";
+import { tableStyles } from "../../../pages/styles";
+import { jobPriorityConfig, jobStatusConfig } from "./config";
 
 interface Props {
   clientId: number;
@@ -39,11 +42,7 @@ interface Props {
   jobs?: Job[];
 }
 
-export function JobTable({
-  clientId,
-  projectId,
-  jobs = [],
-}: Props) {
+export function JobTable({ clientId, projectId, jobs = [] }: Props) {
   const [editingJobId, setEditingJobId] = useState<number | null>(null);
   const [editingJobData, setEditingJobData] = useState<JobUpdateDto>({});
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -92,15 +91,15 @@ export function JobTable({
 
   return (
     <Box>
-      <Table size="small">
+      <Table stickyHeader size="small" sx={tableStyles}>
         <TableHead>
           <TableRow>
-            <TableCell>Job Name</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Priority</TableCell>
-            <TableCell>Due Date</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell align="center">Job Name</TableCell>
+            <TableCell align="center">Status</TableCell>
+            <TableCell align="center">Priority</TableCell>
+            <TableCell align="center">Due Date</TableCell>
+            <TableCell align="center">Description</TableCell>
+            <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -109,7 +108,7 @@ export function JobTable({
             : allJobs?.filter((j) => j.projectId === projectId) || []
           ).map((job) => (
             <TableRow key={job.id} hover>
-              <TableCell>
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <TextField
                     value={editingJobData.name || ""}
@@ -126,7 +125,7 @@ export function JobTable({
                   job.name
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <TextField
                     select
@@ -137,19 +136,26 @@ export function JobTable({
                         status: Number(e.target.value),
                       })
                     }
-                    SelectProps={{ native: true }}
                   >
-                    {Object.entries(jobStatusKeyMap).map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v}
-                      </option>
+                    {Object.entries(jobStatusConfig).map(([k, v]) => (
+                      <MenuItem key={k} value={k}>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          {v.icon}
+                          <span>{v.label}</span>
+                        </Stack>
+                      </MenuItem>
                     ))}
                   </TextField>
                 ) : (
-                  <Chip label={jobStatusKeyMap[job.status]} size="small" />
+                  <Chip
+                    size="small"
+                    label={jobStatusConfig[job.status].label}
+                    icon={jobStatusConfig[job.status].icon}
+                    color={jobStatusConfig[job.status].color}
+                  />
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <TextField
                     select
@@ -160,23 +166,31 @@ export function JobTable({
                         priority: Number(e.target.value),
                       })
                     }
-                    SelectProps={{ native: true }}
                   >
-                    {Object.entries(jobPriorityKeyMap).map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v}
-                      </option>
+                    {Object.entries(jobPriorityConfig).map(([k, v]) => (
+                      <MenuItem key={k} value={k}>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          {v.icon}
+                          <span>{v.label}</span>
+                        </Stack>
+                      </MenuItem>
                     ))}
                   </TextField>
                 ) : (
                   <Chip
-                    label={jobPriorityKeyMap[job.priority]}
                     size="small"
                     variant="outlined"
+                    label={jobPriorityConfig[job.priority].label}
+                    icon={jobPriorityConfig[job.priority].icon}
+                    sx={{
+                      color: "white",
+                      borderColor: "#444",
+                      "& .MuiChip-icon": { color: "#888" },
+                    }}
                   />
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <TextField
                     type="date"
@@ -193,7 +207,7 @@ export function JobTable({
                   format(new Date(job.dueDate), "yyyy-MM-dd")
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <TextField
                     value={editingJobData.description || ""}
@@ -210,7 +224,7 @@ export function JobTable({
                   job.description
                 )}
               </TableCell>
-              <TableCell align="right">
+              <TableCell align="center">
                 {editingJobId === job.id ? (
                   <Stack direction="row" spacing={1}>
                     <IconButton onClick={handleCancelEdit}>
@@ -336,13 +350,6 @@ export function JobTable({
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        startIcon={<Add />}
-        onClick={() => setShowAddDialog(true)}
-        sx={{ mt: 1 }}
-      >
-        Add Job
-      </Button>
     </Box>
   );
 }

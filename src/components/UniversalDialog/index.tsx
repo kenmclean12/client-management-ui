@@ -13,6 +13,7 @@ interface Props {
   loading?: boolean;
   hasContent?: boolean;
   emptyMessage?: string;
+  topRightAction?: ReactNode;
   maxWidth?: "sm" | "md" | "lg";
 }
 
@@ -25,6 +26,7 @@ export function UniversalDialog({
   loading = false,
   hasContent = true,
   emptyMessage = "No content found",
+  topRightAction,
   maxWidth = "sm",
 }: Props) {
   return (
@@ -40,7 +42,19 @@ export function UniversalDialog({
         },
       }}
     >
-      {title && <Header title={title} onClose={onClose} />}
+      {title && (
+        <Header
+          title={title}
+          onClose={onClose}
+          extraAction={
+            topRightAction && (
+              <Stack direction="row" spacing={0.5}>
+                {topRightAction}
+              </Stack>
+            )
+          }
+        />
+      )}
       <Content
         display={hasContent}
         loading={loading}

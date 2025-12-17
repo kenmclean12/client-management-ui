@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Chip, Stack, Typography } from "@mui/material";
 import { Visibility } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
-import { JobTable } from "../../Job";
+import { AddJobDialog, JobTable } from "../../Job";
 import type { Job } from "../../../types";
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
 
 export function JobsDialog({ jobs, clientId, projectId }: Props) {
   const [open, setOpen] = useState<boolean>(false);
+  const [openAddJob, setOpenAddJob] = useState<boolean>(false);
 
   return (
     <>
@@ -33,11 +34,15 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
           "&:hover": { color: "white", borderColor: "white" },
         }}
       />
+
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
         title="Project Jobs"
         maxWidth="lg"
+        topRightAction={
+          <AddJobDialog clientId={clientId} projectId={projectId} />
+        }
       >
         {jobs.length === 0 ? (
           <Typography color="#aaa" sx={{ textAlign: "center", py: 4 }}>
@@ -46,6 +51,14 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
         ) : (
           <JobTable clientId={clientId} projectId={projectId} jobs={jobs} />
         )}
+      </UniversalDialog>
+      <UniversalDialog
+        open={openAddJob}
+        onClose={() => setOpenAddJob(false)}
+        title="Add Job"
+        maxWidth="sm"
+      >
+        <Typography color="#aaa">Add Job Form goes here</Typography>
       </UniversalDialog>
     </>
   );
