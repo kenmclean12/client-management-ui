@@ -35,7 +35,7 @@ export function DeleteUserDialog({ user, open, onClose }: Props) {
       <Typography color="white">
         Are you sure you want to delete{" "}
         <strong>
-          {user.firstName} {user.lastName}
+          {user?.firstName} {user?.lastName}
         </strong>
         ? This action cannot be undone.
       </Typography>

@@ -14,10 +14,10 @@ export const userTextFields: {
 ];
 
 export const createUserForm = (user: UserResponseDto): UserUpdateDto => ({
-  userName: user.userName ?? "",
-  email: user.email ?? "",
-  firstName: user.firstName ?? "",
-  lastName: user.lastName ?? "",
-  role: user.role,
-  avatarUrl: user.avatarUrl ?? "",
+  userName: user?.userName ?? "",
+  email: user?.email ?? "",
+  firstName: user?.firstName ?? "",
+  lastName: user?.lastName ?? "",
+  role: user?.role,
+  avatarUrl: user?.avatarUrl ?? "",
 });

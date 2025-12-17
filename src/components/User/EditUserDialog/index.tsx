@@ -36,7 +36,7 @@ interface Props {
 
 export function EditUserDialog({ user, open, onClose }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { mutateAsync: updateUser } = useUsersUpdate(user.id);
+  const { mutateAsync: updateUser } = useUsersUpdate(user?.id);
   const [initialForm, setInitialForm] = useState<UserUpdateDto>(() =>
     createUserForm(user)
   );

@@ -8,6 +8,7 @@ import {
   Stack,
   Chip,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { Job } from "../../../types";
 import { format } from "date-fns";
@@ -17,6 +18,7 @@ import { UserRow } from "../../User";
 import { jobPriorityConfig, jobStatusConfig } from "./config";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import {
+  clientNameTextStyles,
   descriptionTextStyles,
   ellipsisCellSx,
   priorityChipStyles,
@@ -59,16 +61,23 @@ export function JobRow({ clientId, job, userPage }: Props) {
             {job.description || "—"}
           </Typography>
         </TableCell>
-        <TableCell align="center" sx={ellipsisCellSx}>
-          {job.dueDate ? format(new Date(job.dueDate), "yyyy-MM-dd") : "n/a"}
+        <TableCell align="center" sx={{ maxWidth: 180 }}>
+          {job.client ? (
+            <Tooltip title={job.client.name} arrow>
+              <Typography
+                onClick={() => navigate(`/clients/${job.client?.id}`)}
+                sx={clientNameTextStyles}
+                noWrap
+              >
+                {job.client.name}
+              </Typography>
+            </Tooltip>
+          ) : (
+            "—"
+          )}
         </TableCell>
         <TableCell align="center" sx={ellipsisCellSx}>
-          <Chip
-            size="small"
-            label={jobStatusConfig[job.status].label}
-            icon={jobStatusConfig[job.status].icon}
-            color={jobStatusConfig[job.status].color}
-          />
+          {job.dueDate ? format(new Date(job.dueDate), "yyyy-MM-dd") : "n/a"}
         </TableCell>
         <TableCell align="center" sx={ellipsisCellSx}>
           <Chip
@@ -77,6 +86,14 @@ export function JobRow({ clientId, job, userPage }: Props) {
             label={jobPriorityConfig[job.priority].label}
             icon={jobPriorityConfig[job.priority].icon}
             sx={priorityChipStyles}
+          />
+        </TableCell>
+        <TableCell align="center" sx={ellipsisCellSx}>
+          <Chip
+            size="small"
+            label={jobStatusConfig[job.status].label}
+            icon={jobStatusConfig[job.status].icon}
+            color={jobStatusConfig[job.status].color}
           />
         </TableCell>
         <TableCell align="center">

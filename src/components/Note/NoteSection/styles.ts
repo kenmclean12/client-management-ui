@@ -19,7 +19,8 @@ export const noteIconStyles = {
 
 export const noteContainerStyles = {
   flexShrink: 0,
-  height: 310,
+  height: 380,
+  maxHeight: "400px",
   gap: "8px",
   overflowY: "auto",
 };

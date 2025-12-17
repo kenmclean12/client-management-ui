@@ -22,11 +22,12 @@ export function JobTable({ jobs = [], userPage }: Props) {
         <TableHead>
           <TableRow>
             {!userPage && <TableCell align="left">Assigned</TableCell>}
-            <TableCell align="center">Job Name</TableCell>
+            <TableCell align="center">Name</TableCell>
             <TableCell align="center">Description</TableCell>
+            <TableCell align="center">Client</TableCell>
             <TableCell align="center">Due Date</TableCell>
-            <TableCell align="center">Status</TableCell>
             <TableCell align="center">Priority</TableCell>
+            <TableCell align="center">Status</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
