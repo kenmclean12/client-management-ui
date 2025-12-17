@@ -10,10 +10,7 @@ import {
 } from "./styles";
 import { validateLogin } from "./utils";
 import { LoginRequestDto } from "../../../types";
-import {
-  authInnerContainerStyles,
-  authInputStyles,
-} from "../styles";
+import { authInnerContainerStyles, authInputStyles } from "../styles";
 import { useAuth } from "../../../context";
 import { dialogButtonStyles } from "../../styles";
 

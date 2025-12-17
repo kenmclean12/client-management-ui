@@ -13,10 +13,7 @@ import { FormErrors, Step } from "./types";
 import { UserCreateDto } from "../../../types";
 import { previousStep, update, validateStep } from "./utils";
 import { stepFields } from "./config";
-import {
-  authInnerContainerStyles,
-  authInputStyles,
-} from "../styles";
+import { authInnerContainerStyles, authInputStyles } from "../styles";
 import { useAuth } from "../../../context";
 import { dialogButtonStyles } from "../../styles";
 

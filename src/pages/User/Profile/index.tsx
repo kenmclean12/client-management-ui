@@ -20,7 +20,12 @@ import { format } from "date-fns";
 import { useUsersGetById } from "../../../hooks";
 import { useProjectsGetByUserId, useJobsGetByUserId } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
-import { JobTable, PageShell, ProjectTable, UserInviteForm } from "../../../components";
+import {
+  JobTable,
+  PageShell,
+  ProjectTable,
+  UserInviteForm,
+} from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
 import {

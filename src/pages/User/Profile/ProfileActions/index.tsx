@@ -17,12 +17,7 @@ interface Props {
   isSelf: boolean;
 }
 
-export function ProfileActions({
-  user,
-  isReadOnly,
-  isAdmin,
-  isSelf,
-}: Props) {
+export function ProfileActions({ user, isReadOnly, isAdmin, isSelf }: Props) {
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [resetOpen, setResetOpen] = useState<boolean>(false);
