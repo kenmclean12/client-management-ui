@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import { useUsersGetById } from "../../../hooks";
 import { useProjectsGetByUserId, useJobsGetByUserId } from "../../../hooks";
 import { UserResponseDto, UserRole, UserRoleLabel } from "../../../types";
-import { PageShell, UserInviteForm } from "../../../components";
+import { JobTable, PageShell, UserInviteForm } from "../../../components";
 import { ProfileActions } from "./ProfileActions";
 import { useAuth } from "../../../context";
 import {
@@ -177,24 +177,7 @@ export function ProfilePage() {
               </Typography>
               <Stack sx={assignedJobsContainerStyles}>
                 {jobs.length > 0 ? (
-                  jobs.map((job) => (
-                    <Paper key={job.id} variant="outlined" sx={{ p: 2 }}>
-                      <Typography fontWeight={600} sx={ellipsisTextStyles}>
-                        {job.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {job.status} · {job.priority}
-                      </Typography>
-                      {job.dueDate && (
-                        <Typography variant="caption" color="text.secondary">
-                          Due:{" "}
-                          {job.dueDate
-                            ? format(new Date(job.dueDate), "PPP")
-                            : "n/a"}
-                        </Typography>
-                      )}
-                    </Paper>
-                  ))
+                  <JobTable jobs={jobs} userPage />
                 ) : (
                   <Box textAlign="center">
                     <PendingActions sx={{ fontSize: 40, color: "#ccc" }} />

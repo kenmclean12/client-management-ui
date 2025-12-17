@@ -50,6 +50,7 @@ export const assignedJobsContainerStyles = {
   justifyContent: "center",
   height: "230px",
   width: "100%",
+  color: "white",
   gap: "16px",
   border: "1px solid #444",
   backgroundColor: "#1e1e1e",

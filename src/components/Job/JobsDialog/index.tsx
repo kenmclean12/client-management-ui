@@ -49,7 +49,7 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
             No jobs found for this project.
           </Typography>
         ) : (
-          <JobTable clientId={clientId} projectId={projectId} jobs={jobs} />
+          <JobTable jobs={jobs} />
         )}
       </UniversalDialog>
       <UniversalDialog
