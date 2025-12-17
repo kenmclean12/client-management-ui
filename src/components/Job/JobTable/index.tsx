@@ -37,14 +37,12 @@ interface Props {
   clientId: number;
   projectId: number;
   jobs?: Job[];
-  refreshParent: () => void;
 }
 
 export function JobTable({
   clientId,
   projectId,
   jobs = [],
-  refreshParent,
 }: Props) {
   const [editingJobId, setEditingJobId] = useState<number | null>(null);
   const [editingJobData, setEditingJobData] = useState<JobUpdateDto>({});
@@ -82,29 +80,14 @@ export function JobTable({
 
       setEditingJobId(null);
       setEditingJobData({});
-      refreshParent();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await deleteMutation.mutateAsync();
-      refreshParent();
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleAddJob = async (dto: JobCreateDto) => {
-    try {
-      await createMutation.mutateAsync(dto);
-      setShowAddDialog(false);
-      refreshParent();
-    } catch (err) {
-      console.error(err);
-    }
+    await createMutation.mutateAsync(dto);
+    setShowAddDialog(false);
   };
 
   return (
@@ -242,7 +225,10 @@ export function JobTable({
                     <IconButton onClick={() => handleEditClick(job)}>
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={handleDelete} color="error">
+                    <IconButton
+                      onClick={async () => await deleteMutation.mutateAsync()}
+                      color="error"
+                    >
                       <Delete />
                     </IconButton>
                   </Stack>

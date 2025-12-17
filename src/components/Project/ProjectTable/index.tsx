@@ -334,7 +334,6 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                               clientId={p.clientId}
                               projectId={p.id}
                               jobs={p.jobs || []}
-                              refreshParent={() => {}}
                             />
                           </Box>
                         </Collapse>

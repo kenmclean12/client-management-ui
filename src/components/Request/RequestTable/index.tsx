@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   Chip,
+  Stack,
 } from "@mui/material";
 import {
   PriorityHigh,
@@ -26,14 +27,14 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { RequestApprovalDialog } from "../RequestApprovalDialog";
 import { DescriptionDialog } from "../../DescriptionDialog";
+import { RequestUpdateDialog } from "../RequestUpdateDialog";
 dayjs.extend(utc);
 
 interface Props {
   requests: Request[];
-  onRefetch?: () => void;
 }
 
-export function RequestsTable({ requests, onRefetch }: Props) {
+export function RequestsTable({ requests }: Props) {
   const [openDescription, setOpenDescription] = useState<string>("");
 
   return (
@@ -121,7 +122,10 @@ export function RequestsTable({ requests, onRefetch }: Props) {
                   />
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyles}>
-                  <RequestApprovalDialog request={r} onRefetch={onRefetch} />
+                  <Stack direction="row" justifyContent="center" spacing={0.5}>
+                    <RequestUpdateDialog request={r} />
+                    <RequestApprovalDialog request={r} />
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}

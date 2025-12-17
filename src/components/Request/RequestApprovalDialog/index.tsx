@@ -24,10 +24,9 @@ interface EditingRequest {
 
 interface Props {
   request: Request;
-  onRefetch?: () => void;
 }
 
-export function RequestApprovalDialog({ request, onRefetch }: Props) {
+export function RequestApprovalDialog({ request }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [editingRequest, setEditingRequest] = useState<EditingRequest | null>(
     null
@@ -64,7 +63,6 @@ export function RequestApprovalDialog({ request, onRefetch }: Props) {
 
     setEditingRequest(null);
     setSelectedUser(null);
-    onRefetch?.();
   };
 
   const handleClose = () => {
