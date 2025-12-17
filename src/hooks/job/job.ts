@@ -34,13 +34,15 @@ export function useJobsGetByUserId(userId: number) {
   });
 }
 
-export function useJobsCreate() {
+export function useJobsCreate(clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: (dto: JobCreateDto) => post<Job>("/job", dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
+      qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["projects", "client", clientId] });
       enqueueSnackbar("Job created successfully", {
         variant: "success",
       });
@@ -53,7 +55,7 @@ export function useJobsCreate() {
   });
 }
 
-export function useJobsUpdate(id: number) {
+export function useJobsUpdate(id: number, clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
@@ -62,6 +64,8 @@ export function useJobsUpdate(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
+       qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["projects", "client", clientId] });
       enqueueSnackbar("Job updated successfully", {
         variant: "success",
       });
@@ -74,7 +78,7 @@ export function useJobsUpdate(id: number) {
   });
 }
 
-export function useJobsDelete(id: number) {
+export function useJobsDelete(id: number, clientId: number) {
   const qc = useQueryClient();
 
   return useMutation({
@@ -82,6 +86,8 @@ export function useJobsDelete(id: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["jobs", id] });
+       qc.invalidateQueries({ queryKey: ["projects"] });
+      qc.invalidateQueries({ queryKey: ["projects", "client", clientId] });
       enqueueSnackbar("Job deleted", {
         variant: "success",
       });

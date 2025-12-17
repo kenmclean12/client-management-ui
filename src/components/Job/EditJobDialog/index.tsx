@@ -4,16 +4,15 @@ import {
   Stack,
   TextField,
   Button,
-  Tooltip,
   MenuItem,
   Select,
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { useJobsCreate } from "../../../hooks";
+import { Edit } from "@mui/icons-material";
 import {
-  JobCreateDto,
+  Job,
+  JobUpdateDto,
   jobPriorityKeyMap,
   jobStatusKeyMap,
 } from "../../../types";
@@ -24,62 +23,54 @@ import {
   selectStyles,
   textFieldStyles,
 } from "../../../pages/styles";
+import { useJobsUpdate } from "../../../hooks";
 
 interface Props {
-  clientId: number;
-  projectId: number;
+  job: Job;
 }
 
-export function AddJobDialog({ clientId, projectId }: Props) {
+export function EditJobDialog({ job }: Props) {
   const [open, setOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Partial<JobCreateDto>>({
-    name: "",
-    description: "",
-    status: 1,
-    priority: 1,
-    dueDate: "",
+  const [formData, setFormData] = useState<Partial<JobUpdateDto>>({
+    name: job.name,
+    description: job.description,
+    status: job.status,
+    priority: job.priority,
+    dueDate: job.dueDate.slice(0, 10),
   });
-  const { mutateAsync: createJob } = useJobsCreate(clientId);
+  const { mutateAsync: updateJob } = useJobsUpdate(job.id, job.clientId);
 
-  const handleAdd = async () => {
+  const handleSave = async () => {
     if (!formData.name || !formData.dueDate) return;
 
-    await createJob({
-      ...formData,
-      clientId,
-      projectId,
-      dueDate: String(toUTCDateString(formData.dueDate!)),
-    } as JobCreateDto);
+    await updateJob({
+      id: job.id,
+      dto: {
+        ...formData,
+        dueDate: String(toUTCDateString(formData.dueDate)),
+      },
+    });
 
     setOpen(false);
-    setFormData({
-      name: "",
-      description: "",
-      status: 1,
-      priority: 1,
-      dueDate: "",
-    });
   };
 
   return (
     <>
-      <Tooltip title="Add Job">
-        <IconButton onClick={() => setOpen(true)}>
-          <Add sx={{ color: "white" }} />
-        </IconButton>
-      </Tooltip>
+      <IconButton onClick={() => setOpen(true)}>
+        <Edit sx={{ color: "white" }} />
+      </IconButton>
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Add Job"
+        title="Edit Job"
         footer={
           <Button
             variant="contained"
-            onClick={handleAdd}
+            onClick={handleSave}
             sx={dialogButtonStyles}
             disabled={!formData.name || !formData.dueDate}
           >
-            Add
+            Save
           </Button>
         }
       >
@@ -87,9 +78,9 @@ export function AddJobDialog({ clientId, projectId }: Props) {
           <TextField
             label="Job Name"
             fullWidth
-            value={formData.name}
             size="small"
             sx={textFieldStyles}
+            value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <TextField
