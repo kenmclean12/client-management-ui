@@ -3,19 +3,29 @@ import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useContactsUpdate } from "../../../hooks";
-import { Contact, ContactUpdateDto } from "../../../types";
+import { Contact, ContactUpdateDto, UserRole } from "../../../types";
 import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
+import { useAuth } from "../../../context";
 
 interface Props {
   contact: Contact;
 }
 
 export function ContactEditDialog({ contact }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [name, setName] = useState<string>(contact.name);
-  const [email, setEmail] = useState<string>(contact.email);
-  const [phone, setPhone] = useState<string>(contact.phone ?? "");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const { mutateAsync: update } = useContactsUpdate(contact.id);
+  const isAdmin = user?.role === UserRole.Admin;
+
+  const handleOpen = () => {
+    setName(contact.name ?? "");
+    setEmail(contact.email ?? "");
+    setPhone(contact.phone ?? "");
+    setOpen(true);
+  };
 
   const handleSave = async () => {
     const dto: ContactUpdateDto = {
@@ -31,12 +41,16 @@ export function ContactEditDialog({ contact }: Props) {
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)} sx={{ color: "#aaa" }}>
+      <IconButton
+        onClick={handleOpen}
+        sx={{ color: "#aaa" }}
+        disabled={!isAdmin}
+      >
         <Edit />
       </IconButton>
       <UniversalDialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleOpen}
         title="Edit Contact"
         footer={
           <Button
@@ -54,6 +68,7 @@ export function ContactEditDialog({ contact }: Props) {
             label="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            inputProps={{ maxLength: 100 }}
             size="small"
             sx={textFieldStyles}
           />
@@ -61,6 +76,7 @@ export function ContactEditDialog({ contact }: Props) {
             label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            inputProps={{ maxLength: 100 }}
             size="small"
             sx={textFieldStyles}
           />
@@ -68,6 +84,7 @@ export function ContactEditDialog({ contact }: Props) {
             label="Phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            inputProps={{ maxLength: 20 }}
             size="small"
             sx={textFieldStyles}
           />

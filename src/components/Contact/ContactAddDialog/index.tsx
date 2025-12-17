@@ -3,19 +3,23 @@ import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useContactsCreate } from "../../../hooks";
-import { ContactCreateDto } from "../../../types";
+import { ContactCreateDto, UserRole } from "../../../types";
 import { dialogButtonStyles, textFieldStyles } from "../../../pages/styles";
+import { useAuth } from "../../../context";
 
 interface Props {
   clientId: number;
 }
 
 export function ContactAddDialog({ clientId }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const { mutateAsync: create } = useContactsCreate(clientId);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isStandard = user?.role === UserRole.Standard;
 
   const handleCreate = async () => {
     const dto: ContactCreateDto = {
@@ -40,6 +44,7 @@ export function ContactAddDialog({ clientId }: Props) {
       <IconButton
         onClick={() => setOpen(true)}
         sx={{ color: "white", borderColor: "#666" }}
+        disabled={!isAdmin && !isStandard}
       >
         <Add />
       </IconButton>

@@ -4,6 +4,8 @@ import { Delete } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
 import { useContactsDelete } from "../../../hooks";
 import { dialogButtonStyles } from "../../../pages/styles";
+import { useAuth } from "../../../context";
+import { UserRole } from "../../../types";
 
 interface Props {
   clientId: number;
@@ -16,12 +18,18 @@ export function ContactDeleteDialog({
   contactId,
   contactName,
 }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const { mutateAsync: deleteContact } = useContactsDelete(clientId);
+  const isAdmin = user?.role === UserRole.Admin;
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)} sx={{ color: "#f55" }}>
+      <IconButton
+        onClick={() => setOpen(true)}
+        sx={{ color: "#f55" }}
+        disabled={!isAdmin}
+      >
         <Delete />
       </IconButton>
       <UniversalDialog
