@@ -7,7 +7,12 @@ export const topRowContainerStyles = {
 };
 
 export const countCardStyles = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
   flex: 1,
+  textAlign: "center",
   backgroundColor: "black",
   border: "1px solid #444",
 };
