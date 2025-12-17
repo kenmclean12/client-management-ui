@@ -32,3 +32,14 @@ export const priorityChipStyles = {
   borderColor: "#444",
   "& .MuiChip-icon": { color: "#888" },
 };
+
+export const clientNameTextStyles = {
+  color: "#aaa",
+  textOverflow: "ellipsis",
+  cursor: "pointer",
+  overflow: "hidden",
+  "&:hover": {
+    color: "white",
+    textDecoration: "underline",
+  },
+};

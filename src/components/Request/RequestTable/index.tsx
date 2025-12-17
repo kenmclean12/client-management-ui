@@ -11,6 +11,7 @@ import {
   Box,
   Chip,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import {
   PriorityHigh,
@@ -23,6 +24,7 @@ import { priorityConfig, statusConfig, tableHeaders } from "./config";
 import { formatDate } from "../../../utils";
 import { tableContainerStyles, tableStyles } from "../../../pages/styles";
 import {
+  clientNameTextStyles,
   descriptionBoxStyles,
   ellipsisTextBoxStyles,
   priorityChipStyles,
@@ -33,6 +35,7 @@ import utc from "dayjs/plugin/utc";
 import { RequestApprovalDialog } from "../RequestApprovalDialog";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import { RequestUpdateDialog } from "../RequestUpdateDialog";
+import { useNavigate } from "react-router-dom";
 dayjs.extend(utc);
 
 interface Props {
@@ -40,6 +43,7 @@ interface Props {
 }
 
 export function RequestsTable({ requests }: Props) {
+  const navigate = useNavigate();
   const [openDescription, setOpenDescription] = useState<string>("");
 
   return (
@@ -62,6 +66,19 @@ export function RequestsTable({ requests }: Props) {
                 hover
                 sx={{ "&:hover": { bgcolor: "#111" } }}
               >
+                <TableCell align="center" sx={tableCellStyles}>
+                  <Box sx={ellipsisTextBoxStyles}>
+                    <Tooltip title={r.client.name} arrow>
+                      <Typography
+                        onClick={() => navigate(`/clients/${r.client?.id}`)}
+                        sx={clientNameTextStyles}
+                        noWrap
+                      >
+                        {r.client.name}
+                      </Typography>
+                    </Tooltip>
+                  </Box>
+                </TableCell>
                 <TableCell align="center" sx={tableCellStyles}>
                   <Box sx={ellipsisTextBoxStyles}>
                     <Title fontSize="small" sx={{ color: "#777" }} />

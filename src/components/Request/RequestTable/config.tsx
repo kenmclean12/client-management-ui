@@ -51,6 +51,7 @@ export const statusLabels = (sortedRequests: { status: RequestStatus }[]) => [
 ];
 
 export const tableHeaders = [
+  "Client",
   "Title",
   "Created",
   "Description",
