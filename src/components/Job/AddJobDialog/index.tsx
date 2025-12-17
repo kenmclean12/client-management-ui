@@ -16,6 +16,7 @@ import {
   JobCreateDto,
   jobPriorityKeyMap,
   jobStatusKeyMap,
+  UserRole,
 } from "../../../types";
 import { toUTCDateString } from "../../../utils";
 import { UniversalDialog } from "../../UniversalDialog";
@@ -26,6 +27,8 @@ import {
 } from "../../../pages/styles";
 import { darkMenuProps } from "../styles";
 import { UserSelect } from "../../User";
+import { emptyForm } from "./config";
+import { useAuth } from "../../../context";
 
 interface Props {
   clientId: number;
@@ -33,16 +36,13 @@ interface Props {
 }
 
 export function AddJobDialog({ clientId, projectId }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Partial<JobCreateDto>>({
-    name: "",
-    description: "",
-    status: 1,
-    priority: 1,
-    dueDate: "",
-  });
+  const [formData, setFormData] = useState<Partial<JobCreateDto>>(emptyForm);
   const { data: users = [] } = useUsersGetAll();
   const { mutateAsync: createJob } = useJobsCreate(clientId);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isStandard = user?.role === UserRole.Standard;
 
   const handleAdd = async () => {
     if (!formData.name || !formData.dueDate) return;
@@ -54,32 +54,21 @@ export function AddJobDialog({ clientId, projectId }: Props) {
       dueDate: String(toUTCDateString(formData.dueDate!)),
     } as JobCreateDto);
 
-    setOpen(false);
-    setFormData({
-      name: "",
-      description: "",
-      status: 1,
-      priority: 1,
-      dueDate: "",
-    });
+    onClose();
   };
 
   const onClose = () => {
     setOpen(false);
-    setFormData({
-      name: "",
-      description: "",
-      status: 1,
-      priority: 1,
-      assignedUserId: undefined,
-      dueDate: "",
-    });
+    setFormData(emptyForm);
   };
 
   return (
     <>
       <Tooltip title="Add Job">
-        <IconButton onClick={() => setOpen(true)}>
+        <IconButton
+          onClick={() => setOpen(true)}
+          disabled={!isAdmin && !isStandard}
+        >
           <Add sx={{ color: "white" }} />
         </IconButton>
       </Tooltip>
@@ -103,6 +92,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
             label="Job Name"
             fullWidth
             value={formData.name}
+            inputProps={{ maxLength: 100 }}
             size="small"
             sx={textFieldStyles}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -112,6 +102,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
             fullWidth
             multiline
             rows={3}
+            inputProps={{ maxLength: 1000 }}
             size="small"
             sx={textFieldStyles}
             value={formData.description}
@@ -172,7 +163,6 @@ export function AddJobDialog({ clientId, projectId }: Props) {
               border: "1px solid #2a2a2a",
             }}
           />
-
           <TextField
             label="Due Date"
             type="date"

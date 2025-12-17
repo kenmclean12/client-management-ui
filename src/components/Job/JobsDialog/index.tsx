@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Chip, Stack, Typography } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
+import { PendingActions, Visibility } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
 import { AddJobDialog, JobTable } from "../../Job";
 import type { Job } from "../../../types";
+import { chipStyles, noJobsDisplayStyles } from "./styles";
 
 interface Props {
   jobs: Job[];
@@ -13,7 +14,6 @@ interface Props {
 
 export function JobsDialog({ jobs, clientId, projectId }: Props) {
   const [open, setOpen] = useState<boolean>(false);
-  const [openAddJob, setOpenAddJob] = useState<boolean>(false);
 
   return (
     <>
@@ -21,20 +21,15 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
         clickable
         onClick={() => setOpen(true)}
         label={
-          <Stack direction="row" spacing={0.5} alignItems="center">
+          <Stack direction="row" alignItems="center" spacing={0.5}>
             <Typography variant="body2">{jobs.length || 0} jobs</Typography>
             <Visibility fontSize="small" />
           </Stack>
         }
         variant="outlined"
         size="small"
-        sx={{
-          color: "#aaa",
-          borderColor: "#555",
-          "&:hover": { color: "white", borderColor: "white" },
-        }}
+        sx={chipStyles}
       />
-
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
@@ -44,21 +39,16 @@ export function JobsDialog({ jobs, clientId, projectId }: Props) {
           <AddJobDialog clientId={clientId} projectId={projectId} />
         }
       >
-        {jobs.length === 0 ? (
-          <Typography color="#aaa" sx={{ textAlign: "center", py: 4 }}>
-            No jobs found for this project.
-          </Typography>
+        {jobs.length > 0 ? (
+          <Stack sx={noJobsDisplayStyles}>
+            <PendingActions sx={{ fontSize: 40, color: "#ccc" }} />
+            <Typography fontSize={16} color="#ccc">
+              No Jobs Found
+            </Typography>
+          </Stack>
         ) : (
           <JobTable jobs={jobs} />
         )}
-      </UniversalDialog>
-      <UniversalDialog
-        open={openAddJob}
-        onClose={() => setOpenAddJob(false)}
-        title="Add Job"
-        maxWidth="sm"
-      >
-        <Typography color="#aaa">Add Job Form goes here</Typography>
       </UniversalDialog>
     </>
   );

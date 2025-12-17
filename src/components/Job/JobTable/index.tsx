@@ -7,8 +7,8 @@ import {
   TableRow,
 } from "@mui/material";
 import { Job } from "../../../types";
-import { tableStyles } from "../../../pages/styles";
 import { JobRow } from "../JobRow";
+import { jobTableStyles } from "./styles";
 
 interface Props {
   jobs?: Job[];
@@ -18,17 +18,7 @@ interface Props {
 export function JobTable({ jobs = [], userPage }: Props) {
   return (
     <Box width="100%">
-      <Table
-        stickyHeader
-        size="small"
-        sx={{
-          ...tableStyles,
-          maxHeight: "650px",
-          width: "100%",
-          tableLayout: "fixed",
-          overflowY: "auto",
-        }}
-      >
+      <Table stickyHeader size="small" sx={jobTableStyles}>
         <TableHead>
           <TableRow>
             {!userPage && <TableCell align="left">Assigned</TableCell>}
@@ -40,7 +30,6 @@ export function JobTable({ jobs = [], userPage }: Props) {
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
-
         <TableBody>
           {jobs.map((job) => (
             <JobRow

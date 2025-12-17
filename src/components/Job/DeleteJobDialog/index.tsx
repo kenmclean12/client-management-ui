@@ -4,6 +4,8 @@ import { Delete } from "@mui/icons-material";
 import { useJobsDelete } from "../../../hooks";
 import { UniversalDialog } from "../../UniversalDialog";
 import { dialogButtonStyles } from "../../../pages/styles";
+import { useAuth } from "../../../context";
+import { UserRole } from "../../../types";
 
 interface Props {
   jobId: number;
@@ -12,8 +14,10 @@ interface Props {
 }
 
 export function DeleteJobDialog({ jobId, jobName, clientId }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const { mutateAsync: deleteJob } = useJobsDelete(jobId, clientId);
+  const isAdmin = user?.role === UserRole.Admin;
 
   const handleDelete = async () => {
     await deleteJob();
@@ -23,11 +27,10 @@ export function DeleteJobDialog({ jobId, jobName, clientId }: Props) {
   return (
     <>
       <Tooltip title="Delete Job">
-        <IconButton onClick={() => setOpen(true)}>
+        <IconButton onClick={() => setOpen(true)} disabled={!isAdmin}>
           <Delete sx={{ color: "#ff5252" }} />
         </IconButton>
       </Tooltip>
-
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}

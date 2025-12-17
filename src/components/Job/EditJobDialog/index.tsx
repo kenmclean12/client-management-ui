@@ -13,6 +13,7 @@ import { Edit } from "@mui/icons-material";
 import {
   Job,
   JobUpdateDto,
+  UserRole,
   jobPriorityKeyMap,
   jobStatusKeyMap,
 } from "../../../types";
@@ -26,25 +27,22 @@ import {
 import { useJobsUpdate, useUsersGetAll } from "../../../hooks";
 import { darkMenuProps } from "../styles";
 import { UserSelect } from "../../User";
+import { emptyJobForm, jobToForm } from "./config";
+import { useAuth } from "../../../context";
+import { menuPaperStyles } from "./styles";
 
 interface Props {
   job: Job;
 }
 
 export function EditJobDialog({ job }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const { data: users = [] } = useUsersGetAll();
-
-  const [formData, setFormData] = useState<Partial<JobUpdateDto>>({
-    name: job.name,
-    description: job.description,
-    status: job.status,
-    priority: job.priority,
-    assignedUserId: job.assignedUserId ?? undefined,
-    dueDate: job.dueDate.slice(0, 10),
-  });
-
+  const [formData, setFormData] = useState<Partial<JobUpdateDto>>(emptyJobForm);
   const { mutateAsync: updateJob } = useJobsUpdate(job.id, job.clientId);
+  const isAdmin = user?.role === UserRole.Admin;
+  const isAssignedUser = user?.id === job.assignedUserId;
 
   const handleSave = async () => {
     if (!formData.name || !formData.dueDate) return;
@@ -57,6 +55,11 @@ export function EditJobDialog({ job }: Props) {
       },
     });
 
+    onClose();
+  };
+
+  const handleOpen = () => {
+    setFormData(jobToForm(job));
     setOpen(false);
   };
 
@@ -74,7 +77,7 @@ export function EditJobDialog({ job }: Props) {
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)}>
+      <IconButton onClick={handleOpen} disabled={!isAdmin && !isAssignedUser}>
         <Edit sx={{ color: "white" }} />
       </IconButton>
       <UniversalDialog
@@ -160,11 +163,7 @@ export function EditJobDialog({ job }: Props) {
                 assignedUserId: user?.id ?? undefined,
               })
             }
-            menuPaperStyles={{
-              backgroundColor: "#121212",
-              color: "white",
-              border: "1px solid #2a2a2a",
-            }}
+            menuPaperStyles={menuPaperStyles}
           />
           <TextField
             label="Due Date"

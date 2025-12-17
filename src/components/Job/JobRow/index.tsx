@@ -16,20 +16,17 @@ import { DeleteJobDialog } from "../DeleteJobDialog";
 import { UserRow } from "../../User";
 import { jobPriorityConfig, jobStatusConfig } from "./config";
 import { DescriptionDialog } from "../../DescriptionDialog";
+import {
+  descriptionTextStyles,
+  ellipsisCellSx,
+  priorityChipStyles,
+} from "./styles";
 
 interface Props {
   clientId: number;
   job: Job;
   userPage?: boolean;
 }
-
-const ellipsisCellSx = {
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  color: "#ccc",
-  maxWidth: 0,
-};
 
 export function JobRow({ clientId, job, userPage }: Props) {
   const navigate = useNavigate();
@@ -57,14 +54,7 @@ export function JobRow({ clientId, job, userPage }: Props) {
           <Typography
             component="span"
             onClick={() => setOpenDesc(true)}
-            sx={{
-              cursor: "pointer",
-              color: "#ccc",
-              "&:hover": {
-                color: "white",
-                textDecoration: "underline",
-              },
-            }}
+            sx={descriptionTextStyles}
           >
             {job.description || "—"}
           </Typography>
@@ -86,15 +76,11 @@ export function JobRow({ clientId, job, userPage }: Props) {
             variant="outlined"
             label={jobPriorityConfig[job.priority].label}
             icon={jobPriorityConfig[job.priority].icon}
-            sx={{
-              color: "white",
-              borderColor: "#444",
-              "& .MuiChip-icon": { color: "#888" },
-            }}
+            sx={priorityChipStyles}
           />
         </TableCell>
         <TableCell align="center">
-          <Stack direction="row" spacing={0.5} justifyContent="center">
+          <Stack direction="row" justifyContent="center" spacing={0.5}>
             <EditJobDialog job={job} />
             <IconButton color="error">
               <DeleteJobDialog
