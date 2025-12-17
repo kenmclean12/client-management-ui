@@ -19,6 +19,7 @@ import {
 } from "../../../types";
 import { dialogButtonStyles, selectStyles } from "../../../pages/styles";
 import { useRequestsUpdate } from "../../../hooks";
+import { menuProps } from "./styles";
 
 interface Props {
   request: Request;
@@ -67,12 +68,15 @@ export function RequestUpdateDialog({ request }: Props) {
               value={status}
               label="Status"
               sx={selectStyles}
+              MenuProps={menuProps}
               onChange={(e) =>
                 setStatus(Number(e.target.value) as RequestStatus)
               }
             >
               {Object.entries(RequestStatus)
-                .filter(([_, val]) => typeof val === "number")
+                .filter(
+                  ([key, val]) => typeof val === "number" && key !== "Approved"
+                )
                 .map(([key, val]) => (
                   <MenuItem key={val} value={val}>
                     {key}
@@ -85,6 +89,7 @@ export function RequestUpdateDialog({ request }: Props) {
             <Select
               value={priority}
               label="Priority"
+              MenuProps={menuProps}
               sx={selectStyles}
               onChange={(e) => setPriority(e.target.value as RequestPriority)}
             >
