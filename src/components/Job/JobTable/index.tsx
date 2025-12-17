@@ -16,6 +16,7 @@ import { tableStyles } from "../../../pages/styles";
 import { jobPriorityConfig, jobStatusConfig } from "./config";
 import { EditJobDialog } from "../EditJobDialog";
 import { DeleteJobDialog } from "../DeleteJobDialog";
+import { UserRow } from "../../User";
 
 interface Props {
   clientId: number;
@@ -35,6 +36,7 @@ export function JobTable({ clientId, projectId, jobs = [] }: Props) {
       <Table stickyHeader size="small" sx={tableStyles}>
         <TableHead>
           <TableRow>
+            <TableCell align="left">Assigned</TableCell>
             <TableCell align="center">Job Name</TableCell>
             <TableCell align="center">Description</TableCell>
             <TableCell align="center">Due Date</TableCell>
@@ -46,6 +48,14 @@ export function JobTable({ clientId, projectId, jobs = [] }: Props) {
         <TableBody>
           {visibleJobs.map((job) => (
             <TableRow key={job.id} hover>
+              <TableCell align="left">
+                {job.assignedUser ? (
+                  <UserRow user={job.assignedUser} />
+                ) : (
+                  <Box height="32px" />
+                )}
+              </TableCell>
+              <TableCell align="center">{job.name}</TableCell>
               <TableCell align="center">{job.name}</TableCell>
               <TableCell align="center">{job.description}</TableCell>
               <TableCell align="center">

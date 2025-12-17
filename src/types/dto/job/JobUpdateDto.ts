@@ -9,6 +9,7 @@ export interface JobUpdateDto {
 
   status?: JobStatus;
   priority?: JobPriority;
+  assignedUserId?: number;
 
   dueDate?: string;
   estimatedFinish?: string | null;

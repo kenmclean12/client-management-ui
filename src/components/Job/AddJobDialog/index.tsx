@@ -11,7 +11,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useJobsCreate } from "../../../hooks";
+import { useJobsCreate, useUsersGetAll } from "../../../hooks";
 import {
   JobCreateDto,
   jobPriorityKeyMap,
@@ -25,6 +25,7 @@ import {
   textFieldStyles,
 } from "../../../pages/styles";
 import { darkMenuProps } from "../styles";
+import { UserSelect } from "../../User";
 
 interface Props {
   clientId: number;
@@ -40,6 +41,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
     priority: 1,
     dueDate: "",
   });
+  const { data: users = [] } = useUsersGetAll();
   const { mutateAsync: createJob } = useJobsCreate(clientId);
 
   const handleAdd = async () => {
@@ -62,6 +64,18 @@ export function AddJobDialog({ clientId, projectId }: Props) {
     });
   };
 
+  const onClose = () => {
+    setOpen(false);
+    setFormData({
+      name: "",
+      description: "",
+      status: 1,
+      priority: 1,
+      assignedUserId: undefined,
+      dueDate: "",
+    });
+  };
+
   return (
     <>
       <Tooltip title="Add Job">
@@ -71,7 +85,7 @@ export function AddJobDialog({ clientId, projectId }: Props) {
       </Tooltip>
       <UniversalDialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={onClose}
         title="Add Job"
         footer={
           <Button
@@ -143,6 +157,22 @@ export function AddJobDialog({ clientId, projectId }: Props) {
               ))}
             </Select>
           </FormControl>
+          <UserSelect
+            users={users}
+            value={users.find((u) => u.id === formData.assignedUserId) ?? null}
+            onChange={(user) =>
+              setFormData({
+                ...formData,
+                assignedUserId: user?.id ?? undefined,
+              })
+            }
+            menuPaperStyles={{
+              backgroundColor: "#121212",
+              color: "white",
+              border: "1px solid #2a2a2a",
+            }}
+          />
+
           <TextField
             label="Due Date"
             type="date"

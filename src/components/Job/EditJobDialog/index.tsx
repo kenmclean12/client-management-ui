@@ -23,8 +23,9 @@ import {
   selectStyles,
   textFieldStyles,
 } from "../../../pages/styles";
-import { useJobsUpdate } from "../../../hooks";
+import { useJobsUpdate, useUsersGetAll } from "../../../hooks";
 import { darkMenuProps } from "../styles";
+import { UserSelect } from "../../User";
 
 interface Props {
   job: Job;
@@ -32,13 +33,17 @@ interface Props {
 
 export function EditJobDialog({ job }: Props) {
   const [open, setOpen] = useState<boolean>(false);
+  const { data: users = [] } = useUsersGetAll();
+
   const [formData, setFormData] = useState<Partial<JobUpdateDto>>({
     name: job.name,
     description: job.description,
     status: job.status,
     priority: job.priority,
+    assignedUserId: job.assignedUserId ?? undefined,
     dueDate: job.dueDate.slice(0, 10),
   });
+
   const { mutateAsync: updateJob } = useJobsUpdate(job.id, job.clientId);
 
   const handleSave = async () => {
@@ -55,6 +60,18 @@ export function EditJobDialog({ job }: Props) {
     setOpen(false);
   };
 
+  const onClose = () => {
+    setOpen(false);
+    setFormData({
+      name: job.name,
+      description: job.description,
+      status: job.status,
+      priority: job.priority,
+      assignedUserId: job.assignedUserId ?? undefined,
+      dueDate: job.dueDate.slice(0, 10),
+    });
+  };
+
   return (
     <>
       <IconButton onClick={() => setOpen(true)}>
@@ -62,7 +79,7 @@ export function EditJobDialog({ job }: Props) {
       </IconButton>
       <UniversalDialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={onClose}
         title="Edit Job"
         footer={
           <Button
@@ -102,8 +119,8 @@ export function EditJobDialog({ job }: Props) {
               value={formData.status}
               label="Status"
               size="small"
-              MenuProps={darkMenuProps}
               sx={selectStyles}
+              MenuProps={darkMenuProps}
               onChange={(e) =>
                 setFormData({ ...formData, status: Number(e.target.value) })
               }
@@ -134,6 +151,21 @@ export function EditJobDialog({ job }: Props) {
               ))}
             </Select>
           </FormControl>
+          <UserSelect
+            users={users}
+            value={users.find((u) => u.id === formData.assignedUserId) ?? null}
+            onChange={(user) =>
+              setFormData({
+                ...formData,
+                assignedUserId: user?.id ?? undefined,
+              })
+            }
+            menuPaperStyles={{
+              backgroundColor: "#121212",
+              color: "white",
+              border: "1px solid #2a2a2a",
+            }}
+          />
           <TextField
             label="Due Date"
             type="date"

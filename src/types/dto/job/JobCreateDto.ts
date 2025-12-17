@@ -6,6 +6,7 @@ export interface JobCreateDto {
   clientId: number;
   status?: JobStatus;
   priority?: JobPriority;
+  assignedUserId?: number;
   dueDate: string;
   projectId?: number | null;
   estimatedFinish?: string | null;
