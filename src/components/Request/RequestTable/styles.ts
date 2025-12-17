@@ -10,7 +10,7 @@ export const ellipsisTextBoxStyles = {
 };
 
 export const tableCellStyles = {
-  maxWidth: 200,
+  maxWidth: 100,
   color: "#aaa",
   textOverflow: "ellipsis",
   textAlign: "center",

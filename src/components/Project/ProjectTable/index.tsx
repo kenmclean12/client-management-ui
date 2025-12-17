@@ -123,7 +123,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                   <Fragment key={p.id}>
                     <TableRow sx={tableRowStyles} hover>
                       {!userPage && (
-                        <TableCell align="center" sx={{ maxWidth: 200 }}>
+                        <TableCell align="center" sx={{ maxWidth: 150 }}>
                           {p.assignedUser ? (
                             <UserRow
                               user={p.assignedUser}
@@ -165,7 +165,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                         )}
                       </TableCell>
                       {!clientSpecific && (
-                        <TableCell align="center" sx={{ maxWidth: 180 }}>
+                        <TableCell align="center" sx={{ maxWidth: 150 }}>
                           {p.client ? (
                             <Tooltip title={p.client.name} arrow>
                               <Typography
@@ -183,7 +183,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                           )}
                         </TableCell>
                       )}
-                      <TableCell align="center" sx={{ maxWidth: 200 }}>
+                      <TableCell align="center" sx={{ maxWidth: 150 }}>
                         <Tooltip
                           title={`${formatDate(p.startDate)} → ${formatDate(
                             p.dueDate

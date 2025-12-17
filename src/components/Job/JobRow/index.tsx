@@ -50,7 +50,9 @@ export function JobRow({ clientId, job, userPage }: Props) {
           </TableCell>
         )}
         <TableCell align="center" sx={{ ...ellipsisCellSx, color: "white" }}>
-          {job.name}
+          <Tooltip title={job.name} arrow>
+            <span style={{ cursor: "pointer" }}>{job.name}</span>
+          </Tooltip>
         </TableCell>
         <TableCell align="center" sx={ellipsisCellSx}>
           <Typography

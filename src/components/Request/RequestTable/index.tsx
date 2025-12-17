@@ -82,9 +82,11 @@ export function RequestsTable({ requests }: Props) {
                 <TableCell align="center" sx={tableCellStyles}>
                   <Box sx={ellipsisTextBoxStyles}>
                     <Title fontSize="small" sx={{ color: "#777" }} />
-                    <Typography variant="body2" noWrap color="#aaa">
-                      {r.title}
-                    </Typography>
+                    <Tooltip title={r.title} arrow>
+                      <Typography variant="body2" color="#aaa" noWrap>
+                        {r.title}
+                      </Typography>
+                    </Tooltip>
                   </Box>
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyles}>

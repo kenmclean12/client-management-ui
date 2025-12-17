@@ -1,5 +1,5 @@
 export const ellipsisCellSx = {
-  maxWidth: 0,
+  maxWidth: 150,
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
