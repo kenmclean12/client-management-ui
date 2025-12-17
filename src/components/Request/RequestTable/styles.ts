@@ -2,7 +2,7 @@ export const ellipsisTextBoxStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  gap: .5,
+  gap: 0.5,
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
@@ -16,4 +16,19 @@ export const tableCellStyles = {
   textAlign: "center",
   whiteSpace: "nowrap",
   overflow: "hidden",
+};
+
+export const descriptionBoxStyles = {
+  ...ellipsisTextBoxStyles,
+  cursor: "pointer",
+  "&:hover .desc": {
+    color: "white",
+    textDecoration: "underline",
+  },
+};
+
+export const priorityChipStyles = {
+  color: "white",
+  borderColor: "#444",
+  "& .MuiChip-icon": { color: "#888" },
 };

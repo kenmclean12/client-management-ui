@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   IconButton,
   Stack,
@@ -18,33 +18,44 @@ import {
   ProjectStatus,
   ProjectUpdateDto,
   RequestPriority,
+  UserRole,
 } from "../../../types";
 import { dialogButtonStyles, selectStyles } from "../../../pages/styles";
 import { useProjectsUpdate } from "../../../hooks";
 import { menuProps } from "./styles";
 import { textFieldStyles } from "../../Request/RequestApprovalDialog/styles";
+import { useAuth } from "../../../context";
 
 interface Props {
   project: Project;
 }
 
 export function ProjectUpdateDialog({ project }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<ProjectStatus>(project.projectStatus);
+  const [status, setStatus] = useState<ProjectStatus>(ProjectStatus.Pending);
   const [priority, setPriority] = useState<RequestPriority>(
-    project.projectPriority
+    RequestPriority.Low
   );
-  const [endDate, setEndDate] = useState<Dayjs | null>(
-    project.endDate ? dayjs(project.endDate) : null
-  );
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const { mutateAsync: updateProject } = useProjectsUpdate(project.id);
+  const isAdmin = user?.role === UserRole.Admin;
 
-  const handleOpen = () => {
-    setOpen(true);
-    setStatus(project.projectStatus);
-    setPriority(project.projectPriority);
-    setEndDate(dayjs(project.endDate));
-  };
+  const isDirty = useMemo(() => {
+    return (
+      status !== project.projectStatus ||
+      priority !== project.projectPriority ||
+      dayjs(project.endDate ?? null).valueOf() !==
+        dayjs(endDate ?? null).valueOf()
+    );
+  }, [
+    status,
+    priority,
+    endDate,
+    project.projectStatus,
+    project.projectPriority,
+    project.endDate,
+  ]);
 
   const handleSave = async () => {
     await updateProject({
@@ -58,6 +69,13 @@ export function ProjectUpdateDialog({ project }: Props) {
     setOpen(false);
   };
 
+  const handleOpen = () => {
+    setOpen(true);
+    setStatus(project.projectStatus);
+    setPriority(project.projectPriority);
+    setEndDate(project.endDate ? dayjs(project.endDate) : null);
+  };
+
   const onClose = () => {
     setOpen(false);
     setStatus(ProjectStatus.Pending);
@@ -67,7 +85,11 @@ export function ProjectUpdateDialog({ project }: Props) {
 
   return (
     <>
-      <IconButton sx={{ color: "white" }} onClick={handleOpen}>
+      <IconButton
+        sx={{ color: "white" }}
+        onClick={handleOpen}
+        disabled={!isAdmin}
+      >
         <Edit />
       </IconButton>
       <UniversalDialog
@@ -79,6 +101,7 @@ export function ProjectUpdateDialog({ project }: Props) {
             variant="outlined"
             onClick={handleSave}
             sx={dialogButtonStyles}
+            disabled={!isDirty}
           >
             Update
           </Button>

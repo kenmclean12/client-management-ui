@@ -25,6 +25,17 @@ import { UserRow } from "../../User";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import { ProjectCompletionDialog } from "../ProjectCompletionDialog";
 import { ProjectUpdateDialog } from "../ProjectUpdateDialog";
+import {
+  clientNameTextStyles,
+  countCardStyles,
+  descriptionBoxStyles,
+  noProjectsBoxStyles,
+  priorityChipStyles,
+  projectPaperStyles,
+  tableRowStyles,
+  textStyles,
+  topRowContainerStyles,
+} from "./styles";
 
 interface Props {
   projects: Project[];
@@ -37,7 +48,6 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
   const [openDescription, setOpenDescription] = useState<string>("");
   const formatDate = (d?: string | null) =>
     d ? new Date(d).toLocaleDateString() : "—";
-
   const sortedProjects = [...projects].sort(
     (a, b) =>
       new Date(b.startDate || "").getTime() -
@@ -59,43 +69,32 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
   return (
     <Box sx={{ p: 0 }}>
       {!userPage && (
-        <Stack direction="row" spacing={2} flex={1} sx={{ mb: 2 }}>
-          <Card
-            sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
-          >
+        <Stack sx={topRowContainerStyles}>
+          <Card sx={countCardStyles}>
             <CardContent>
-              <Typography sx={{ color: "#aaa" }} variant="body2">
+              <Typography variant="body2" color="#aaa">
                 Total Projects
               </Typography>
-              <Typography variant="h5" sx={{ color: "white" }}>
+              <Typography variant="h5" color="white">
                 {projectCounts.total}
               </Typography>
             </CardContent>
           </Card>
-          <Card
-            sx={{ flex: 1, backgroundColor: "black", border: "1px solid #444" }}
-          >
+          <Card sx={countCardStyles}>
             <CardContent>
-              <Typography sx={{ color: "#aaa" }} variant="body2">
+              <Typography variant="body2" color="#aaa">
                 Total Jobs
               </Typography>
-              <Typography variant="h5" sx={{ color: "white" }}>
+              <Typography variant="h5" color="white">
                 {projectCounts.jobs}
               </Typography>
             </CardContent>
           </Card>
         </Stack>
       )}
-      <Paper
-        sx={{
-          p: !userPage ? 3 : 0,
-          backgroundColor: "black",
-          border: "1px solid #444",
-          color: "white",
-        }}
-      >
+      <Paper sx={{ ...projectPaperStyles, p: !userPage ? 3 : 0 }}>
         {sortedProjects.length === 0 ? (
-          <Box sx={{ textAlign: "center", py: 6, color: "#aaa" }}>
+          <Box sx={noProjectsBoxStyles}>
             <Work sx={{ fontSize: 56, color: "#555" }} />
             <Typography>No projects found</Typography>
           </Box>
@@ -122,10 +121,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
               <TableBody>
                 {sortedProjects.map((p) => (
                   <Fragment key={p.id}>
-                    <TableRow
-                      hover
-                      sx={{ "&:hover": { backgroundColor: "#111" } }}
-                    >
+                    <TableRow sx={tableRowStyles} hover>
                       {!userPage && (
                         <TableCell align="center" sx={{ maxWidth: 200 }}>
                           {p.assignedUser ? (
@@ -143,14 +139,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                       )}
                       <TableCell align="center" sx={{ maxWidth: 150 }}>
                         <Tooltip title={p.name} arrow>
-                          <Typography
-                            noWrap
-                            sx={{
-                              color: "#aaa",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
+                          <Typography sx={textStyles} noWrap>
                             {p.name}
                           </Typography>
                         </Tooltip>
@@ -158,34 +147,16 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                       <TableCell align="center" sx={{ maxWidth: 150 }}>
                         {p.description ? (
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                              cursor: "pointer",
-                              overflow: "hidden",
-                              "&:hover .desc": {
-                                color: "white",
-                                textDecoration: "underline",
-                              },
-                            }}
                             onClick={() =>
                               setOpenDescription(p.description ?? "")
                             }
+                            sx={descriptionBoxStyles}
                           >
                             <Visibility
                               fontSize="small"
                               sx={{ color: "#777" }}
                             />
-                            <Typography
-                              className="desc"
-                              noWrap
-                              sx={{
-                                color: "#aaa",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }}
-                            >
+                            <Typography className="desc" sx={textStyles} noWrap>
                               {p.description}
                             </Typography>
                           </Box>
@@ -198,20 +169,11 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                           {p.client ? (
                             <Tooltip title={p.client.name} arrow>
                               <Typography
-                                noWrap
-                                sx={{
-                                  cursor: "pointer",
-                                  overflow: "hidden",
-                                  color: "#aaa",
-                                  textOverflow: "ellipsis",
-                                  "&:hover": {
-                                    color: "white",
-                                    textDecoration: "underline",
-                                  },
-                                }}
                                 onClick={() =>
                                   navigate(`/clients/${p.client?.id}`)
                                 }
+                                sx={clientNameTextStyles}
+                                noWrap
                               >
                                 {p.client.name}
                               </Typography>
@@ -239,11 +201,7 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                           variant="outlined"
                           label={projectPriorityConfig[p.projectPriority].label}
                           icon={projectPriorityConfig[p.projectPriority].icon}
-                          sx={{
-                            color: "white",
-                            borderColor: "#444",
-                            "& .MuiChip-icon": { color: "#888" },
-                          }}
+                          sx={priorityChipStyles}
                         />
                       </TableCell>
                       <TableCell align="center">

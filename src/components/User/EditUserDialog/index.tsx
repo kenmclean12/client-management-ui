@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
   Stack,
   TextField,
@@ -26,7 +26,7 @@ import {
   selectStyles,
   textFieldStyles,
 } from "../../../pages/styles";
-import { userTextFields } from "./config";
+import { createUserForm, userTextFields } from "./config";
 
 interface Props {
   user: UserResponseDto;
@@ -36,56 +36,65 @@ interface Props {
 
 export function EditUserDialog({ user, open, onClose }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const updateMutation = useUsersUpdate(user?.id);
-  const [formData, setFormData] = useState<UserUpdateDto>({
-    userName: user?.userName ?? "",
-    email: user?.email ?? "",
-    firstName: user?.firstName ?? "",
-    lastName: user?.lastName ?? "",
-    role: user?.role,
-    avatarUrl: user?.avatarUrl ?? "",
-  });
+  const { mutateAsync: updateUser } = useUsersUpdate(user.id);
+  const [initialForm, setInitialForm] = useState<UserUpdateDto>(() =>
+    createUserForm(user)
+  );
+  const [form, setForm] = useState<UserUpdateDto>(initialForm);
+
+  const isDirty = useMemo(() => {
+    return Object.keys(form).some(
+      (key) =>
+        form[key as keyof UserUpdateDto] !==
+        initialForm[key as keyof UserUpdateDto]
+    );
+  }, [form, initialForm]);
 
   const handleSave = async () => {
-    await updateMutation.mutateAsync({
+    await updateUser({
       id: user.id,
-      dto: formData,
+      dto: form,
     });
+
+    setInitialForm(form);
     onClose();
   };
 
-  function handleImageInput(
-    e: React.ChangeEvent<HTMLInputElement>,
-    onLoad: (dataUrl: string) => void
-  ) {
+  function handleImageInput(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = () => onLoad(reader.result as string);
+    reader.onload = () =>
+      setForm((p) => ({ ...p, avatarUrl: reader.result as string }));
     reader.readAsDataURL(file);
   }
+
+  const handleClose = () => {
+    setForm(initialForm);
+    onClose();
+  };
 
   return (
     <UniversalDialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       title="Edit User"
       footer={
         <Button
           variant="outlined"
           onClick={handleSave}
           sx={dialogButtonStyles}
-          disabled={updateMutation.isPending}
+          disabled={!isDirty}
         >
           Save
         </Button>
       }
     >
       <Stack spacing={2.5}>
-        <Stack alignItems="center" spacing={1}>
+        <Stack alignItems="center">
           <Box sx={{ position: "relative", pb: 2 }}>
-            <Avatar src={formData.avatarUrl ?? ""} sx={avatarStyles} />
+            <Avatar src={form.avatarUrl ?? ""} sx={avatarStyles} />
             <IconButton
               size="small"
               onClick={() => fileInputRef.current?.click()}
@@ -98,11 +107,7 @@ export function EditUserDialog({ user, open, onClose }: Props) {
               type="file"
               hidden
               accept="image/*"
-              onChange={(e) =>
-                handleImageInput(e, (avatarUrl) =>
-                  setFormData((p) => ({ ...p, avatarUrl }))
-                )
-              }
+              onChange={handleImageInput}
             />
           </Box>
         </Stack>
@@ -110,24 +115,22 @@ export function EditUserDialog({ user, open, onClose }: Props) {
           <TextField
             key={key}
             label={label}
-            value={formData[key] ?? ""}
-            sx={textFieldStyles}
+            value={form[key] ?? ""}
             size="small"
-            onChange={(e) =>
-              setFormData((p) => ({ ...p, [key]: e.target.value }))
-            }
+            sx={textFieldStyles}
+            onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
           />
         ))}
         <FormControl fullWidth>
           <InputLabel sx={inputLabelStyles}>Role</InputLabel>
           <Select
-            value={formData.role}
+            value={form.role}
             label="Role"
-            sx={selectStyles}
             size="small"
+            sx={selectStyles}
             MenuProps={selectMenuProps}
             onChange={(e) =>
-              setFormData((p) => ({
+              setForm((p) => ({
                 ...p,
                 role: e.target.value as UserRole,
               }))

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   IconButton,
   Stack,
@@ -44,9 +44,21 @@ export function EditJobDialog({ job }: Props) {
   const isAdmin = user?.role === UserRole.Admin;
   const isAssignedUser = user?.id === job.assignedUserId;
 
+  const isDirty = useMemo(() => {
+    const original = jobToForm(job);
+
+    return (
+      formData.name !== original.name ||
+      formData.description !== original.description ||
+      formData.status !== original.status ||
+      formData.priority !== original.priority ||
+      formData.assignedUserId !== original.assignedUserId ||
+      formData.dueDate !== original.dueDate
+    );
+  }, [formData, job]);
+
   const handleSave = async () => {
     if (!formData.name || !formData.dueDate) return;
-
     await updateJob({
       id: job.id,
       dto: {
@@ -60,19 +72,12 @@ export function EditJobDialog({ job }: Props) {
 
   const handleOpen = () => {
     setFormData(jobToForm(job));
-    setOpen(false);
+    setOpen(true);
   };
 
   const onClose = () => {
     setOpen(false);
-    setFormData({
-      name: job.name,
-      description: job.description,
-      status: job.status,
-      priority: job.priority,
-      assignedUserId: job.assignedUserId ?? undefined,
-      dueDate: job.dueDate.slice(0, 10),
-    });
+    setFormData(jobToForm(job));
   };
 
   return (
@@ -89,7 +94,7 @@ export function EditJobDialog({ job }: Props) {
             variant="contained"
             onClick={handleSave}
             sx={dialogButtonStyles}
-            disabled={!formData.name || !formData.dueDate}
+            disabled={!isDirty || !formData.name || !formData.dueDate}
           >
             Save
           </Button>

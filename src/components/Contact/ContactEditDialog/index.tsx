@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../../components";
@@ -19,6 +19,14 @@ export function ContactEditDialog({ contact }: Props) {
   const [phone, setPhone] = useState<string>("");
   const { mutateAsync: update } = useContactsUpdate(contact.id);
   const isAdmin = user?.role === UserRole.Admin;
+
+  const isDirty = useMemo(() => {
+    return (
+      name !== (contact.name ?? "") ||
+      email !== (contact.email ?? "") ||
+      phone !== (contact.phone ?? "")
+    );
+  }, [name, email, phone, contact]);
 
   const handleOpen = () => {
     setName(contact.name ?? "");
@@ -50,7 +58,7 @@ export function ContactEditDialog({ contact }: Props) {
       </IconButton>
       <UniversalDialog
         open={open}
-        onClose={handleOpen}
+        onClose={() => setOpen(false)}
         title="Edit Contact"
         footer={
           <Button
@@ -58,6 +66,7 @@ export function ContactEditDialog({ contact }: Props) {
             onClick={handleSave}
             sx={dialogButtonStyles}
             fullWidth
+            disabled={!isDirty}
           >
             Save
           </Button>

@@ -22,7 +22,12 @@ import { Request } from "../../../types";
 import { priorityConfig, statusConfig, tableHeaders } from "./config";
 import { formatDate } from "../../../utils";
 import { tableContainerStyles, tableStyles } from "../../../pages/styles";
-import { ellipsisTextBoxStyles, tableCellStyles } from "./styles";
+import {
+  descriptionBoxStyles,
+  ellipsisTextBoxStyles,
+  priorityChipStyles,
+  tableCellStyles,
+} from "./styles";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { RequestApprovalDialog } from "../RequestApprovalDialog";
@@ -68,7 +73,7 @@ export function RequestsTable({ requests }: Props) {
                 <TableCell align="center" sx={tableCellStyles}>
                   <Box sx={ellipsisTextBoxStyles}>
                     <CalendarToday fontSize="small" sx={{ color: "#888" }} />
-                    <Typography variant="body2" noWrap sx={{ color: "#aaa" }}>
+                    <Typography variant="body2" color="#aaa" noWrap>
                       {formatDate(r.createdAt)}
                     </Typography>
                   </Box>
@@ -76,22 +81,15 @@ export function RequestsTable({ requests }: Props) {
                 <TableCell align="center" sx={tableCellStyles}>
                   {r.description ? (
                     <Box
-                      sx={{
-                        ...ellipsisTextBoxStyles,
-                        cursor: "pointer",
-                        "&:hover .desc": {
-                          color: "white",
-                          textDecoration: "underline",
-                        },
-                      }}
                       onClick={() => setOpenDescription(r.description)}
+                      sx={descriptionBoxStyles}
                     >
                       <Visibility fontSize="small" sx={{ color: "#777" }} />
                       <Typography
                         className="desc"
                         variant="body2"
+                        color="#aaa"
                         noWrap
-                        sx={{ color: "#aaa" }}
                       >
                         {r.description}
                       </Typography>
@@ -106,11 +104,7 @@ export function RequestsTable({ requests }: Props) {
                     variant="outlined"
                     label={priorityConfig[r.priority]}
                     icon={<PriorityHigh fontSize="small" />}
-                    sx={{
-                      color: "white",
-                      borderColor: "#444",
-                      "& .MuiChip-icon": { color: "#888" },
-                    }}
+                    sx={priorityChipStyles}
                   />
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyles}>

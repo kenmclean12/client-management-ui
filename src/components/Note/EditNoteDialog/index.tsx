@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
@@ -15,9 +15,14 @@ export function EditNoteDialog({ note }: Props) {
   const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [content, setContent] = useState<string>(note.content);
-  const { mutateAsync: update, isPending } = useNotesUpdate(note.id);
+  const { mutateAsync: update } = useNotesUpdate(note.id);
   const isAdmin = user?.role === UserRole.Admin;
   const isSelf = user?.id === note.userId;
+  const isOwner = isAdmin && isSelf;
+
+  const isDirty = useMemo(() => {
+    return content.trim() !== note.content.trim();
+  }, [content, note.content]);
 
   const handleOpen = () => {
     setContent(note.content);
@@ -38,7 +43,7 @@ export function EditNoteDialog({ note }: Props) {
         size="small"
         onClick={handleOpen}
         sx={{ color: "white" }}
-        disabled={!isAdmin && !isSelf}
+        disabled={!isOwner}
       >
         <Edit />
       </IconButton>
@@ -51,7 +56,7 @@ export function EditNoteDialog({ note }: Props) {
             variant="outlined"
             onClick={handleSave}
             sx={dialogButtonStyles}
-            disabled={!content || isPending}
+            disabled={!isDirty || !content}
           >
             Save
           </Button>

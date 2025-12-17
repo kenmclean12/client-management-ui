@@ -1,4 +1,4 @@
-import { UserUpdateDto } from "../../../types";
+import { UserResponseDto, UserUpdateDto } from "../../../types";
 
 export const userTextFields: {
   key: keyof Pick<
@@ -12,3 +12,12 @@ export const userTextFields: {
   { key: "userName", label: "Username" },
   { key: "email", label: "Email" },
 ];
+
+export const createUserForm = (user: UserResponseDto): UserUpdateDto => ({
+  userName: user.userName ?? "",
+  email: user.email ?? "",
+  firstName: user.firstName ?? "",
+  lastName: user.lastName ?? "",
+  role: user.role,
+  avatarUrl: user.avatarUrl ?? "",
+});

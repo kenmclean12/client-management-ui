@@ -15,20 +15,24 @@ import {
   RequestPriority,
   RequestStatus,
   RequestUpdateDto,
+  UserRole,
 } from "../../../types";
 import { dialogButtonStyles, selectStyles } from "../../../pages/styles";
 import { useRequestsUpdate } from "../../../hooks";
 import { menuProps } from "./styles";
+import { useAuth } from "../../../context";
 
 interface Props {
   request: Request;
 }
 
 export function RequestUpdateDialog({ request }: Props) {
+  const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<RequestStatus>(request.status);
   const [priority, setPriority] = useState<RequestPriority>(request.priority);
   const { mutateAsync: updateRequest } = useRequestsUpdate(request.id);
+  const isAdmin = user?.role === UserRole.Admin;
 
   const handleSave = async () => {
     await updateRequest({
@@ -43,7 +47,11 @@ export function RequestUpdateDialog({ request }: Props) {
 
   return (
     <>
-      <IconButton sx={{ color: "white" }} onClick={() => setOpen(true)}>
+      <IconButton
+        sx={{ color: "white" }}
+        onClick={() => setOpen(true)}
+        disabled={!isAdmin}
+      >
         <Edit />
       </IconButton>
       <UniversalDialog
