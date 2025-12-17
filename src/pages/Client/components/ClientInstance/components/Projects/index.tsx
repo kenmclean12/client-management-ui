@@ -35,7 +35,7 @@ export function ClientProjects({ client }: Props) {
         </Typography>
       </Box>
       <Divider sx={{ my: 2, backgroundColor: "#444" }} />
-      <ProjectTable projects={projects ?? []} />
+      <ProjectTable projects={projects ?? []} clientSpecific />
     </Paper>
   );
 }

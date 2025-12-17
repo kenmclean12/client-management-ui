@@ -50,11 +50,17 @@ interface EditingProject {
 
 interface Props {
   projects: Project[];
+  clientSpecific?: boolean;
   onCreate?: (dto: ProjectUpdateDto) => Promise<void>;
   onUpdate?: (id: number, dto: ProjectUpdateDto) => Promise<void>;
 }
 
-export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
+export function ProjectTable({
+  projects,
+  clientSpecific,
+  onCreate,
+  onUpdate,
+}: Props) {
   const navigate = useNavigate();
   const [openDescription, setOpenDescription] = useState<string>("");
   const [expandedProjectId, setExpandedProjectId] = useState<number | null>(
@@ -152,7 +158,9 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                   <TableCell align="center">Assigned To</TableCell>
                   <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Description</TableCell>
-                  <TableCell align="center">Client</TableCell>
+                  {!clientSpecific && (
+                    <TableCell align="center">Client</TableCell>
+                  )}
                   <TableCell align="center">Timeline</TableCell>
                   <TableCell align="center">Jobs</TableCell>
                   <TableCell align="center">Priority</TableCell>
@@ -232,32 +240,34 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                           "—"
                         )}
                       </TableCell>
-                      <TableCell align="center" sx={{ maxWidth: 180 }}>
-                        {p.client ? (
-                          <Tooltip title={p.client.name} arrow>
-                            <Typography
-                              noWrap
-                              sx={{
-                                cursor: "pointer",
-                                overflow: "hidden",
-                                color: "#aaa",
-                                textOverflow: "ellipsis",
-                                "&:hover": {
-                                  color: "white",
-                                  textDecoration: "underline",
-                                },
-                              }}
-                              onClick={() =>
-                                navigate(`/clients/${p.client?.id}`)
-                              }
-                            >
-                              {p.client.name}
-                            </Typography>
-                          </Tooltip>
-                        ) : (
-                          "—"
-                        )}
-                      </TableCell>
+                      {!clientSpecific && (
+                        <TableCell align="center" sx={{ maxWidth: 180 }}>
+                          {p.client ? (
+                            <Tooltip title={p.client.name} arrow>
+                              <Typography
+                                noWrap
+                                sx={{
+                                  cursor: "pointer",
+                                  overflow: "hidden",
+                                  color: "#aaa",
+                                  textOverflow: "ellipsis",
+                                  "&:hover": {
+                                    color: "white",
+                                    textDecoration: "underline",
+                                  },
+                                }}
+                                onClick={() =>
+                                  navigate(`/clients/${p.client?.id}`)
+                                }
+                              >
+                                {p.client.name}
+                              </Typography>
+                            </Tooltip>
+                          ) : (
+                            "—"
+                          )}
+                        </TableCell>
+                      )}
                       <TableCell align="center" sx={{ maxWidth: 200 }}>
                         <Tooltip
                           title={`${formatDate(p.startDate)} → ${formatDate(
