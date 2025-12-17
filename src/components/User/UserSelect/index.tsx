@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Select,
   MenuItem,
@@ -6,7 +7,6 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import { useState } from "react";
 import type { UserResponseDto } from "../../../types";
 import { UserRow } from "../UserRow";
 import { CSSObject } from "@emotion/react";
@@ -27,7 +27,7 @@ export function UserSelect({
   onChange,
   menuPaperStyles,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
     <Stack>

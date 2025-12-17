@@ -38,7 +38,7 @@ interface Props {
 export function AddJobDialog({ clientId, projectId }: Props) {
   const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Partial<JobCreateDto>>(emptyForm);
+  const [formData, setFormData] = useState<Partial<JobCreateDto>>(emptyForm)
   const { data: users = [] } = useUsersGetAll();
   const { mutateAsync: createJob } = useJobsCreate(clientId);
   const isAdmin = user?.role === UserRole.Admin;

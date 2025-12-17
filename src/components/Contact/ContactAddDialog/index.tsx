@@ -39,6 +39,11 @@ export function ContactAddDialog({ clientId }: Props) {
     setPhone("");
   };
 
+  const isValid =
+    name.trim().length > 0 &&
+    email.trim().length > 0 &&
+    phone.trim().length > 0;
+
   return (
     <>
       <IconButton
@@ -57,6 +62,7 @@ export function ContactAddDialog({ clientId }: Props) {
             variant="outlined"
             onClick={handleCreate}
             sx={dialogButtonStyles}
+            disabled={!isValid}
             fullWidth
           >
             Add

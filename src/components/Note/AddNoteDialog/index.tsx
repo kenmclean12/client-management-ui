@@ -41,6 +41,7 @@ export function AddNoteDialog({ clientId }: Props) {
             variant="outlined"
             onClick={handleAddClick}
             sx={dialogButtonStyles}
+            disabled={!note}
           >
             Add
           </Button>
