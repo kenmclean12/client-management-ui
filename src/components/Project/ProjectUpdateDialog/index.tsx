@@ -9,34 +9,47 @@ import {
   InputLabel,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { UniversalDialog } from "../../UniversalDialog";
 import {
-  Request,
+  Project,
+  ProjectStatus,
+  ProjectUpdateDto,
   RequestPriority,
-  RequestStatus,
-  RequestUpdateDto,
 } from "../../../types";
-import { dialogButtonStyles, selectStyles } from "../../../pages/styles";
-import { useRequestsUpdate } from "../../../hooks";
+import {
+  dialogButtonStyles,
+  selectStyles,
+  textFieldStyles,
+} from "../../../pages/styles";
+import { useProjectsUpdate } from "../../../hooks";
 import { menuProps } from "./styles";
 
 interface Props {
-  request: Request;
+  project: Project;
 }
 
-export function RequestUpdateDialog({ request }: Props) {
+export function ProjectUpdateDialog({ project }: Props) {
   const [open, setOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<RequestStatus>(request.status);
-  const [priority, setPriority] = useState<RequestPriority>(request.priority);
-  const { mutateAsync: updateRequest } = useRequestsUpdate(request.id);
+  const [status, setStatus] = useState<ProjectStatus>(project.projectStatus);
+  const [priority, setPriority] = useState<RequestPriority>(
+    project.projectPriority
+  );
+  const [endDate, setEndDate] = useState<Dayjs | null>(
+    project.endDate ? dayjs(project.endDate) : null
+  );
+  const { mutateAsync: updateProject } = useProjectsUpdate(project.id);
 
   const handleSave = async () => {
-    await updateRequest({
-      id: request.id,
+    await updateProject({
+      id: project.id,
       dto: {
-        status,
-        priority,
-      } as unknown as RequestUpdateDto,
+        projectStatus: status,
+        projectPriority: priority,
+        endDate: endDate ? endDate.toISOString() : null,
+      } as unknown as ProjectUpdateDto,
     });
     setOpen(false);
   };
@@ -49,7 +62,7 @@ export function RequestUpdateDialog({ request }: Props) {
       <UniversalDialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Update Request"
+        title="Update Project"
         footer={
           <Button
             variant="outlined"
@@ -69,10 +82,10 @@ export function RequestUpdateDialog({ request }: Props) {
               sx={selectStyles}
               MenuProps={menuProps}
               onChange={(e) =>
-                setStatus(Number(e.target.value) as RequestStatus)
+                setStatus(Number(e.target.value) as ProjectStatus)
               }
             >
-              {Object.entries(RequestStatus)
+              {Object.entries(ProjectStatus)
                 .filter(
                   ([key, val]) => typeof val === "number" && key !== "Approved"
                 )
@@ -88,9 +101,11 @@ export function RequestUpdateDialog({ request }: Props) {
             <Select
               value={priority}
               label="Priority"
-              MenuProps={menuProps}
               sx={selectStyles}
-              onChange={(e) => setPriority(e.target.value as RequestPriority)}
+              MenuProps={menuProps}
+              onChange={(e) =>
+                setPriority(Number(e.target.value) as RequestPriority)
+              }
             >
               {[
                 RequestPriority.Low,
@@ -107,6 +122,20 @@ export function RequestUpdateDialog({ request }: Props) {
               ))}
             </Select>
           </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="End Date"
+              value={endDate}
+              onChange={(value: Dayjs | null) => setEndDate(value)}
+              slotProps={{
+                textField: {
+                  size: "small",
+                  fullWidth: true,
+                  sx: textFieldStyles,
+                },
+              }}
+            />
+          </LocalizationProvider>
         </Stack>
       </UniversalDialog>
     </>

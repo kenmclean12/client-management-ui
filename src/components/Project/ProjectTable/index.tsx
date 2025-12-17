@@ -41,6 +41,7 @@ import { projectPriorityConfig, projectStatusConfig } from "./config";
 import { UserRow } from "../../User";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import { ProjectCompletionDialog } from "../ProjectCompletionDialog";
+import { ProjectUpdateDialog } from "../ProjectUpdateDialog";
 
 interface EditingProject {
   id: number | null;
@@ -323,7 +324,14 @@ export function ProjectTable({ projects, onCreate, onUpdate }: Props) {
                         />
                       </TableCell>
                       <TableCell align="center">
-                        <ProjectCompletionDialog project={p} />
+                        <Stack
+                          direction="row"
+                          justifyContent="center"
+                          spacing={0.5}
+                        >
+                          <ProjectUpdateDialog project={p} />
+                          <ProjectCompletionDialog project={p} />
+                        </Stack>
                       </TableCell>
                     </TableRow>
                     <TableRow>
