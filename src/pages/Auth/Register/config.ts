@@ -2,9 +2,9 @@ import { Step, StepField } from "./types";
 
 export const stepFields: Record<Step, StepField[]> = {
   [Step.One]: [
+    { key: "email", placeholder: "Email" },
     { key: "firstName", placeholder: "First Name" },
     { key: "lastName", placeholder: "Last Name" },
-    { key: "email", placeholder: "Email" },
   ],
   [Step.Two]: [
     { key: "userName", placeholder: "Username" },
