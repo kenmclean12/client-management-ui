@@ -89,7 +89,7 @@ export function ContactAddDialog({ clientId }: Props) {
           <TextField
             label="Phone"
             value={phone}
-            onChange={() => setPhone("")}
+            onChange={(e) => setPhone(e.target.value)}
             inputProps={{ maxLength: 20 }}
             size="small"
             sx={textFieldStyles}
