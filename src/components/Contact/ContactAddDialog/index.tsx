@@ -30,6 +30,7 @@ export function ContactAddDialog({ clientId }: Props) {
     };
 
     await create(dto);
+    handleClose();
   };
 
   const handleClose = () => {
