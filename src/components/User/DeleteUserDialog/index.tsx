@@ -23,7 +23,10 @@ export function DeleteUserDialog({ user, open, onClose }: Props) {
       title="Delete User"
       footer={
         <Button
-          onClick={async () => await deleteUser()}
+          onClick={async () => {
+            await deleteUser();
+            onClose();
+          }}
           variant="outlined"
           sx={dialogButtonStyles}
           disabled={!isAdmin}
