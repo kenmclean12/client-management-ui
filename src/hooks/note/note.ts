@@ -13,7 +13,7 @@ export function useNotesGetAll() {
 export function useNotesGetByClient(id: number) {
   return useQuery<Note[]>({
     queryKey: ["notes", id],
-    queryFn: () => get<Note[]>(`/notes/${id}`),
+    queryFn: () => get<Note[]>(`/notes/client/${id}`),
   });
 }
 
