@@ -7,4 +7,5 @@ export interface UserCreateDto {
   firstName: string;
   lastName: string;
   role?: UserRole;
+  token: string;
 }
