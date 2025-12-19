@@ -138,7 +138,7 @@ export function ProfilePage() {
                     <JobTable jobs={jobs} userPage />
                   </Stack>
                 ) : (
-                  <Box textAlign="center">
+                  <Box textAlign="center" pt={7}>
                     <PendingActions sx={{ fontSize: 40, color: "#ccc" }} />
                     <Typography fontSize={16} color="#ccc">
                       No Jobs Found
