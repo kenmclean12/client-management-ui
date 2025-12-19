@@ -23,7 +23,6 @@ export function RegisterPage() {
   const { register } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
   const [params] = useSearchParams();
-  const tokenParam = params.get("invite");
   const emailParam = params.get("email");
 
   const [step, setStep] = useState<Step>(Step.One);
@@ -33,23 +32,14 @@ export function RegisterPage() {
     email: "",
     userName: "",
     password: "",
-    token: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
-    if (!tokenParam) {
-      enqueueSnackbar("Registration requires a valid invite", {
-        variant: "error",
-      });
-      navigate("/login", { replace: true });
-      return;
-    }
-
     if (emailParam) {
-      setForm((f) => ({ ...f, email: emailParam, token: tokenParam }));
+      setForm((f) => ({ ...f, email: emailParam }));
     }
-  }, [tokenParam, emailParam, navigate, enqueueSnackbar]);
+  }, [emailParam]);
 
   const handleNext = () => {
     const validationErrors = validateStep(step, form);
@@ -65,7 +55,6 @@ export function RegisterPage() {
   };
 
   const handleRegister = async () => {
-    if (!tokenParam) return;
     if (Object.keys(errors).length) return;
     await register(form);
     navigate("/", { replace: true });
