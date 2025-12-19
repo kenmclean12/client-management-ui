@@ -27,7 +27,6 @@ import {
   clientNameTextStyles,
   descriptionBoxStyles,
   ellipsisTextBoxStyles,
-  priorityChipStyles,
   tableCellStyles,
 } from "./styles";
 import dayjs from "dayjs";
@@ -36,6 +35,7 @@ import { RequestApprovalDialog } from "../RequestApprovalDialog";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import { RequestUpdateDialog } from "../RequestUpdateDialog";
 import { useNavigate } from "react-router-dom";
+import { priorityColorConfig } from "../../config";
 dayjs.extend(utc);
 
 interface Props {
@@ -123,7 +123,15 @@ export function RequestsTable({ requests }: Props) {
                     variant="outlined"
                     label={priorityConfig[r.priority]}
                     icon={<PriorityHigh fontSize="small" />}
-                    sx={priorityChipStyles}
+                    sx={{
+                      backgroundColor:
+                        priorityColorConfig[r.priority].backgroundColor,
+                      color: priorityColorConfig[r.priority].color,
+                      borderColor: priorityColorConfig[r.priority].borderColor,
+                      "& .MuiChip-icon": {
+                        color: priorityColorConfig[r.priority].color,
+                      },
+                    }}
                   />
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyles}>

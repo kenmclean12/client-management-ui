@@ -61,9 +61,3 @@ export const clientNameTextStyles = {
     textDecoration: "underline",
   },
 };
-
-export const priorityChipStyles = {
-  color: "white",
-  borderColor: "#444",
-  "& .MuiChip-icon": { color: "#888" },
-};

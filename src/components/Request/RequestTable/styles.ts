@@ -27,12 +27,6 @@ export const descriptionBoxStyles = {
   },
 };
 
-export const priorityChipStyles = {
-  color: "white",
-  borderColor: "#444",
-  "& .MuiChip-icon": { color: "#888" },
-};
-
 export const clientNameTextStyles = {
   color: "#aaa",
   textOverflow: "ellipsis",

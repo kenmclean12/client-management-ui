@@ -30,12 +30,12 @@ import {
   countCardStyles,
   descriptionBoxStyles,
   noProjectsBoxStyles,
-  priorityChipStyles,
   projectPaperStyles,
   tableRowStyles,
   textStyles,
   topRowContainerStyles,
 } from "./styles";
+import { priorityColorConfig } from "../../config";
 
 interface Props {
   projects: Project[];
@@ -201,7 +201,19 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                           variant="outlined"
                           label={projectPriorityConfig[p.projectPriority].label}
                           icon={projectPriorityConfig[p.projectPriority].icon}
-                          sx={priorityChipStyles}
+                          sx={{
+                            backgroundColor:
+                              priorityColorConfig[p.projectPriority]
+                                .backgroundColor,
+                            color: priorityColorConfig[p.projectPriority].color,
+                            borderColor:
+                              priorityColorConfig[p.projectPriority]
+                                .borderColor,
+                            "& .MuiChip-icon": {
+                              color:
+                                priorityColorConfig[p.projectPriority].color,
+                            },
+                          }}
                         />
                       </TableCell>
                       <TableCell align="center">

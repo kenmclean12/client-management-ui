@@ -15,14 +15,14 @@ import { format } from "date-fns";
 import { EditJobDialog } from "../EditJobDialog";
 import { DeleteJobDialog } from "../DeleteJobDialog";
 import { UserRow } from "../../User";
-import { jobPriorityConfig, jobStatusConfig } from "./config";
 import { DescriptionDialog } from "../../DescriptionDialog";
 import {
   clientNameTextStyles,
   descriptionTextStyles,
   ellipsisCellSx,
-  priorityChipStyles,
 } from "./styles";
+import { jobPriorityConfig, jobStatusConfig } from "../JobTable/config";
+import { priorityColorConfig } from "../../config";
 
 interface Props {
   clientId: number;
@@ -87,7 +87,15 @@ export function JobRow({ clientId, job, userPage }: Props) {
             variant="outlined"
             label={jobPriorityConfig[job.priority].label}
             icon={jobPriorityConfig[job.priority].icon}
-            sx={priorityChipStyles}
+            sx={{
+              backgroundColor:
+                priorityColorConfig[job.priority].backgroundColor,
+              color: priorityColorConfig[job.priority].color,
+              borderColor: priorityColorConfig[job.priority].borderColor,
+              "& .MuiChip-icon": {
+                color: priorityColorConfig[job.priority].color,
+              },
+            }}
           />
         </TableCell>
         <TableCell align="center" sx={ellipsisCellSx}>
