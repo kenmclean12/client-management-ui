@@ -30,7 +30,20 @@ export const textFieldStyles = {
   },
 };
 
+// export const jobTableStyles = {
+//   ...tableStyles,
+//   maxHeight: "650px",
+//   width: "100%",
+//   tableLayout: "fixed",
+//   overflowY: "auto",
+// };
+
+
 export const tableStyles = {
+  maxHeight: "650px",
+  width: "100%",
+  tableLayout: "fixed",
+  overflowY: "auto",
   border: "1px solid #444",
   "& .MuiTableCell-head": {
     color: "#ccc",
