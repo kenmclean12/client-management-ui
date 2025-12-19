@@ -103,7 +103,13 @@ export function JobRow({ clientId, job, userPage }: Props) {
             size="small"
             label={jobStatusConfig[job.status].label}
             icon={jobStatusConfig[job.status].icon}
-            color={jobStatusConfig[job.status].color}
+            sx={{
+              border: `1px solid ${jobStatusConfig[job.status].color}`,
+              color: jobStatusConfig[job.status].color,
+              "& .MuiChip-icon": {
+                color: jobStatusConfig[job.status].color,
+              },
+            }}
           />
         </TableCell>
         <TableCell align="center">

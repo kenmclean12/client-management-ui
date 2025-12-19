@@ -221,7 +221,14 @@ export function ProjectTable({ projects, clientSpecific, userPage }: Props) {
                           size="small"
                           label={projectStatusConfig[p.projectStatus].label}
                           icon={projectStatusConfig[p.projectStatus].icon}
-                          color={projectStatusConfig[p.projectStatus].color}
+                          sx={{
+                            color: projectStatusConfig[p.projectStatus].color,
+                            border: `1px solid ${projectStatusConfig[p.projectStatus].color}`,
+                             "& .MuiChip-icon": {
+                              color:
+                                projectStatusConfig[p.projectStatus].color,
+                            },
+                          }}
                         />
                       </TableCell>
                       <TableCell align="center">

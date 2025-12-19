@@ -134,7 +134,7 @@ export function ProfilePage() {
               </Typography>
               <Stack sx={assignedJobsContainerStyles}>
                 {jobs.length > 0 ? (
-                  <Stack mx={1.5} mt={6} sx={{ backgroundColor: "black" }}>
+                  <Stack mx={1.5} sx={{ backgroundColor: "black" }}>
                     <JobTable jobs={jobs} userPage />
                   </Stack>
                 ) : (

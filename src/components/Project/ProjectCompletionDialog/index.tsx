@@ -24,6 +24,7 @@ export function ProjectCompletionDialog({ project }: Props) {
       id: project.id,
       dto: { projectStatus: ProjectStatus.Done },
     });
+    setOpen(false);
   };
 
   return (

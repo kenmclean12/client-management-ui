@@ -33,28 +33,29 @@ export const projectStatusConfig: Record<
   ProjectStatus,
   {
     label: string;
-    color: "default" | "warning" | "info" | "success";
+    color: string;
     icon: JSX.Element;
   }
 > = {
   [ProjectStatus.Stopped]: {
     label: "Stopped",
-    color: "default",
+    color: "#9e9e9e",
     icon: <PauseCircle fontSize="small" />,
   },
   [ProjectStatus.Pending]: {
     label: "Pending",
-    color: "warning",
+    color: "#fbc02d",
     icon: <HourglassEmpty fontSize="small" />,
   },
   [ProjectStatus.InProgress]: {
     label: "In Progress",
-    color: "info",
+    color: "#42a5f5",
     icon: <PlayCircle fontSize="small" />,
   },
   [ProjectStatus.Done]: {
     label: "Done",
-    color: "success",
+    color: "#4caf50",
     icon: <CheckCircle fontSize="small" />,
   },
 };
+

@@ -14,28 +14,28 @@ export const jobStatusConfig: Record<
   JobStatus,
   {
     label: string;
-    color: "default" | "warning" | "info" | "success";
+    color: string;
     icon: JSX.Element;
   }
 > = {
   [JobStatus.Stopped]: {
     label: "Not Started",
-    color: "default",
+    color: "#9e9e9e",
     icon: <PauseCircle fontSize="small" />,
   },
   [JobStatus.Pending]: {
     label: "Blocked",
-    color: "warning",
+    color: "#fbc02d",
     icon: <HourglassEmpty fontSize="small" />,
   },
   [JobStatus.InProgress]: {
     label: "In Progress",
-    color: "info",
+    color: "#42a5f5",
     icon: <PlayCircle fontSize="small" />,
   },
   [JobStatus.Done]: {
     label: "Completed",
-    color: "success",
+    color: "#4caf50",
     icon: <CheckCircle fontSize="small" />,
   },
 };
