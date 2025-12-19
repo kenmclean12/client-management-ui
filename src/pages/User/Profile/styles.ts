@@ -34,12 +34,12 @@ export const assignedProjectsContainerStyles = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  minHeight: "230px",
   maxHeight: "230px",
   width: "100%",
   gap: "16px",
   border: "1px solid #444",
   backgroundColor: "#1e1e1e",
-  pt: 40,
   overflowY: "auto",
 };
 
@@ -48,6 +48,7 @@ export const assignedJobsContainerStyles = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  minHeight: "230px",
   height: "230px",
   width: "100%",
   color: "white",
