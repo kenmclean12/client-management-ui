@@ -23,6 +23,7 @@ import {
 } from "./styles";
 import { jobPriorityConfig, jobStatusConfig } from "../JobTable/config";
 import { priorityColorConfig } from "../../config";
+import { useUsersGetById } from "../../../hooks";
 
 interface Props {
   clientId: number;
@@ -33,15 +34,16 @@ interface Props {
 export function JobRow({ clientId, job, userPage }: Props) {
   const navigate = useNavigate();
   const [openDesc, setOpenDesc] = useState<boolean>(false);
+  const { data: assignedUser } = useUsersGetById(job.assignedUserId as number);
 
   return (
     <>
       <TableRow hover>
         {!userPage && (
           <TableCell align="left" sx={ellipsisCellSx}>
-            {job.assignedUser ? (
+            {assignedUser ? (
               <UserRow
-                user={job.assignedUser}
+                user={assignedUser}
                 onClick={() => navigate(`/users/${job.assignedUserId}`)}
               />
             ) : (
